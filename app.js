@@ -145,8 +145,8 @@
     state.dilate += ((state.speed > 0.22 ? 1 : 0) - state.dilate) * 0.045;
     state.speed *= 0.94;
     const ix = state.x * 15, iy = state.y * 8;          // iris drift
-    const prx = 9.5 + state.dilate * 3.5;                // gentle dilation
-    const pry = 19 + state.dilate * 1.0;
+    const prx = 8.5 + state.dilate * 3;                // gentle dilation
+    const pry = 17 + state.dilate * 1.0;
     const breathe = reduceMotion ? 0.42 : 0.34 + 0.12 * Math.sin(now * 0.0009);
     for (const e of eyes) {
       e.iris.setAttribute('transform', `translate(${ix.toFixed(2)}, ${iy.toFixed(2)})`);
