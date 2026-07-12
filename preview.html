@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenMeow — See your agents work. Coming soon.</title>
+<meta name="description" content="OpenMeow is the open-source observability layer for AI agents. Every process registers as a cat. Coming soon." />
+<meta property="og:title" content="OpenMeow — Coming soon" />
+<meta property="og:description" content="See your agents work. The open-source observability layer for AI agents." />
+<meta property="og:image" content="https://openmeow.io/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://openmeow.io/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://openmeow.io/og.jpg" />
+<meta name="theme-color" content="#0B0A09" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%23F2B366'/><path d='M24 34 L30 11 L47 29 Z M76 34 L70 11 L53 29 Z' fill='%23F2B366'/><circle cx='40' cy='53' r='4' fill='%23140F0A'/><circle cx='60' cy='53' r='4' fill='%23140F0A'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0B0A09;
+    --ink: #F4EFE7;
+    --muted: #9A8F82;
+    --faint: #6A6157;
+    --gold: #F2B366;
+    --gold-hi: #FFD9A0;
+    --hair: rgba(255,232,205,.10);
+    --hair-2: rgba(255,232,205,.18);
+    --display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overscroll-behavior: none; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* mouse-reactive warm lattice */
+  #flow { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+  /* warm ambient light behind the cat */
+  .glow {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(46% 38% at 50% 30%, rgba(255,170,94,.16) 0%, rgba(255,138,66,.05) 42%, transparent 72%),
+      radial-gradient(130% 100% at 50% 42%, transparent 44%, rgba(3,2,1,.62) 100%);
+  }
+  .grain {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: .045; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap {
+    position: relative; z-index: 3;
+    min-height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 56px 22px 92px;
+  }
+  /* ---------- hero cat ---------- */
+  .cat {
+    width: min(316px, 56vw);
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    will-change: transform;
+    animation: float 7.5s var(--ease) infinite;
+    filter:
+      drop-shadow(0 2px 1px rgba(0,0,0,.5))
+      drop-shadow(0 30px 42px rgba(0,0,0,.5))
+      drop-shadow(0 0 70px rgba(255,150,80,.16));
+  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
+  /* ---------- wordmark ---------- */
+  .wordmark {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(33px, 7vw, 76px);
+    letter-spacing: -0.05em; line-height: 1;
+    margin-top: 10px; user-select: none;
+    display: flex; align-items: baseline; justify-content: center;
+    filter: drop-shadow(0 6px 24px rgba(0,0,0,.45));
+  }
+  .wordmark .open { color: var(--ink); }
+  .wordmark .meow {
+    background: linear-gradient(178deg, var(--gold-hi) 0%, var(--gold) 55%, #DA9740 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+  .wordmark .dot {
+    align-self: baseline; margin-left: 0.05em;
+    width: 0.115em; height: 0.115em; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 12px rgba(242,179,102,.9), 0 0 26px rgba(242,179,102,.45);
+    animation: pulse 3s var(--ease) infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.9); } }
+  /* ---------- tagline ---------- */
+  .tagline {
+    margin-top: 16px;
+    font-family: var(--sans); font-weight: 400;
+    font-size: clamp(15px, 2vw, 19px);
+    letter-spacing: 0.005em; color: var(--muted);
+  }
+  /* ---------- coming soon ---------- */
+  .coming {
+    margin-top: 22px;
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(23px, 4.2vw, 46px);
+    letter-spacing: -0.02em; line-height: 1;
+    background: linear-gradient(180deg, #FFFDF9 0%, #EDE4D6 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    filter: drop-shadow(0 4px 18px rgba(0,0,0,.35));
+  }
+  /* ---------- email capture ---------- */
+  .notify {
+    margin-top: 30px;
+    display: flex; align-items: center; gap: 6px;
+    width: min(432px, 92vw);
+    padding: 6px 6px 6px 6px;
+    border: 1px solid var(--hair);
+    border-radius: 999px;
+    background: rgba(255,248,240,.045);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.07),
+      0 20px 44px -20px rgba(0,0,0,.7);
+    transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .notify:focus-within {
+    border-color: rgba(242,179,102,.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.09),
+      0 0 0 4px rgba(242,179,102,.10),
+      0 20px 44px -20px rgba(0,0,0,.7);
+  }
+  .notify input {
+    flex: 1; min-width: 0;
+    background: transparent; border: 0; outline: 0;
+    color: var(--ink); font-size: 16px; font-family: var(--sans);
+    padding: 12px 14px 12px 16px; letter-spacing: .005em;
+  }
+  .notify input::placeholder { color: var(--muted); }
+  .notify button {
+    flex: none; cursor: pointer; border: 0;
+    font-family: var(--display); font-weight: 700; font-size: 15px;
+    letter-spacing: -0.01em; color: #16110B;
+    padding: 12px 22px; border-radius: 999px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F1E9DC 100%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 6px 16px -4px rgba(0,0,0,.5);
+    transition: transform .25s var(--ease), box-shadow .3s var(--ease), filter .25s var(--ease);
+  }
+  .notify button:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 10px 24px -6px rgba(242,179,102,.45); filter: brightness(1.03); }
+  .notify button:active { transform: translateY(0); }
+  .notify button:disabled { opacity: .55; cursor: default; transform: none; }
+  .status { min-height: 20px; margin-top: 15px; font-size: 13.5px; color: var(--muted); letter-spacing: .01em; }
+  .status.ok { color: #9BE3B4; }
+  .status.err { color: #F0A9A0; }
+  /* ---------- footer ---------- */
+  .foot {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 3;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    padding: 18px; font-family: var(--mono);
+    font-size: 11.5px; letter-spacing: .04em; color: var(--faint);
+    text-transform: uppercase;
+  }
+  .foot a { color: var(--faint); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color .3s var(--ease); }
+  .foot a:hover { color: var(--gold); }
+  .foot .sep { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
+  .foot svg { width: 14px; height: 14px; fill: currentColor; }
+  @media (max-width: 460px) { .foot .hide-sm { display: none; } }
+  @media (orientation: landscape) and (max-height: 560px) {
+    .wrap { padding: 20px 22px 40px; }
+    .cat { width: min(132px, 30vh); animation: none; }
+    .wordmark { font-size: clamp(26px, 4vw, 40px); margin-top: 6px; }
+    .tagline { margin-top: 8px; font-size: 14px; }
+    .coming { margin-top: 10px; font-size: clamp(20px, 3vw, 30px); }
+    .notify { margin-top: 16px; }
+    .foot { position: static; margin-top: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cat, .wordmark .dot { animation: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="flow" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main class="wrap">
+  <img class="cat" src="cat.webp" width="316" height="316"
+       alt="A fluffy ginger cat, the OpenMeow mascot, gazing calmly at you" />
+
+  <h1 class="wordmark"><span class="open">Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></h1>
+
+  <p class="tagline">See your agents work.</p>
+
+  <div class="coming">Coming&nbsp;soon</div>
+
+  <form class="notify" id="notify" novalidate>
+    <label for="email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your email address</label>
+    <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
+           placeholder="Get notified at launch" aria-describedby="status" />
+    <button type="submit">Notify&nbsp;me</button>
+  </form>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</main>
+
+<footer class="foot">
+  <span>Open-source agent observability</span>
+  <span class="sep hide-sm" aria-hidden="true"></span>
+  <a class="hide-sm" href="https://github.com/EverythingHertz" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    GitHub
+  </a>
+  <span class="sep" aria-hidden="true"></span>
+  <span>© 2026 OpenMeow</span>
+</footer>
+
+<script>
+/* ============================================================
+   1. WARM REACTIVE LATTICE — subtle, sits behind the glow
+   ============================================================ */
+(() => {
+  const canvas = document.getElementById('flow');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, DPR, cols, rows, pts;
+  const GAP = 50;
+  const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, speed: 0, on: false, w: 0 };
+  let idle = false;
+
+  function resize() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    cols = Math.ceil(W / GAP) + 3;
+    rows = Math.ceil(H / GAP) + 3;
+    pts = [];
+    for (let j = 0; j < rows; j++)
+      for (let i = 0; i < cols; i++)
+        pts.push({ ox: (i - 1) * GAP, oy: (j - 1) * GAP, x: 0, y: 0 });
+  }
+  resize();
+  addEventListener('resize', () => { resize(); wake(); if (reduceMotion) requestAnimationFrame(step); });
+
+  function wake() { if (idle) { idle = false; requestAnimationFrame(step); } }
+  function track(x, y) {
+    mouse.px = mouse.x; mouse.py = mouse.y;
+    mouse.x = x; mouse.y = y;
+    mouse.speed = mouse.px < -999 ? 0 : Math.min(60, Math.hypot(x - mouse.px, y - mouse.py));
+    mouse.on = true; wake();
+  }
+  addEventListener('pointermove', e => track(e.clientX, e.clientY), { passive: true });
+  addEventListener('touchmove', e => { const t = e.touches[0]; if (t) track(t.clientX, t.clientY); }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => { mouse.on = false; });
+
+  function flowAngle(x, y, t) {
+    return Math.sin(x * 0.0015 + t * 0.00020) * 1.6
+         + Math.cos(y * 0.0020 - t * 0.00016) * 1.3
+         + Math.sin((x + y) * 0.0009 + t * 0.00010) * 1.0;
+  }
+  const RADIUS = 208, RADIUS2 = RADIUS * RADIUS;
+
+  function step(t) {
+    const amp = reduceMotion ? 0 : 6.5;
+    mouse.w += ((mouse.on ? 1 : 0) - mouse.w) * 0.09;
+    for (const p of pts) {
+      const a = flowAngle(p.ox, p.oy, t);
+      let dx = Math.cos(a) * amp;
+      let dy = Math.sin(a * 1.3) * amp;
+      const mx = p.ox - mouse.x, my = p.oy - mouse.y;
+      const d2 = mx * mx + my * my;
+      if (d2 < RADIUS2) {
+        const d = Math.sqrt(d2) || 1;
+        const f = (1 - d / RADIUS);
+        const push = f * f * (22 + mouse.speed * 0.85) * mouse.w;
+        dx += (mx / d) * push; dy += (my / d) * push;
+      }
+      p.x = p.ox + dx; p.y = p.oy + dy;
+    }
+    ctx.clearRect(0, 0, W, H);
+    for (let j = 0; j < rows; j++) {
+      ctx.beginPath();
+      for (let i = 0; i < cols; i++) { const p = pts[j * cols + i]; i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); }
+      const g = j / rows;
+      ctx.strokeStyle = `rgba(240,182,112,${0.028 + 0.03 * Math.sin(g * Math.PI)})`;
+      ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let i = 0; i < cols; i++) {
+      ctx.beginPath();
+      for (let j = 0; j < rows; j++) { const p = pts[j * cols + i]; j === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); }
+      const g = i / cols;
+      ctx.strokeStyle = `rgba(226,142,92,${0.026 + 0.03 * Math.sin(g * Math.PI)})`;
+      ctx.lineWidth = 1; ctx.stroke();
+    }
+    if (mouse.w > 0.01) {
+      for (const p of pts) {
+        const mx = p.ox - mouse.x, my = p.oy - mouse.y;
+        const d2 = mx * mx + my * my;
+        if (d2 < RADIUS2 * 0.6) {
+          const f = 1 - Math.sqrt(d2) / (RADIUS * 0.78);
+          ctx.fillStyle = `rgba(255,205,130,${f * 0.5 * mouse.w})`;
+          ctx.beginPath(); ctx.arc(p.x, p.y, 1 + f * 1.5, 0, 7); ctx.fill();
+        }
+      }
+      const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, RADIUS);
+      g.addColorStop(0, `rgba(255,172,92,${.055 * mouse.w})`);
+      g.addColorStop(1, 'rgba(255,172,92,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(mouse.x - RADIUS, mouse.y - RADIUS, RADIUS * 2, RADIUS * 2);
+    }
+    mouse.speed *= 0.92;
+    if (reduceMotion && mouse.w < 0.01) { idle = true; } else { requestAnimationFrame(step); }
+  }
+  requestAnimationFrame(step);
+})();
+
+/* ============================================================
+   2. DEPTH — gentle cursor parallax on cat + glow, plus float
+   ============================================================ */
+(() => {
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cat = document.querySelector('.cat');
+  const glow = document.querySelector('.glow');
+  if (rm) return;
+  cat.style.animation = 'none';
+  let tx = 0, ty = 0, x = 0, y = 0;
+  const aim = (cx, cy) => { tx = (cx / innerWidth - .5) * 2; ty = (cy / innerHeight - .5) * 2; };
+  addEventListener('pointermove', e => aim(e.clientX, e.clientY), { passive: true });
+  addEventListener('touchmove', e => { const t = e.touches[0]; if (t) aim(t.clientX, t.clientY); }, { passive: true });
+  (function loop(now) {
+    x += (tx - x) * .045; y += (ty - y) * .045;
+    const bob = Math.sin(now * 0.00088) * 9;
+    cat.style.transform = `translate(${(-x * 9).toFixed(2)}px, ${(-y * 5 + bob).toFixed(2)}px)`;
+    glow.style.transform = `translate(${(x * 13).toFixed(2)}px, ${(y * 9).toFixed(2)}px)`;
+    requestAnimationFrame(loop);
+  })(0);
+})();
+
+/* ============================================================
+   3. EMAIL CAPTURE
+   ============================================================ */
+(() => {
+  const NOTIFY_ENDPOINT = "";
+  const form = document.getElementById('notify');
+  const input = document.getElementById('email');
+  const status = document.getElementById('status');
+  const btn = form.querySelector('button');
+  const valid = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = input.value.trim();
+    status.className = 'status';
+    if (!valid(email)) { status.textContent = 'Please enter a valid email address.'; status.classList.add('err'); input.focus(); return; }
+    btn.disabled = true; status.textContent = 'Adding you…';
+    try {
+      if (NOTIFY_ENDPOINT) {
+        const r = await fetch(NOTIFY_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        if (!r.ok) throw new Error('bad');
+      } else { await new Promise(r => setTimeout(r, 500)); }
+      form.reset();
+      status.textContent = "You're on the list — we'll meow when it's live.";
+      status.className = 'status ok';
+    } catch (err) {
+      status.textContent = 'Something went wrong. Please try again.';
+      status.className = 'status err';
+    } finally { btn.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>
