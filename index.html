@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenMeow — See your agents work. Coming soon.</title>
+<meta name="description" content="OpenMeow is the open visual monitoring layer for AI agents. Every process registers as a cat. Coming soon." />
+<meta property="og:title" content="OpenMeow — coming soon" />
+<meta property="og:description" content="See your agents work. Every AI process registers as a cat." />
+<meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3DlCVdjo8RXELA5Sxeob2Uxh8GX/hf_20260712_003556_e5dfaba6-f5db-49e9-8797-6530e8ebc540.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#06080F" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #06080F;
+    --surface: #0D1119;
+    --card: #131825;
+    --border: #1E2535;
+    --emerald: #34D399;
+    --sky: #38BDF8;
+    --violet: #A78BFA;
+    --rose: #F43F5E;
+    --amber: #FBBF24;
+    --text: #F0F2F5;
+    --muted: #7A8494;
+    --dim: #3E4756;
+    --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, system-ui, sans-serif;
+    --display: 'Space Grotesk', 'Inter', -apple-system, system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #flow {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    display: block; z-index: 0;
+  }
+  .vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 120% 90% at 50% 40%, transparent 40%, rgba(3,5,10,.55) 100%),
+      linear-gradient(180deg, rgba(6,8,15,.35) 0%, transparent 22%, transparent 70%, rgba(6,8,15,.7) 100%);
+  }
+  .wrap {
+    position: relative; z-index: 2;
+    min-height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 48px 24px 96px;
+  }
+  .coming {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(44px, 11vw, 138px);
+    letter-spacing: -0.05em; line-height: 0.98;
+    text-transform: none; white-space: nowrap;
+    background: linear-gradient(105deg, #E8FBF3 0%, var(--emerald) 38%, var(--sky) 72%, var(--violet) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: sheen 9s ease-in-out infinite;
+    filter: drop-shadow(0 0 42px rgba(52,211,153,.22));
+    margin-top: 40px;
+  }
+  .eyes { width: min(400px, 72vw); margin-bottom: 4px; filter: drop-shadow(0 0 30px rgba(52,211,153,.28)); }
+  @keyframes sheen { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+  .wordmark {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(44px, 7vw, 88px);
+    letter-spacing: -0.045em; line-height: 1;
+    margin: 26px 0 0; user-select: none;
+    display: flex; align-items: baseline; justify-content: center;
+  }
+  .wordmark .open { color: var(--text); }
+  .wordmark .meow {
+    background: linear-gradient(100deg, var(--emerald) 0%, #2EC4A6 55%, var(--sky) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+  .wordmark::after {
+    content: ''; align-self: baseline;
+    width: 0.13em; height: 0.13em; margin-left: 0.10em;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 14px rgba(52,211,153,.8), 0 0 34px rgba(52,211,153,.35);
+    animation: dotPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%,100% { opacity: .85; }
+    50%     { opacity: .45; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .coming { animation: none; } .wordmark::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="flow" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<main class="wrap">
+  <svg class="eyes" id="eyes" viewBox="0 0 360 130" role="img" aria-label="Two calm glowing cat eyes">
+    <defs>
+      <radialGradient id="irisGrad" cx="50%" cy="42%" r="70%">
+        <stop offset="0%"  stop-color="#A5F3D6"/>
+        <stop offset="38%" stop-color="#52E3AE"/>
+        <stop offset="70%" stop-color="#2BC493"/>
+        <stop offset="90%" stop-color="#0D8A63"/>
+        <stop offset="100%" stop-color="#075E45"/>
+      </radialGradient>
+      <radialGradient id="pupilGrad" cx="50%" cy="44%" r="62%">
+        <stop offset="0%"  stop-color="#0E2A20"/>
+        <stop offset="72%" stop-color="#061510"/>
+        <stop offset="100%" stop-color="#040D09"/>
+      </radialGradient>
+      <linearGradient id="hood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="rgba(6,8,15,.92)"/>
+        <stop offset="100%" stop-color="rgba(6,8,15,0)"/>
+      </linearGradient>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="soft" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="14"/>
+      </filter>
+      <path id="eyeShape" d="M -68,0 C -46,-36 46,-36 68,0 C 46,36 -46,36 -68,0 Z"/>
+      <clipPath id="clipL"><use href="#eyeShape" transform="translate(95,65)"/></clipPath>
+      <clipPath id="clipR"><use href="#eyeShape" transform="translate(265,65)"/></clipPath>
+    </defs>
+    <ellipse cx="95"  cy="68" rx="80" ry="44" fill="rgba(52,211,153,.09)" filter="url(#soft)"/>
+    <ellipse cx="265" cy="68" rx="80" ry="44" fill="rgba(52,211,153,.09)" filter="url(#soft)"/>
+    <ellipse cx="180" cy="70" rx="60" ry="30" fill="rgba(167,139,250,.05)" filter="url(#soft)"/>
+    <g clip-path="url(#clipL)">
+      <use href="#eyeShape" transform="translate(95,65)" fill="#0A0E16"/>
+      <g id="irisL">
+        <circle cx="95" cy="65" r="34" fill="url(#irisGrad)"/>
+        <path d="M 74 51 A 28 28 0 0 1 112 45" fill="none" stroke="rgba(235,255,246,.6)" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M 112 82 A 26 26 0 0 1 80 84" fill="none" stroke="rgba(235,255,246,.16)" stroke-width="2" stroke-linecap="round"/>
+        <ellipse id="pupilL" cx="95" cy="65" rx="9.5" ry="19" fill="url(#pupilGrad)"/>
+      </g>
+      <path d="M 27 29 L 163 29 L 163 46 C 130 34 60 34 27 46 Z" fill="url(#hood)"/>
+      <path id="lidTopL" fill="#06080F" d=""/>
+      <path id="lidBotL" fill="#06080F" d=""/>
+    </g>
+    <use href="#eyeShape" transform="translate(95,65)" fill="none" stroke="rgba(52,211,153,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeL"/>
+    <g clip-path="url(#clipR)">
+      <use href="#eyeShape" transform="translate(265,65)" fill="#0A0E16"/>
+      <g id="irisR">
+        <circle cx="265" cy="65" r="34" fill="url(#irisGrad)"/>
+        <path d="M 244 51 A 28 28 0 0 1 282 45" fill="none" stroke="rgba(235,255,246,.6)" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M 282 82 A 26 26 0 0 1 250 84" fill="none" stroke="rgba(235,255,246,.16)" stroke-width="2" stroke-linecap="round"/>
+        <ellipse id="pupilR" cx="265" cy="65" rx="9.5" ry="19" fill="url(#pupilGrad)"/>
+      </g>
+      <path d="M 197 29 L 333 29 L 333 46 C 300 34 230 34 197 46 Z" fill="url(#hood)"/>
+      <path id="lidTopR" fill="#06080F" d=""/>
+      <path id="lidBotR" fill="#06080F" d=""/>
+    </g>
+    <use href="#eyeShape" transform="translate(265,65)" fill="none" stroke="rgba(52,211,153,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeR"/>
+  </svg>
+  <h1 class="wordmark"><span class="open">Open</span><span class="meow">Meow</span></h1>
+  <div class="coming">Coming&nbsp;soon</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
