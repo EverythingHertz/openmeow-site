@@ -27,13 +27,14 @@
     --gold: #F2B366;
     --gold-hi: #FFD9A0;
     --hair: rgba(255,232,205,.10);
-    --hair-2: rgba(255,232,205,.18);
     --display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
     --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
     --ease: cubic-bezier(.22,1,.36,1);
+    --ease-out: cubic-bezier(.16,1,.3,1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  ::selection { background: rgba(242,179,102,.28); color: #FFF6E9; }
   html, body { height: 100%; overscroll-behavior: none; }
   body {
     background: var(--bg);
@@ -43,9 +44,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  /* mouse-reactive warm lattice */
   #flow { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
-  /* warm ambient light behind the cat */
   .glow {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
     background:
@@ -63,7 +62,9 @@
     align-items: center; justify-content: center;
     text-align: center; padding: 56px 22px 92px;
   }
-  /* ---------- hero cat ---------- */
+  .reveal { opacity: 0; animation: rise .9s var(--ease-out) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  .cat-wrap { position: relative; display: block; line-height: 0; animation-delay: .04s; }
   .cat {
     width: min(316px, 56vw);
     aspect-ratio: 1 / 1;
@@ -71,19 +72,20 @@
     will-change: transform;
     animation: float 7.5s var(--ease) infinite;
     filter:
-      drop-shadow(0 2px 1px rgba(0,0,0,.5))
-      drop-shadow(0 30px 42px rgba(0,0,0,.5))
-      drop-shadow(0 0 70px rgba(255,150,80,.16));
+      drop-shadow(0 2px 1px rgba(0,0,0,.55))
+      drop-shadow(0 18px 24px rgba(0,0,0,.42))
+      drop-shadow(0 44px 60px rgba(0,0,0,.4))
+      drop-shadow(0 0 76px rgba(255,150,80,.17));
   }
   @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
-  /* ---------- wordmark ---------- */
   .wordmark {
     font-family: var(--display); font-weight: 700;
     font-size: clamp(33px, 7vw, 76px);
     letter-spacing: -0.05em; line-height: 1;
-    margin-top: 10px; user-select: none;
+    margin-top: 12px; user-select: none;
     display: flex; align-items: baseline; justify-content: center;
     filter: drop-shadow(0 6px 24px rgba(0,0,0,.45));
+    animation-delay: .16s;
   }
   .wordmark .open { color: var(--ink); }
   .wordmark .meow {
@@ -99,30 +101,32 @@
     animation: pulse 3s var(--ease) infinite;
   }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.9); } }
-  /* ---------- tagline ---------- */
   .tagline {
     margin-top: 16px;
     font-family: var(--sans); font-weight: 400;
     font-size: clamp(15px, 2vw, 19px);
     letter-spacing: 0.005em; color: var(--muted);
+    animation-delay: .27s;
   }
-  /* ---------- coming soon ---------- */
   .coming {
     margin-top: 22px;
     font-family: var(--display); font-weight: 600;
     font-size: clamp(23px, 4.2vw, 46px);
     letter-spacing: -0.02em; line-height: 1;
-    background: linear-gradient(180deg, #FFFDF9 0%, #EDE4D6 100%);
+    background: linear-gradient(100deg, #E7DECF 0%, #FBF5EA 42%, #FFFFFF 50%, #FBF5EA 58%, #E7DECF 100%);
+    background-size: 260% 100%;
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
     filter: drop-shadow(0 4px 18px rgba(0,0,0,.35));
+    animation: rise .9s var(--ease-out) both, sheen 7s var(--ease) 1s infinite;
+    animation-delay: .37s, 0s;
   }
-  /* ---------- email capture ---------- */
+  @keyframes sheen { 0% { background-position: 130% 0; } 55%,100% { background-position: -30% 0; } }
   .notify {
     margin-top: 30px;
     display: flex; align-items: center; gap: 6px;
     width: min(432px, 92vw);
-    padding: 6px 6px 6px 6px;
+    padding: 6px;
     border: 1px solid var(--hair);
     border-radius: 999px;
     background: rgba(255,248,240,.045);
@@ -132,6 +136,7 @@
       inset 0 1px 0 rgba(255,255,255,.07),
       0 20px 44px -20px rgba(0,0,0,.7);
     transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+    animation-delay: .49s;
   }
   .notify:focus-within {
     border-color: rgba(242,179,102,.45);
@@ -158,20 +163,22 @@
   }
   .notify button:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 10px 24px -6px rgba(242,179,102,.45); filter: brightness(1.03); }
   .notify button:active { transform: translateY(0); }
+  .notify button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
   .notify button:disabled { opacity: .55; cursor: default; transform: none; }
   .status { min-height: 20px; margin-top: 15px; font-size: 13.5px; color: var(--muted); letter-spacing: .01em; }
   .status.ok { color: #9BE3B4; }
   .status.err { color: #F0A9A0; }
-  /* ---------- footer ---------- */
   .foot {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 3;
     display: flex; align-items: center; justify-content: center; gap: 14px;
     padding: 18px; font-family: var(--mono);
     font-size: 11.5px; letter-spacing: .04em; color: var(--faint);
     text-transform: uppercase;
+    animation-delay: .72s;
   }
-  .foot a { color: var(--faint); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color .3s var(--ease); }
+  .foot a { color: var(--faint); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border-radius: 6px; transition: color .3s var(--ease); }
   .foot a:hover { color: var(--gold); }
+  .foot a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
   .foot .sep { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
   .foot svg { width: 14px; height: 14px; fill: currentColor; }
   @media (max-width: 460px) { .foot .hide-sm { display: none; } }
@@ -185,7 +192,9 @@
     .foot { position: static; margin-top: 18px; }
   }
   @media (prefers-reduced-motion: reduce) {
+    .reveal, .coming { animation: none !important; opacity: 1 !important; transform: none !important; }
     .cat, .wordmark .dot { animation: none; }
+    .coming { background-position: 50% 0; }
   }
 </style>
 </head>
@@ -193,18 +202,15 @@
 <canvas id="flow" aria-hidden="true"></canvas>
 <div class="glow" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
-
 <main class="wrap">
-  <img class="cat" src="cat.webp" width="316" height="316"
-       alt="A fluffy ginger cat, the OpenMeow mascot, gazing calmly at you" />
-
-  <h1 class="wordmark"><span class="open">Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></h1>
-
-  <p class="tagline">See your agents work.</p>
-
+  <span class="cat-wrap reveal">
+    <img class="cat" src="cat.webp" width="316" height="316"
+         alt="A fluffy ginger cat, the OpenMeow mascot, gazing calmly at you" />
+  </span>
+  <h1 class="wordmark reveal"><span class="open">Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></h1>
+  <p class="tagline reveal">See your agents work.</p>
   <div class="coming">Coming&nbsp;soon</div>
-
-  <form class="notify" id="notify" novalidate>
+  <form class="notify reveal" id="notify" novalidate>
     <label for="email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your email address</label>
     <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
            placeholder="Get notified at launch" aria-describedby="status" />
@@ -212,8 +218,7 @@
   </form>
   <p class="status" id="status" role="status" aria-live="polite"></p>
 </main>
-
-<footer class="foot">
+<footer class="foot reveal">
   <span>Open-source agent observability</span>
   <span class="sep hide-sm" aria-hidden="true"></span>
   <a class="hide-sm" href="https://github.com/EverythingHertz" target="_blank" rel="noopener noreferrer">
@@ -223,11 +228,7 @@
   <span class="sep" aria-hidden="true"></span>
   <span>© 2026 OpenMeow</span>
 </footer>
-
 <script>
-/* ============================================================
-   1. WARM REACTIVE LATTICE — subtle, sits behind the glow
-   ============================================================ */
 (() => {
   const canvas = document.getElementById('flow');
   const ctx = canvas.getContext('2d');
@@ -236,7 +237,6 @@
   const GAP = 50;
   const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, speed: 0, on: false, w: 0 };
   let idle = false;
-
   function resize() {
     DPR = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
@@ -251,7 +251,6 @@
   }
   resize();
   addEventListener('resize', () => { resize(); wake(); if (reduceMotion) requestAnimationFrame(step); });
-
   function wake() { if (idle) { idle = false; requestAnimationFrame(step); } }
   function track(x, y) {
     mouse.px = mouse.x; mouse.py = mouse.y;
@@ -262,14 +261,12 @@
   addEventListener('pointermove', e => track(e.clientX, e.clientY), { passive: true });
   addEventListener('touchmove', e => { const t = e.touches[0]; if (t) track(t.clientX, t.clientY); }, { passive: true });
   document.documentElement.addEventListener('pointerleave', () => { mouse.on = false; });
-
   function flowAngle(x, y, t) {
     return Math.sin(x * 0.0015 + t * 0.00020) * 1.6
          + Math.cos(y * 0.0020 - t * 0.00016) * 1.3
          + Math.sin((x + y) * 0.0009 + t * 0.00010) * 1.0;
   }
   const RADIUS = 208, RADIUS2 = RADIUS * RADIUS;
-
   function step(t) {
     const amp = reduceMotion ? 0 : 6.5;
     mouse.w += ((mouse.on ? 1 : 0) - mouse.w) * 0.09;
@@ -323,10 +320,6 @@
   }
   requestAnimationFrame(step);
 })();
-
-/* ============================================================
-   2. DEPTH — gentle cursor parallax on cat + glow, plus float
-   ============================================================ */
 (() => {
   const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cat = document.querySelector('.cat');
@@ -345,11 +338,10 @@
     requestAnimationFrame(loop);
   })(0);
 })();
-
-/* ============================================================
-   3. EMAIL CAPTURE
-   ============================================================ */
 (() => {
+  // To collect real emails, set NOTIFY_ENDPOINT to your form service URL
+  // (e.g. a Formspree endpoint "https://formspree.io/f/xxxxxxx"). Until then,
+  // the form validates and shows the success state without sending anywhere.
   const NOTIFY_ENDPOINT = "";
   const form = document.getElementById('notify');
   const input = document.getElementById('email');
@@ -364,16 +356,23 @@
     btn.disabled = true; status.textContent = 'Adding you…';
     try {
       if (NOTIFY_ENDPOINT) {
-        const r = await fetch(NOTIFY_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        const r = await fetch(NOTIFY_ENDPOINT, {
+          method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
         if (!r.ok) throw new Error('bad');
-      } else { await new Promise(r => setTimeout(r, 500)); }
+      } else {
+        await new Promise(r => setTimeout(r, 500));
+      }
       form.reset();
       status.textContent = "You're on the list — we'll meow when it's live.";
       status.className = 'status ok';
     } catch (err) {
       status.textContent = 'Something went wrong. Please try again.';
       status.className = 'status err';
-    } finally { btn.disabled = false; }
+    } finally {
+      btn.disabled = false;
+    }
   });
 })();
 </script>
