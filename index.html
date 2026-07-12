@@ -5,34 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>OpenMeow — See your agents work. Coming soon.</title>
 <meta name="description" content="OpenMeow is the open visual monitoring layer for AI agents. Every process registers as a cat. Coming soon." />
-<meta property="og:title" content="OpenMeow — coming soon" />
+<meta property="og:title" content="OpenMeow — Coming soon" />
 <meta property="og:description" content="See your agents work. Every AI process registers as a cat." />
-<meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3DlCVdjo8RXELA5Sxeob2Uxh8GX/hf_20260712_003556_e5dfaba6-f5db-49e9-8797-6530e8ebc540.png" />
+<meta property="og:image" content="https://openmeow.io/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://openmeow.io/" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="theme-color" content="#06080F" />
+<meta name="twitter:image" content="https://openmeow.io/og.jpg" />
+<meta name="theme-color" content="#0E0B0A" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='54' r='30' fill='%23F0A16A'/><path d='M25 34 L30 12 L46 28 Z M75 34 L70 12 L54 28 Z' fill='%23F0A16A'/><circle cx='40' cy='52' r='4' fill='%231a1210'/><circle cx='60' cy='52' r='4' fill='%231a1210'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #06080F;
-    --surface: #0D1119;
-    --card: #131825;
-    --border: #1E2535;
-    --emerald: #34D399;
-    --sky: #38BDF8;
-    --violet: #A78BFA;
-    --rose: #F43F5E;
-    --amber: #FBBF24;
-    --text: #F0F2F5;
-    --muted: #7A8494;
-    --dim: #3E4756;
-    --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-    --sans: 'Inter', -apple-system, system-ui, sans-serif;
-    --display: 'Space Grotesk', 'Inter', -apple-system, system-ui, sans-serif;
+    --bg: #0E0B0A;
+    --text: #F5F0EA;
+    --muted: #A5988C;
+    --line: rgba(255,236,214,.14);
+    --display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --sans: -apple-system, system-ui, 'Segoe UI', sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; }
+  html, body { height: 100%; overscroll-behavior: none; }
   body {
     background: var(--bg);
     color: var(--text);
@@ -40,165 +36,179 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
-  #flow {
-    position: fixed; inset: 0; width: 100%; height: 100%;
-    display: block; z-index: 0;
-  }
-  .vignette {
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  .glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 120% 90% at 50% 40%, transparent 40%, rgba(3,5,10,.55) 100%),
-      linear-gradient(180deg, rgba(6,8,15,.35) 0%, transparent 22%, transparent 70%, rgba(6,8,15,.7) 100%);
+      radial-gradient(48% 40% at 50% 32%, rgba(255,168,92,.20) 0%, rgba(255,140,70,.07) 40%, transparent 70%),
+      radial-gradient(120% 90% at 50% 40%, transparent 46%, rgba(4,3,2,.55) 100%);
   }
+  .grain { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   .wrap {
     position: relative; z-index: 2;
     min-height: 100svh;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center; padding: 48px 24px 96px;
+    text-align: center; padding: 40px 22px 72px;
   }
-  .coming {
-    font-family: var(--display); font-weight: 700;
-    font-size: clamp(44px, 11vw, 138px);
-    letter-spacing: -0.05em; line-height: 0.98;
-    text-transform: none; white-space: nowrap;
-    background: linear-gradient(105deg, #FBF4DC 0%, #EAC54F 34%, #E879F9 70%, var(--violet) 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent; color: transparent;
-    animation: sheen 9s ease-in-out infinite;
+  .cat {
+    width: min(340px, 60vw);
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
     will-change: transform;
-    filter: drop-shadow(0 30px 46px rgba(0,0,0,.62)) drop-shadow(0 0 38px rgba(234,197,79,.13));
-    margin-top: 40px;
+    animation: float 7s ease-in-out infinite;
+    filter: drop-shadow(0 26px 40px rgba(0,0,0,.5)) drop-shadow(0 0 60px rgba(255,150,80,.18));
+    margin-bottom: 0;
   }
-  .eyes { width: min(300px, 56vw); margin-bottom: 0; will-change: transform;
-    filter: drop-shadow(0 26px 28px rgba(0,0,0,.62)) drop-shadow(0 0 26px rgba(228,190,90,.2)); }
-  @keyframes sheen { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
   .wordmark {
-    will-change: transform;
-    filter: drop-shadow(0 16px 22px rgba(0,0,0,.58));
     font-family: var(--display); font-weight: 700;
-    font-size: clamp(44px, 7vw, 88px);
+    font-size: clamp(28px, 6.4vw, 74px);
     letter-spacing: -0.045em; line-height: 1;
-    margin: 26px 0 0; user-select: none;
+    margin-top: 2px; user-select: none;
     display: flex; align-items: baseline; justify-content: center;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,.45));
   }
   .wordmark .open { color: var(--text); }
   .wordmark .meow {
-    background: linear-gradient(100deg, #F0ABFC 0%, #E879F9 48%, #D426C9 100%);
+    background: linear-gradient(100deg, #B79CFF 0%, #C084FC 46%, #E879F9 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
   }
   .wordmark::after {
     content: ''; align-self: baseline;
-    width: 0.13em; height: 0.13em; margin-left: 0.10em;
+    width: 0.12em; height: 0.12em; margin-left: 0.04em;
     border-radius: 50%;
-    background: #EAC54F;
-    box-shadow: 0 0 14px rgba(234,197,79,.8), 0 0 34px rgba(234,197,79,.35);
+    background: #F0A16A;
+    box-shadow: 0 0 14px rgba(240,161,106,.85), 0 0 30px rgba(240,161,106,.4);
     animation: dotPulse 3.2s ease-in-out infinite;
   }
-  @keyframes dotPulse {
-    0%,100% { opacity: .85; }
-    50%     { opacity: .45; }
+  @keyframes dotPulse { 0%,100% { opacity: .9; } 50% { opacity: .45; } }
+  .coming {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 10vw, 116px);
+    letter-spacing: -0.05em; line-height: 0.98;
+    white-space: nowrap; margin-top: 14px;
+    background: linear-gradient(102deg, #F8E3A6 0%, #F4B980 26%, #F07EA6 52%, #E879F9 74%, #B79CFF 100%);
+    background-size: 120% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: sheen 9s ease-in-out infinite;
+    filter: drop-shadow(0 16px 30px rgba(0,0,0,.5));
+  }
+  @keyframes sheen { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+  .notify {
+    margin-top: 30px;
+    display: flex; align-items: center; gap: 6px;
+    width: min(430px, 92vw);
+    padding: 6px 6px 6px 4px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255,246,236,.04);
+    backdrop-filter: blur(6px);
+    transition: border-color .25s ease, box-shadow .25s ease;
+  }
+  .notify:focus-within { border-color: rgba(224,140,220,.5); box-shadow: 0 0 0 4px rgba(200,120,240,.10); }
+  .notify input {
+    flex: 1; min-width: 0;
+    background: transparent; border: 0; outline: 0;
+    color: var(--text); font-size: 16px; font-family: var(--sans);
+    padding: 12px 16px;
+  }
+  .notify input::placeholder { color: var(--muted); }
+  .notify button {
+    flex: none; cursor: pointer; border: 0;
+    font-family: var(--display); font-weight: 700; font-size: 15px;
+    letter-spacing: -0.01em; color: #fff;
+    padding: 12px 22px; border-radius: 999px;
+    background: linear-gradient(135deg, #C084FC 0%, #9333EA 100%);
+    box-shadow: 0 6px 18px rgba(147,51,234,.4);
+    transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+  }
+  .notify button:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(147,51,234,.5); }
+  .notify button:active { transform: translateY(0); }
+  .notify button:disabled { opacity: .6; cursor: default; transform: none; }
+  .status { min-height: 20px; margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .status.ok { color: #86EFAC; }
+  .status.err { color: #FCA5A5; }
+  @media (orientation: landscape) and (max-height: 560px) {
+    .wrap { padding: 16px 22px 22px; }
+    .cat { width: min(150px, 34vh); animation: none; margin-bottom: 2px; }
+    .wordmark { font-size: clamp(24px, 3.8vw, 40px); }
+    .coming { font-size: clamp(32px, 5.6vw, 56px); margin-top: 8px; }
+    .notify { margin-top: 14px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .coming { animation: none; } .wordmark::after { animation: none; }
+    .cat, .coming, .wordmark::after { animation: none; }
   }
 </style>
 </head>
 <body>
-<canvas id="flow" aria-hidden="true"></canvas>
-<div class="vignette" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
 <main class="wrap">
-  <svg class="eyes" id="eyes" viewBox="0 0 360 310" role="img" aria-label="Cat head silhouette with calm glowing eyes">
-    <defs>
-      <radialGradient id="irisGrad" cx="50%" cy="42%" r="70%">
-        <stop offset="0%"  stop-color="#F6EEC7"/>
-        <stop offset="38%" stop-color="#EBD68C"/>
-        <stop offset="70%" stop-color="#DDBB5E"/>
-        <stop offset="90%" stop-color="#A98432"/>
-        <stop offset="100%" stop-color="#6E5520"/>
-      </radialGradient>
-      <radialGradient id="pupilGrad" cx="50%" cy="44%" r="62%">
-        <stop offset="0%"  stop-color="#241D0B"/>
-        <stop offset="72%" stop-color="#120E05"/>
-        <stop offset="100%" stop-color="#0A0803"/>
-      </radialGradient>
-      <linearGradient id="hood" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="rgba(9,11,20,.9)"/>
-        <stop offset="100%" stop-color="rgba(9,11,20,0)"/>
-      </linearGradient>
-      <radialGradient id="headSheen" cx="50%" cy="30%" r="75%">
-        <stop offset="0%"  stop-color="#111527"/>
-        <stop offset="60%" stop-color="#0C0F1C"/>
-        <stop offset="100%" stop-color="#090B14"/>
-      </radialGradient>
-      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-        <feGaussianBlur stdDeviation="6" result="b"/>
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="soft" x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="14"/>
-      </filter>
-      <path id="eyeShape" d="M -68,0 C -46,-36 46,-36 68,0 C 46,36 -46,36 -68,0 Z"/>
-      <clipPath id="clipL"><use href="#eyeShape" transform="translate(95,65)"/></clipPath>
-      <clipPath id="clipR"><use href="#eyeShape" transform="translate(265,65)"/></clipPath>
-      <path id="headPath" d="M 180 292
-        C 122 292, 80 262, 63 214
-        C 53 186, 51 152, 57 120
-        L 46 40
-        C 45 31, 54 26, 61 32
-        L 114 76
-        C 134 61, 156 53, 180 53
-        C 204 53, 226 61, 246 76
-        L 299 32
-        C 306 26, 315 31, 314 40
-        L 303 120
-        C 309 152, 307 186, 297 214
-        C 280 262, 238 292, 180 292 Z"/>
-    </defs>
-    <ellipse cx="180" cy="160" rx="150" ry="120" fill="rgba(228,190,90,.05)" filter="url(#soft)"/>
-    <use href="#headPath" fill="url(#headSheen)"/>
-    <use href="#headPath" fill="none" stroke="rgba(228,190,90,.14)" stroke-width="1.4" filter="url(#glow)"/>
-    <path d="M 62 44 L 104 79 L 72 96 Z" fill="rgba(228,190,90,.05)"/>
-    <path d="M 298 44 L 256 79 L 288 96 Z" fill="rgba(228,190,90,.05)"/>
-    <path d="M 172 224 L 188 224 L 180 234 Z" fill="rgba(228,190,90,.10)"/>
-    <g transform="translate(126,158) scale(0.60) translate(-95,-65)">
-      <ellipse cx="95" cy="68" rx="80" ry="44" fill="rgba(228,190,90,.10)" filter="url(#soft)"/>
-      <g clip-path="url(#clipL)">
-        <use href="#eyeShape" transform="translate(95,65)" fill="#0A0E16"/>
-        <g id="irisL">
-          <circle cx="95" cy="65" r="30.5" fill="url(#irisGrad)"/>
-          <path d="M 76 52.5 A 25 25 0 0 1 110 47" fill="none" stroke="rgba(255,250,232,.6)" stroke-width="2.6" stroke-linecap="round"/>
-          <path d="M 110 80.5 A 23 23 0 0 1 81.5 82" fill="none" stroke="rgba(255,250,232,.16)" stroke-width="2" stroke-linecap="round"/>
-          <ellipse id="pupilL" cx="95" cy="65" rx="8.5" ry="17" fill="url(#pupilGrad)"/>
-        </g>
-        <path d="M 27 29 L 163 29 L 163 46 C 130 34 60 34 27 46 Z" fill="url(#hood)"/>
-        <path id="lidTopL" fill="#0C0F1C" d=""/>
-        <path id="lidBotL" fill="#0C0F1C" d=""/>
-      </g>
-      <use href="#eyeShape" transform="translate(95,65)" fill="none" stroke="rgba(228,190,90,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeL"/>
-    </g>
-    <g transform="translate(234,158) scale(0.60) translate(-265,-65)">
-      <ellipse cx="265" cy="68" rx="80" ry="44" fill="rgba(228,190,90,.10)" filter="url(#soft)"/>
-      <g clip-path="url(#clipR)">
-        <use href="#eyeShape" transform="translate(265,65)" fill="#0A0E16"/>
-        <g id="irisR">
-          <circle cx="265" cy="65" r="30.5" fill="url(#irisGrad)"/>
-          <path d="M 246 52.5 A 25 25 0 0 1 280 47" fill="none" stroke="rgba(255,250,232,.6)" stroke-width="2.6" stroke-linecap="round"/>
-          <path d="M 280 80.5 A 23 23 0 0 1 251.5 82" fill="none" stroke="rgba(255,250,232,.16)" stroke-width="2" stroke-linecap="round"/>
-          <ellipse id="pupilR" cx="265" cy="65" rx="8.5" ry="17" fill="url(#pupilGrad)"/>
-        </g>
-        <path d="M 197 29 L 333 29 L 333 46 C 300 34 230 34 197 46 Z" fill="url(#hood)"/>
-        <path id="lidTopR" fill="#0C0F1C" d=""/>
-        <path id="lidBotR" fill="#0C0F1C" d=""/>
-      </g>
-      <use href="#eyeShape" transform="translate(265,65)" fill="none" stroke="rgba(228,190,90,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeR"/>
-    </g>
-  </svg>
+  <img class="cat" src="cat.webp" width="360" height="360"
+       alt="A fluffy ginger cat, the OpenMeow mascot, gazing calmly at you" />
+
   <h1 class="wordmark"><span class="open">Open</span><span class="meow">Meow</span></h1>
+
   <div class="coming">Coming&nbsp;soon</div>
+
+  <form class="notify" id="notify" novalidate>
+    <label for="email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your email address</label>
+    <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
+           placeholder="Notify your email" aria-describedby="status" />
+    <button type="submit">Notify&nbsp;Me</button>
+  </form>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
 </main>
-<script src="app.js"></script>
+
+<script>
+(() => {
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cat = document.querySelector('.cat');
+  const glow = document.querySelector('.glow');
+  if (!rm) {
+    cat.style.animation = 'none';
+    let tx = 0, ty = 0, x = 0, y = 0;
+    const aim = (cx, cy) => { tx = (cx / innerWidth - .5) * 2; ty = (cy / innerHeight - .5) * 2; };
+    addEventListener('pointermove', e => aim(e.clientX, e.clientY), { passive: true });
+    addEventListener('touchmove', e => { const t = e.touches[0]; if (t) aim(t.clientX, t.clientY); }, { passive: true });
+    (function loop(now) {
+      x += (tx - x) * .05; y += (ty - y) * .05;
+      const bob = Math.sin(now * 0.00095) * 10;
+      cat.style.transform = `translate(${(-x*10).toFixed(2)}px, ${(-y*6 + bob).toFixed(2)}px)`;
+      glow.style.transform = `translate(${(x*14).toFixed(2)}px, ${(y*10).toFixed(2)}px)`;
+      requestAnimationFrame(loop);
+    })(0);
+  }
+  const NOTIFY_ENDPOINT = "";
+  const form = document.getElementById('notify');
+  const input = document.getElementById('email');
+  const status = document.getElementById('status');
+  const btn = form.querySelector('button');
+  const valid = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = input.value.trim();
+    status.className = 'status';
+    if (!valid(email)) { status.textContent = 'Please enter a valid email address.'; status.classList.add('err'); input.focus(); return; }
+    btn.disabled = true; status.textContent = 'Adding you...';
+    try {
+      if (NOTIFY_ENDPOINT) {
+        const r = await fetch(NOTIFY_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        if (!r.ok) throw new Error('bad');
+      } else { await new Promise(r => setTimeout(r, 500)); }
+      form.reset();
+      status.textContent = "You're on the list — we'll meow when it's live.";
+      status.className = 'status ok';
+    } catch (err) {
+      status.textContent = 'Something went wrong. Please try again.';
+      status.className = 'status err';
+    } finally { btn.disabled = false; }
+  });
+})();
+</script>
 </body>
 </html>
