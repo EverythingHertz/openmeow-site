@@ -62,17 +62,21 @@
     font-size: clamp(44px, 11vw, 138px);
     letter-spacing: -0.05em; line-height: 0.98;
     text-transform: none; white-space: nowrap;
-    background: linear-gradient(105deg, #E8FBF3 0%, var(--emerald) 38%, var(--sky) 72%, var(--violet) 100%);
+    background: linear-gradient(105deg, #FBF4DC 0%, #EAC54F 34%, #E879F9 70%, var(--violet) 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
     animation: sheen 9s ease-in-out infinite;
-    filter: drop-shadow(0 0 42px rgba(52,211,153,.22));
+    will-change: transform;
+    filter: drop-shadow(0 30px 46px rgba(0,0,0,.62)) drop-shadow(0 0 38px rgba(234,197,79,.13));
     margin-top: 40px;
   }
-  .eyes { width: min(400px, 72vw); margin-bottom: 4px; filter: drop-shadow(0 0 30px rgba(52,211,153,.28)); }
+  .eyes { width: min(300px, 56vw); margin-bottom: 0; will-change: transform;
+    filter: drop-shadow(0 26px 28px rgba(0,0,0,.62)) drop-shadow(0 0 26px rgba(228,190,90,.2)); }
   @keyframes sheen { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
   .wordmark {
+    will-change: transform;
+    filter: drop-shadow(0 16px 22px rgba(0,0,0,.58));
     font-family: var(--display); font-weight: 700;
     font-size: clamp(44px, 7vw, 88px);
     letter-spacing: -0.045em; line-height: 1;
@@ -81,7 +85,7 @@
   }
   .wordmark .open { color: var(--text); }
   .wordmark .meow {
-    background: linear-gradient(100deg, var(--emerald) 0%, #2EC4A6 55%, var(--sky) 100%);
+    background: linear-gradient(100deg, #F0ABFC 0%, #E879F9 48%, #D426C9 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
   }
@@ -89,8 +93,8 @@
     content: ''; align-self: baseline;
     width: 0.13em; height: 0.13em; margin-left: 0.10em;
     border-radius: 50%;
-    background: var(--emerald);
-    box-shadow: 0 0 14px rgba(52,211,153,.8), 0 0 34px rgba(52,211,153,.35);
+    background: #EAC54F;
+    box-shadow: 0 0 14px rgba(234,197,79,.8), 0 0 34px rgba(234,197,79,.35);
     animation: dotPulse 3.2s ease-in-out infinite;
   }
   @keyframes dotPulse {
@@ -106,24 +110,29 @@
 <canvas id="flow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 <main class="wrap">
-  <svg class="eyes" id="eyes" viewBox="0 0 360 130" role="img" aria-label="Two calm glowing cat eyes">
+  <svg class="eyes" id="eyes" viewBox="0 0 360 310" role="img" aria-label="Cat head silhouette with calm glowing eyes">
     <defs>
       <radialGradient id="irisGrad" cx="50%" cy="42%" r="70%">
-        <stop offset="0%"  stop-color="#A5F3D6"/>
-        <stop offset="38%" stop-color="#52E3AE"/>
-        <stop offset="70%" stop-color="#2BC493"/>
-        <stop offset="90%" stop-color="#0D8A63"/>
-        <stop offset="100%" stop-color="#075E45"/>
+        <stop offset="0%"  stop-color="#F6EEC7"/>
+        <stop offset="38%" stop-color="#EBD68C"/>
+        <stop offset="70%" stop-color="#DDBB5E"/>
+        <stop offset="90%" stop-color="#A98432"/>
+        <stop offset="100%" stop-color="#6E5520"/>
       </radialGradient>
       <radialGradient id="pupilGrad" cx="50%" cy="44%" r="62%">
-        <stop offset="0%"  stop-color="#0E2A20"/>
-        <stop offset="72%" stop-color="#061510"/>
-        <stop offset="100%" stop-color="#040D09"/>
+        <stop offset="0%"  stop-color="#241D0B"/>
+        <stop offset="72%" stop-color="#120E05"/>
+        <stop offset="100%" stop-color="#0A0803"/>
       </radialGradient>
       <linearGradient id="hood" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="rgba(6,8,15,.92)"/>
-        <stop offset="100%" stop-color="rgba(6,8,15,0)"/>
+        <stop offset="0%"   stop-color="rgba(9,11,20,.9)"/>
+        <stop offset="100%" stop-color="rgba(9,11,20,0)"/>
       </linearGradient>
+      <radialGradient id="headSheen" cx="50%" cy="30%" r="75%">
+        <stop offset="0%"  stop-color="#111527"/>
+        <stop offset="60%" stop-color="#0C0F1C"/>
+        <stop offset="100%" stop-color="#090B14"/>
+      </radialGradient>
       <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
         <feGaussianBlur stdDeviation="6" result="b"/>
         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -134,36 +143,58 @@
       <path id="eyeShape" d="M -68,0 C -46,-36 46,-36 68,0 C 46,36 -46,36 -68,0 Z"/>
       <clipPath id="clipL"><use href="#eyeShape" transform="translate(95,65)"/></clipPath>
       <clipPath id="clipR"><use href="#eyeShape" transform="translate(265,65)"/></clipPath>
+      <path id="headPath" d="M 180 292
+        C 122 292, 80 262, 63 214
+        C 53 186, 51 152, 57 120
+        L 46 40
+        C 45 31, 54 26, 61 32
+        L 114 76
+        C 134 61, 156 53, 180 53
+        C 204 53, 226 61, 246 76
+        L 299 32
+        C 306 26, 315 31, 314 40
+        L 303 120
+        C 309 152, 307 186, 297 214
+        C 280 262, 238 292, 180 292 Z"/>
     </defs>
-    <ellipse cx="95"  cy="68" rx="80" ry="44" fill="rgba(52,211,153,.09)" filter="url(#soft)"/>
-    <ellipse cx="265" cy="68" rx="80" ry="44" fill="rgba(52,211,153,.09)" filter="url(#soft)"/>
-    <ellipse cx="180" cy="70" rx="60" ry="30" fill="rgba(167,139,250,.05)" filter="url(#soft)"/>
-    <g clip-path="url(#clipL)">
-      <use href="#eyeShape" transform="translate(95,65)" fill="#0A0E16"/>
-      <g id="irisL">
-        <circle cx="95" cy="65" r="30.5" fill="url(#irisGrad)"/>
-        <path d="M 76 52.5 A 25 25 0 0 1 110 47" fill="none" stroke="rgba(235,255,246,.6)" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M 110 80.5 A 23 23 0 0 1 81.5 82" fill="none" stroke="rgba(235,255,246,.16)" stroke-width="2" stroke-linecap="round"/>
-        <ellipse id="pupilL" cx="95" cy="65" rx="8.5" ry="17" fill="url(#pupilGrad)"/>
+    <ellipse cx="180" cy="160" rx="150" ry="120" fill="rgba(228,190,90,.05)" filter="url(#soft)"/>
+    <use href="#headPath" fill="url(#headSheen)"/>
+    <use href="#headPath" fill="none" stroke="rgba(228,190,90,.14)" stroke-width="1.4" filter="url(#glow)"/>
+    <path d="M 62 44 L 104 79 L 72 96 Z" fill="rgba(228,190,90,.05)"/>
+    <path d="M 298 44 L 256 79 L 288 96 Z" fill="rgba(228,190,90,.05)"/>
+    <path d="M 172 224 L 188 224 L 180 234 Z" fill="rgba(228,190,90,.10)"/>
+    <g transform="translate(126,158) scale(0.60) translate(-95,-65)">
+      <ellipse cx="95" cy="68" rx="80" ry="44" fill="rgba(228,190,90,.10)" filter="url(#soft)"/>
+      <g clip-path="url(#clipL)">
+        <use href="#eyeShape" transform="translate(95,65)" fill="#0A0E16"/>
+        <g id="irisL">
+          <circle cx="95" cy="65" r="30.5" fill="url(#irisGrad)"/>
+          <path d="M 76 52.5 A 25 25 0 0 1 110 47" fill="none" stroke="rgba(255,250,232,.6)" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M 110 80.5 A 23 23 0 0 1 81.5 82" fill="none" stroke="rgba(255,250,232,.16)" stroke-width="2" stroke-linecap="round"/>
+          <ellipse id="pupilL" cx="95" cy="65" rx="8.5" ry="17" fill="url(#pupilGrad)"/>
+        </g>
+        <path d="M 27 29 L 163 29 L 163 46 C 130 34 60 34 27 46 Z" fill="url(#hood)"/>
+        <path id="lidTopL" fill="#0C0F1C" d=""/>
+        <path id="lidBotL" fill="#0C0F1C" d=""/>
       </g>
-      <path d="M 27 29 L 163 29 L 163 46 C 130 34 60 34 27 46 Z" fill="url(#hood)"/>
-      <path id="lidTopL" fill="#06080F" d=""/>
-      <path id="lidBotL" fill="#06080F" d=""/>
+      <use href="#eyeShape" transform="translate(95,65)" fill="none" stroke="rgba(228,190,90,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeL"/>
     </g>
-    <use href="#eyeShape" transform="translate(95,65)" fill="none" stroke="rgba(52,211,153,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeL"/>
-    <g clip-path="url(#clipR)">
-      <use href="#eyeShape" transform="translate(265,65)" fill="#0A0E16"/>
-      <g id="irisR">
-        <circle cx="265" cy="65" r="30.5" fill="url(#irisGrad)"/>
-        <path d="M 246 52.5 A 25 25 0 0 1 280 47" fill="none" stroke="rgba(235,255,246,.6)" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M 280 80.5 A 23 23 0 0 1 251.5 82" fill="none" stroke="rgba(235,255,246,.16)" stroke-width="2" stroke-linecap="round"/>
-        <ellipse id="pupilR" cx="265" cy="65" rx="8.5" ry="17" fill="url(#pupilGrad)"/>
+    <g transform="translate(234,158) scale(0.60) translate(-265,-65)">
+      <ellipse cx="265" cy="68" rx="80" ry="44" fill="rgba(228,190,90,.10)" filter="url(#soft)"/>
+      <g clip-path="url(#clipR)">
+        <use href="#eyeShape" transform="translate(265,65)" fill="#0A0E16"/>
+        <g id="irisR">
+          <circle cx="265" cy="65" r="30.5" fill="url(#irisGrad)"/>
+          <path d="M 246 52.5 A 25 25 0 0 1 280 47" fill="none" stroke="rgba(255,250,232,.6)" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M 280 80.5 A 23 23 0 0 1 251.5 82" fill="none" stroke="rgba(255,250,232,.16)" stroke-width="2" stroke-linecap="round"/>
+          <ellipse id="pupilR" cx="265" cy="65" rx="8.5" ry="17" fill="url(#pupilGrad)"/>
+        </g>
+        <path d="M 197 29 L 333 29 L 333 46 C 300 34 230 34 197 46 Z" fill="url(#hood)"/>
+        <path id="lidTopR" fill="#0C0F1C" d=""/>
+        <path id="lidBotR" fill="#0C0F1C" d=""/>
       </g>
-      <path d="M 197 29 L 333 29 L 333 46 C 300 34 230 34 197 46 Z" fill="url(#hood)"/>
-      <path id="lidTopR" fill="#06080F" d=""/>
-      <path id="lidBotR" fill="#06080F" d=""/>
+      <use href="#eyeShape" transform="translate(265,65)" fill="none" stroke="rgba(228,190,90,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeR"/>
     </g>
-    <use href="#eyeShape" transform="translate(265,65)" fill="none" stroke="rgba(52,211,153,.42)" stroke-width="1.6" filter="url(#glow)" id="strokeR"/>
   </svg>
   <h1 class="wordmark"><span class="open">Open</span><span class="meow">Meow</span></h1>
   <div class="coming">Coming&nbsp;soon</div>

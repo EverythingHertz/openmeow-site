@@ -34,6 +34,7 @@
   }
   const RADIUS = 220, RADIUS2 = RADIUS * RADIUS;
   function step(t) {
+    // ambient flow + mouse warp
     const amp = reduceMotion ? 0 : 8;
     for (const p of pts) {
       const a = flowAngle(p.ox, p.oy, t);
@@ -51,6 +52,7 @@
       p.x = p.ox + dx; p.y = p.oy + dy;
     }
     ctx.clearRect(0, 0, W, H);
+    // vertical-ish + horizontal-ish curved lines through displaced lattice
     for (let j = 0; j < rows; j++) {
       ctx.beginPath();
       for (let i = 0; i < cols; i++) {
@@ -58,7 +60,7 @@
         i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
       }
       const glow = j / rows;
-      ctx.strokeStyle = `rgba(52, 211, 153, ${0.05 + 0.05 * Math.sin(glow * Math.PI)})`;
+      ctx.strokeStyle = `rgba(228, 190, 90, ${0.04 + 0.04 * Math.sin(glow * Math.PI)})`;
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -73,21 +75,23 @@
       ctx.lineWidth = 1;
       ctx.stroke();
     }
+    // luminous node dots near the cursor
     if (mouse.x > -999) {
       for (const p of pts) {
         const mx = p.ox - mouse.x, my = p.oy - mouse.y;
         const d2 = mx * mx + my * my;
         if (d2 < RADIUS2 * 0.66) {
           const f = 1 - Math.sqrt(d2) / (RADIUS * 0.81);
-          ctx.fillStyle = `rgba(52, 211, 153, ${f * 0.55})`;
+          ctx.fillStyle = `rgba(234, 197, 79, ${f * 0.5})`;
           ctx.beginPath();
           ctx.arc(p.x, p.y, 1.1 + f * 1.6, 0, 7);
           ctx.fill();
         }
       }
+      // cursor halo
       const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, RADIUS);
-      g.addColorStop(0, 'rgba(52,211,153,.07)');
-      g.addColorStop(1, 'rgba(52,211,153,0)');
+      g.addColorStop(0, 'rgba(217,70,239,.055)');
+      g.addColorStop(1, 'rgba(217,70,239,0)');
       ctx.fillStyle = g;
       ctx.fillRect(mouse.x - RADIUS, mouse.y - RADIUS, RADIUS * 2, RADIUS * 2);
     }
@@ -152,11 +156,32 @@
       e.iris.setAttribute('transform', `translate(${ix.toFixed(2)}, ${iy.toFixed(2)})`);
       e.pupil.setAttribute('rx', prx.toFixed(2));
       e.pupil.setAttribute('ry', pry.toFixed(2));
-      e.stroke.setAttribute('stroke', `rgba(52,211,153,${breathe.toFixed(3)})`);
+      e.stroke.setAttribute('stroke', `rgba(228,190,90,${breathe.toFixed(3)})`);
       e.lidT.setAttribute('d', lidTop(e.cx, state.blink));
       e.lidB.setAttribute('d', lidBot(e.cx, state.blink));
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+(() => {
+  const els = [
+    { el: document.querySelector('.eyes'),     depth: 14, bob: 5, ph: 0   },
+    { el: document.querySelector('.wordmark'), depth: 8,  bob: 3, ph: 1.7 },
+    { el: document.querySelector('.coming'),   depth: 4,  bob: 2, ph: 3.2 },
+  ];
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let tx = 0, ty = 0, x = 0, y = 0;
+  addEventListener('pointermove', e => {
+    tx = (e.clientX / innerWidth  - .5) * 2;
+    ty = (e.clientY / innerHeight - .5) * 2;
+  }, { passive: true });
+  (function loop(now) {
+    x += (tx - x) * .06; y += (ty - y) * .06;
+    for (const o of els) {
+      const bob = rm ? 0 : Math.sin(now * .0006 + o.ph) * o.bob;
+      o.el.style.transform = `translate3d(${(-x * o.depth).toFixed(2)}px, ${(-y * o.depth * .6 + bob).toFixed(2)}px, 0)`;
+    }
+    requestAnimationFrame(loop);
+  })(0);
 })();
