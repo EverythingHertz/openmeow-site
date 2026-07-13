@@ -122,59 +122,13 @@
     animation-delay: .37s, 0s;
   }
   @keyframes sheen { 0% { background-position: 130% 0; } 55%,100% { background-position: -30% 0; } }
-  .notify {
-    margin-top: 30px;
-    display: flex; align-items: center; gap: 6px;
-    width: min(432px, 92vw);
-    padding: 6px;
-    border: 1px solid var(--hair);
-    border-radius: 999px;
-    background: rgba(255,248,240,.045);
-    backdrop-filter: blur(14px) saturate(1.1);
-    -webkit-backdrop-filter: blur(14px) saturate(1.1);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.07),
-      0 20px 44px -20px rgba(0,0,0,.7);
-    transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
-    animation-delay: .49s;
-  }
-  .notify:focus-within {
-    border-color: rgba(242,179,102,.45);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.09),
-      0 0 0 4px rgba(242,179,102,.10),
-      0 20px 44px -20px rgba(0,0,0,.7);
-  }
-  .notify input {
-    flex: 1; min-width: 0;
-    background: transparent; border: 0; outline: 0;
-    color: var(--ink); font-size: 16px; font-family: var(--sans);
-    padding: 12px 14px 12px 16px; letter-spacing: .005em;
-  }
-  .notify input::placeholder { color: var(--muted); }
-  .notify button {
-    flex: none; cursor: pointer; border: 0;
-    font-family: var(--display); font-weight: 700; font-size: 15px;
-    letter-spacing: -0.01em; color: #16110B;
-    padding: 12px 22px; border-radius: 999px;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F1E9DC 100%);
-    box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 6px 16px -4px rgba(0,0,0,.5);
-    transition: transform .25s var(--ease), box-shadow .3s var(--ease), filter .25s var(--ease);
-  }
-  .notify button:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 10px 24px -6px rgba(242,179,102,.45); filter: brightness(1.03); }
-  .notify button:active { transform: translateY(0); }
-  .notify button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-  .notify button:disabled { opacity: .55; cursor: default; transform: none; }
-  .status { min-height: 20px; margin-top: 15px; font-size: 13.5px; color: var(--muted); letter-spacing: .01em; }
-  .status.ok { color: #9BE3B4; }
-  .status.err { color: #F0A9A0; }
   .foot {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 3;
     display: flex; align-items: center; justify-content: center; gap: 14px;
     padding: 18px; font-family: var(--mono);
     font-size: 11.5px; letter-spacing: .04em; color: var(--faint);
     text-transform: uppercase;
-    animation-delay: .72s;
+    animation-delay: .52s;
   }
   .foot a { color: var(--faint); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border-radius: 6px; transition: color .3s var(--ease); }
   .foot a:hover { color: var(--gold); }
@@ -188,7 +142,6 @@
     .wordmark { font-size: clamp(26px, 4vw, 40px); margin-top: 6px; }
     .tagline { margin-top: 8px; font-size: 14px; }
     .coming { margin-top: 10px; font-size: clamp(20px, 3vw, 30px); }
-    .notify { margin-top: 16px; }
     .foot { position: static; margin-top: 18px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -210,13 +163,6 @@
   <h1 class="wordmark reveal"><span class="open">Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></h1>
   <p class="tagline reveal">See your agents work.</p>
   <div class="coming">Coming&nbsp;soon</div>
-  <form class="notify reveal" id="notify" novalidate>
-    <label for="email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your email address</label>
-    <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
-           placeholder="Get notified at launch" aria-describedby="status" />
-    <button type="submit">Notify&nbsp;me</button>
-  </form>
-  <p class="status" id="status" role="status" aria-live="polite"></p>
 </main>
 <footer class="foot reveal">
   <span>Open-source agent observability</span>
@@ -337,43 +283,6 @@
     glow.style.transform = `translate(${(x * 13).toFixed(2)}px, ${(y * 9).toFixed(2)}px)`;
     requestAnimationFrame(loop);
   })(0);
-})();
-(() => {
-  // To collect real emails, set NOTIFY_ENDPOINT to your form service URL
-  // (e.g. a Formspree endpoint "https://formspree.io/f/xxxxxxx"). Until then,
-  // the form validates and shows the success state without sending anywhere.
-  const NOTIFY_ENDPOINT = "";
-  const form = document.getElementById('notify');
-  const input = document.getElementById('email');
-  const status = document.getElementById('status');
-  const btn = form.querySelector('button');
-  const valid = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = input.value.trim();
-    status.className = 'status';
-    if (!valid(email)) { status.textContent = 'Please enter a valid email address.'; status.classList.add('err'); input.focus(); return; }
-    btn.disabled = true; status.textContent = 'Adding you…';
-    try {
-      if (NOTIFY_ENDPOINT) {
-        const r = await fetch(NOTIFY_ENDPOINT, {
-          method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        if (!r.ok) throw new Error('bad');
-      } else {
-        await new Promise(r => setTimeout(r, 500));
-      }
-      form.reset();
-      status.textContent = "You're on the list — we'll meow when it's live.";
-      status.className = 'status ok';
-    } catch (err) {
-      status.textContent = 'Something went wrong. Please try again.';
-      status.className = 'status err';
-    } finally {
-      btn.disabled = false;
-    }
-  });
 })();
 </script>
 </body>
