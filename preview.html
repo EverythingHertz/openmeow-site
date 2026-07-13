@@ -78,6 +78,13 @@
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
     mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
   }
+  .parade::before {
+    content: ''; position: absolute; inset: -6% 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(74% 42% at 50% 84%, rgba(218,180,134,.17) 0%, rgba(218,180,134,.06) 52%, transparent 76%),
+      radial-gradient(64% 30% at 50% 10%, rgba(218,180,134,.09) 0%, transparent 70%),
+      linear-gradient(180deg, transparent 68%, rgba(8,5,3,.4) 100%);
+  }
   .row { position: absolute; left: 0; right: 0; overflow: hidden; }
   .row-far { top: 2%; z-index: 1; --tw: clamp(74px, 12.5vw, 128px); opacity: .62; filter: saturate(.85) brightness(.82) blur(.4px); }
   .row-near { bottom: 3.5%; z-index: 2; --tw: clamp(112px, 19vw, 186px); }
@@ -87,8 +94,8 @@
     animation: var(--slide) linear infinite;
     will-change: transform;
   }
-  .row-near .track { --slide: slideL 64s; }
-  .row-far .track { --slide: slideR 88s; }
+  .row-near .track { --slide: slideL 136s; }
+  .row-far .track { --slide: slideR 188s; }
   .row:hover .track { animation-play-state: paused; }
   @keyframes slideL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   @keyframes slideR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
@@ -104,11 +111,12 @@
   .tile img {
     width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%;
     object-fit: cover;
-    -webkit-mask-image: radial-gradient(circle, #000 57%, transparent 73%);
-    mask-image: radial-gradient(circle, #000 57%, transparent 73%);
+    -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 78%);
+    mask-image: radial-gradient(circle, #000 52%, transparent 78%);
     filter:
-      drop-shadow(0 10px 22px rgba(0,0,0,.55))
-      drop-shadow(0 0 30px rgba(51,214,200,.13));
+      drop-shadow(0 10px 22px rgba(0,0,0,.5))
+      drop-shadow(0 0 34px rgba(222,176,120,.13))
+      drop-shadow(0 0 18px rgba(51,214,200,.07));
   }
   .tile .led {
     width: 5px; height: 5px; border-radius: 50%;
@@ -142,25 +150,6 @@
       drop-shadow(0 48px 74px rgba(0,0,0,.5))
       drop-shadow(0 0 54px rgba(255,150,80,.24))
       drop-shadow(0 0 110px rgba(255,140,70,.17));
-  }
-  .orch {
-    position: absolute; left: 50%; bottom: -8px;
-    transform: translateX(-50%);
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--mono); font-size: clamp(9px, 1vw, 11.5px);
-    letter-spacing: .09em; color: #C9B18F; text-transform: uppercase;
-    padding: .36em .75em; border-radius: 999px;
-    background: rgba(22,16,11,.78);
-    border: 1px solid rgba(255,208,150,.16);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    white-space: nowrap;
-  }
-  .orch .dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--gold);
-    box-shadow: 0 0 8px rgba(242,179,102,.95);
-    animation: beat 2.2s var(--ease) infinite;
   }
   .wordmark {
     font-family: var(--display); font-weight: 700;
@@ -211,7 +200,7 @@
     .reveal, .coming, .tile { animation: none !important; opacity: 1 !important; transform: none !important; }
     .cat-wrap { animation: none !important; opacity: 1 !important; transform: translate(-50%, 0) !important; }
     .track { animation: none !important; }
-    .tile .led, .orch .dot, .wordmark .dotp { animation: none; }
+    .tile .led, .wordmark .dotp { animation: none; }
     .coming { background-position: 50% 0; }
   }
 </style>
@@ -221,7 +210,7 @@
 <div class="glow" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <main class="wrap">
-  <div class="parade" role="img" aria-label="A ginger cat orchestrator in front of a flowing panel of its AI agent team — the same cat dressed as a scientist, developer, judge, artist, security guard, doctor, detective, writer, chef, professor, librarian, and mission control">
+  <div class="parade" role="img" aria-label="A ginger cat orchestrator in front of a flowing panel of its AI agent team — the same cat dressed for thirty different jobs, from scientist and developer to judge, firefighter, magician, and fortune teller">
     <div class="row row-far" aria-hidden="true">
       <div class="track">
         <div class="tile"><img src="b-detective.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
@@ -231,6 +220,14 @@
         <div class="tile"><img src="c-librarian.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="b-ops.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-aviator.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-mailcat.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-photographer.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-miner.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-fortune.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-beekeeper.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-lifeguard.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-gardener.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-archaeologist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="b-detective.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-chef.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="b-scribe.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
@@ -238,6 +235,14 @@
         <div class="tile"><img src="c-librarian.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="b-ops.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-aviator.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-mailcat.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-photographer.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-miner.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-fortune.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-beekeeper.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-lifeguard.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-gardener.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-archaeologist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
       </div>
     </div>
     <div class="row row-near" aria-hidden="true">
@@ -249,6 +254,14 @@
         <div class="tile"><img src="c-guard.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-doctor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-toolsmith.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-firefighter.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-referee.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-magician.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-banker.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-conductor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-butler.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-operator.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-janitor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="b-scientist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="b-dev.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-judge.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
@@ -256,12 +269,19 @@
         <div class="tile"><img src="c-guard.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-doctor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
         <div class="tile"><img src="c-toolsmith.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-firefighter.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-referee.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-magician.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="d-banker.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-conductor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-butler.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-operator.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="e-janitor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
       </div>
     </div>
     <span class="cat-wrap">
       <img class="cat" src="cat.webp" width="316" height="316"
            alt="A fluffy ginger cat, the OpenMeow orchestrator, gazing calmly at you" />
-      <span class="orch"><span class="dot" aria-hidden="true"></span>Orchestrator</span>
     </span>
   </div>
   <h1 class="wordmark reveal"><span class="open">Open</span><span class="meow">Meow</span><span class="dotp" aria-hidden="true"></span></h1>
