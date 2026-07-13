@@ -51,7 +51,7 @@
   .glow {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
     background:
-      radial-gradient(46% 38% at 50% 30%, rgba(255,170,94,.16) 0%, rgba(255,138,66,.05) 42%, transparent 72%),
+      radial-gradient(48% 40% at 50% 30%, rgba(255,176,100,.22) 0%, rgba(255,140,68,.07) 42%, transparent 72%),
       radial-gradient(130% 100% at 50% 42%, transparent 44%, rgba(3,2,1,.62) 100%);
   }
   .grain {
@@ -63,7 +63,7 @@
     min-height: 100svh;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center; padding: 56px 22px 92px;
+    text-align: center; padding: 56px 22px 56px;
   }
   .reveal { opacity: 0; animation: rise .9s var(--ease-out) both; }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
@@ -75,10 +75,11 @@
     will-change: transform;
     animation: float 7.5s var(--ease) infinite;
     filter:
-      drop-shadow(0 2px 1px rgba(0,0,0,.55))
-      drop-shadow(0 18px 24px rgba(0,0,0,.42))
-      drop-shadow(0 44px 60px rgba(0,0,0,.4))
-      drop-shadow(0 0 76px rgba(255,150,80,.17));
+      drop-shadow(0 3px 2px rgba(0,0,0,.6))
+      drop-shadow(0 20px 30px rgba(0,0,0,.5))
+      drop-shadow(0 48px 74px rgba(0,0,0,.46))
+      drop-shadow(0 0 54px rgba(255,150,80,.22))
+      drop-shadow(0 0 110px rgba(255,140,70,.16));
   }
   @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
   .wordmark {
@@ -87,7 +88,7 @@
     letter-spacing: -0.05em; line-height: 1;
     margin-top: 12px; user-select: none;
     display: flex; align-items: baseline; justify-content: center;
-    filter: drop-shadow(0 6px 24px rgba(0,0,0,.45));
+    filter: drop-shadow(0 8px 28px rgba(0,0,0,.55));
     animation-delay: .16s;
   }
   .wordmark .open { color: var(--ink); }
@@ -95,6 +96,7 @@
     background: linear-gradient(178deg, var(--teal-hi) 0%, var(--teal) 55%, var(--teal-lo) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
+    filter: drop-shadow(0 0 22px rgba(51,214,200,.5)) drop-shadow(0 3px 12px rgba(51,214,200,.28));
   }
   .wordmark .dot {
     align-self: baseline; margin-left: 0.05em;
@@ -109,35 +111,20 @@
     font-family: var(--display); font-weight: 600;
     font-size: clamp(23px, 4.2vw, 46px);
     letter-spacing: -0.02em; line-height: 1;
-    background: linear-gradient(100deg, #E7DECF 0%, #FBF5EA 42%, #FFFFFF 50%, #FBF5EA 58%, #E7DECF 100%);
+    background: linear-gradient(100deg, #34E0D0 0%, #7DF0EA 22%, #EAFEFF 50%, #93E0FF 74%, #46B4F2 100%);
     background-size: 260% 100%;
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
-    filter: drop-shadow(0 4px 18px rgba(0,0,0,.35));
+    filter: drop-shadow(0 4px 18px rgba(0,0,0,.4)) drop-shadow(0 0 26px rgba(79,208,232,.42));
     animation: rise .9s var(--ease-out) both, sheen 7s var(--ease) 1s infinite;
     animation-delay: .30s, 0s;
   }
   @keyframes sheen { 0% { background-position: 130% 0; } 55%,100% { background-position: -30% 0; } }
-  .foot {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 3;
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    padding: 18px; font-family: var(--mono);
-    font-size: 11.5px; letter-spacing: .04em; color: var(--faint);
-    text-transform: uppercase;
-    animation-delay: .46s;
-  }
-  .foot a { color: var(--faint); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border-radius: 6px; transition: color .3s var(--ease); }
-  .foot a:hover { color: var(--teal); }
-  .foot a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
-  .foot .sep { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
-  .foot svg { width: 14px; height: 14px; fill: currentColor; }
-  @media (max-width: 460px) { .foot .hide-sm { display: none; } }
   @media (orientation: landscape) and (max-height: 560px) {
     .wrap { padding: 20px 22px 40px; }
     .cat { width: min(132px, 30vh); animation: none; }
     .wordmark { font-size: clamp(26px, 4vw, 40px); margin-top: 6px; }
     .coming { margin-top: 10px; font-size: clamp(20px, 3vw, 30px); }
-    .foot { position: static; margin-top: 18px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .reveal, .coming { animation: none !important; opacity: 1 !important; transform: none !important; }
@@ -158,16 +145,6 @@
   <h1 class="wordmark reveal"><span class="open">Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></h1>
   <div class="coming">Coming&nbsp;soon</div>
 </main>
-<footer class="foot reveal">
-  <span>Open-source agent observability</span>
-  <span class="sep hide-sm" aria-hidden="true"></span>
-  <a class="hide-sm" href="https://github.com/EverythingHertz" target="_blank" rel="noopener noreferrer">
-    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    GitHub
-  </a>
-  <span class="sep" aria-hidden="true"></span>
-  <span>© 2026 OpenMeow</span>
-</footer>
 <script>
 (() => {
   const canvas = document.getElementById('flow');
