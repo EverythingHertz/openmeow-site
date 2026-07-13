@@ -26,6 +26,9 @@
     --faint: #6A6157;
     --gold: #F2B366;
     --gold-hi: #FFD9A0;
+    --teal-hi: #86F1E7;
+    --teal: #33D6C8;
+    --teal-lo: #15AEA4;
     --hair: rgba(255,232,205,.10);
     --display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
@@ -34,7 +37,7 @@
     --ease-out: cubic-bezier(.16,1,.3,1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  ::selection { background: rgba(242,179,102,.28); color: #FFF6E9; }
+  ::selection { background: rgba(51,214,200,.30); color: #EAFFFB; }
   html, body { height: 100%; overscroll-behavior: none; }
   body {
     background: var(--bg);
@@ -89,27 +92,20 @@
   }
   .wordmark .open { color: var(--ink); }
   .wordmark .meow {
-    background: linear-gradient(178deg, var(--gold-hi) 0%, var(--gold) 55%, #DA9740 100%);
+    background: linear-gradient(178deg, var(--teal-hi) 0%, var(--teal) 55%, var(--teal-lo) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
   }
   .wordmark .dot {
     align-self: baseline; margin-left: 0.05em;
     width: 0.115em; height: 0.115em; border-radius: 50%;
-    background: var(--gold);
-    box-shadow: 0 0 12px rgba(242,179,102,.9), 0 0 26px rgba(242,179,102,.45);
+    background: var(--teal);
+    box-shadow: 0 0 12px rgba(51,214,200,.9), 0 0 26px rgba(51,214,200,.45);
     animation: pulse 3s var(--ease) infinite;
   }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.9); } }
-  .tagline {
-    margin-top: 16px;
-    font-family: var(--sans); font-weight: 400;
-    font-size: clamp(15px, 2vw, 19px);
-    letter-spacing: 0.005em; color: var(--muted);
-    animation-delay: .27s;
-  }
   .coming {
-    margin-top: 22px;
+    margin-top: 30px;
     font-family: var(--display); font-weight: 600;
     font-size: clamp(23px, 4.2vw, 46px);
     letter-spacing: -0.02em; line-height: 1;
@@ -119,7 +115,7 @@
     -webkit-text-fill-color: transparent; color: transparent;
     filter: drop-shadow(0 4px 18px rgba(0,0,0,.35));
     animation: rise .9s var(--ease-out) both, sheen 7s var(--ease) 1s infinite;
-    animation-delay: .37s, 0s;
+    animation-delay: .30s, 0s;
   }
   @keyframes sheen { 0% { background-position: 130% 0; } 55%,100% { background-position: -30% 0; } }
   .foot {
@@ -128,11 +124,11 @@
     padding: 18px; font-family: var(--mono);
     font-size: 11.5px; letter-spacing: .04em; color: var(--faint);
     text-transform: uppercase;
-    animation-delay: .52s;
+    animation-delay: .46s;
   }
   .foot a { color: var(--faint); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border-radius: 6px; transition: color .3s var(--ease); }
-  .foot a:hover { color: var(--gold); }
-  .foot a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .foot a:hover { color: var(--teal); }
+  .foot a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
   .foot .sep { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
   .foot svg { width: 14px; height: 14px; fill: currentColor; }
   @media (max-width: 460px) { .foot .hide-sm { display: none; } }
@@ -140,7 +136,6 @@
     .wrap { padding: 20px 22px 40px; }
     .cat { width: min(132px, 30vh); animation: none; }
     .wordmark { font-size: clamp(26px, 4vw, 40px); margin-top: 6px; }
-    .tagline { margin-top: 8px; font-size: 14px; }
     .coming { margin-top: 10px; font-size: clamp(20px, 3vw, 30px); }
     .foot { position: static; margin-top: 18px; }
   }
@@ -161,7 +156,6 @@
          alt="A fluffy ginger cat, the OpenMeow mascot, gazing calmly at you" />
   </span>
   <h1 class="wordmark reveal"><span class="open">Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></h1>
-  <p class="tagline reveal">See your agents work.</p>
   <div class="coming">Coming&nbsp;soon</div>
 </main>
 <footer class="foot reveal">
