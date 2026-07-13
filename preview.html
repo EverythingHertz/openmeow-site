@@ -52,8 +52,8 @@
   .glow {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
     background:
-      radial-gradient(48% 40% at 50% 42%, rgba(255,176,100,.20) 0%, rgba(255,140,68,.06) 42%, transparent 72%),
-      radial-gradient(70% 46% at 50% 16%, rgba(51,214,200,.075) 0%, transparent 64%),
+      radial-gradient(48% 40% at 50% 46%, rgba(255,176,100,.20) 0%, rgba(255,140,68,.06) 42%, transparent 72%),
+      radial-gradient(80% 36% at 50% 22%, rgba(51,214,200,.06) 0%, transparent 64%),
       radial-gradient(130% 100% at 50% 42%, transparent 44%, rgba(3,2,1,.62) 100%);
   }
   .grain {
@@ -65,95 +65,71 @@
     min-height: 100svh;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center; padding: 24px 10px 44px;
+    text-align: center; padding: 20px 0 44px;
+    overflow: hidden;
   }
   .reveal { opacity: 0; animation: rise .9s var(--ease-out) both; }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-  .stage {
+  .parade {
     position: relative;
-    width: min(980px, 100vw, 118svh);
-    aspect-ratio: 1000 / 590;
+    width: 100vw;
+    height: clamp(320px, 52svh, 560px);
     flex: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
   }
-  .threads { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }
-  .threads path {
-    fill: none;
-    stroke: url(#tgrad);
-    stroke-width: 1.4;
-    stroke-linecap: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: draw 1.1s var(--ease) forwards;
-  }
-  @keyframes draw { to { stroke-dashoffset: 0; } }
-  .packet { fill: #A5F6EE; }
-  .packet-halo { fill: rgba(134,241,231,.32); }
-  .agent {
-    position: absolute; z-index: 2;
-    transform: translate(-50%, -50%);
-    display: flex; flex-direction: column; align-items: center; gap: 2.2%;
-    opacity: 0;
-    animation: assemble .8s var(--ease-out) both;
+  .row { position: absolute; left: 0; right: 0; overflow: hidden; }
+  .row-far { top: 2%; z-index: 1; --tw: clamp(74px, 12.5vw, 128px); opacity: .62; filter: saturate(.85) brightness(.82) blur(.4px); }
+  .row-near { bottom: 3.5%; z-index: 2; --tw: clamp(112px, 19vw, 186px); }
+  .track {
+    display: flex; align-items: flex-start; gap: clamp(14px, 2.6vw, 30px);
+    width: max-content;
+    animation: var(--slide) linear infinite;
     will-change: transform;
   }
-  @keyframes assemble {
-    from { opacity: 0; transform: translate(-50%, -34%) scale(.62); filter: blur(4px); }
-    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+  .row-near .track { --slide: slideL 64s; }
+  .row-far .track { --slide: slideR 88s; }
+  .row:hover .track { animation-play-state: paused; }
+  @keyframes slideL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes slideR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .tile {
+    width: var(--tw); flex: none;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    opacity: 0;
+    animation: fadein 1s var(--ease-out) both;
   }
-  .agent .pic {
+  .row-near .tile { animation-delay: .5s; }
+  .row-far .tile { animation-delay: .72s; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  .tile img {
     width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 50%;
     object-fit: cover;
-    -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 74%);
-    mask-image: radial-gradient(circle, #000 58%, transparent 74%);
+    -webkit-mask-image: radial-gradient(circle, #000 57%, transparent 73%);
+    mask-image: radial-gradient(circle, #000 57%, transparent 73%);
     filter:
       drop-shadow(0 10px 22px rgba(0,0,0,.55))
-      drop-shadow(0 0 34px rgba(51,214,200,.16));
-    animation: bob 6.4s var(--ease) infinite;
+      drop-shadow(0 0 30px rgba(51,214,200,.13));
   }
-  .agent:nth-child(odd) .pic { animation-delay: -3.2s; }
-  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4.5%); } }
-  .agent .tag {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--mono); font-size: clamp(8.5px, .95vw, 11px);
-    letter-spacing: .09em; color: #B9AFA2; text-transform: uppercase;
-    padding: .34em .7em; border-radius: 999px;
-    background: rgba(16,13,11,.72);
-    border: 1px solid var(--hair);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    white-space: nowrap;
-  }
-  .agent .tag .st { color: var(--teal); }
-  .agent .tag .dot {
+  .tile .led {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--teal);
-    box-shadow: 0 0 8px rgba(51,214,200,.9);
+    box-shadow: 0 0 9px rgba(51,214,200,.95), 0 0 20px rgba(51,214,200,.4);
     animation: beat 2.2s var(--ease) infinite;
   }
-  @keyframes beat { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .35; transform: scale(.7);} }
-  .a1 { left: 33%;   top: 53%; width: 15.4%; --d: .45; animation-delay: .55s; }
-  .a2 { left: 67%;   top: 53%; width: 15.4%; --d: .45; animation-delay: .64s; }
-  .a3 { left: 19.6%; top: 36%; width: 13.2%; --d: .7;  animation-delay: .73s; }
-  .a4 { left: 80.4%; top: 36%; width: 13.2%; --d: .7;  animation-delay: .82s; }
-  .a5 { left: 8.4%;  top: 19%; width: 11.2%; --d: 1;   animation-delay: .91s; }
-  .a6 { left: 91.6%; top: 19%; width: 11.2%; --d: 1;   animation-delay: 1s; }
-  .t1 { animation-delay: .8s; }
-  .t2 { animation-delay: .89s; }
-  .t3 { animation-delay: .98s; }
-  .t4 { animation-delay: 1.07s; }
-  .t5 { animation-delay: 1.16s; }
-  .t6 { animation-delay: 1.25s; }
+  .tile:nth-child(odd) .led { animation-delay: -1.1s; }
+  .tile:nth-child(3n) .led { animation-delay: -.6s; }
+  @keyframes beat { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .3; transform: scale(.68);} }
   .cat-wrap {
-    position: absolute; z-index: 3;
-    left: 50%; top: 66.5%;
-    width: 29%;
+    position: absolute; z-index: 5;
+    left: 50%; bottom: 0;
+    width: clamp(190px, 30svh, 300px);
     line-height: 0;
     opacity: 0;
-    animation: riseC .9s var(--ease-out) .04s both;
+    animation: riseC .9s var(--ease-out) .06s both;
   }
   @keyframes riseC {
-    from { opacity: 0; transform: translate(-50%, -44%); }
-    to   { opacity: 1; transform: translate(-50%, -50%); }
+    from { opacity: 0; transform: translate(-50%, 6%); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
   }
   .cat {
     width: 100%; height: auto;
@@ -162,13 +138,13 @@
     will-change: transform;
     filter:
       drop-shadow(0 3px 2px rgba(0,0,0,.6))
-      drop-shadow(0 20px 30px rgba(0,0,0,.5))
-      drop-shadow(0 48px 74px rgba(0,0,0,.46))
-      drop-shadow(0 0 54px rgba(255,150,80,.22))
-      drop-shadow(0 0 110px rgba(255,140,70,.16));
+      drop-shadow(0 20px 30px rgba(0,0,0,.55))
+      drop-shadow(0 48px 74px rgba(0,0,0,.5))
+      drop-shadow(0 0 54px rgba(255,150,80,.24))
+      drop-shadow(0 0 110px rgba(255,140,70,.17));
   }
   .orch {
-    position: absolute; left: 50%; top: 96%;
+    position: absolute; left: 50%; bottom: -8px;
     transform: translateX(-50%);
     display: inline-flex; align-items: center; gap: 6px;
     font-family: var(--mono); font-size: clamp(9px, 1vw, 11.5px);
@@ -190,11 +166,11 @@
     font-family: var(--display); font-weight: 700;
     font-size: clamp(33px, 6.4vw, 72px);
     letter-spacing: -0.05em; line-height: 1;
-    margin-top: clamp(4px, 1.4vh, 18px);
+    margin-top: clamp(14px, 2.6vh, 30px);
     user-select: none;
     display: flex; align-items: baseline; justify-content: center;
     filter: drop-shadow(0 8px 28px rgba(0,0,0,.55));
-    animation-delay: 1.15s;
+    animation-delay: .3s;
   }
   .wordmark .open { color: var(--ink); }
   .wordmark .meow {
@@ -222,27 +198,20 @@
     -webkit-text-fill-color: transparent; color: transparent;
     filter: drop-shadow(0 4px 18px rgba(0,0,0,.4)) drop-shadow(0 0 26px rgba(79,208,232,.42));
     animation: rise .9s var(--ease-out) both, sheen 7s var(--ease) 1.4s infinite;
-    animation-delay: 1.3s, 0s;
+    animation-delay: .45s, 0s;
   }
   @keyframes sheen { 0% { background-position: 130% 0; } 55%,100% { background-position: -30% 0; } }
-  @media (max-width: 640px) {
-    .stage { width: 128vw; margin: 0 -14vw; }
-    .a5, .a6, .t5, .t6 { display: none; }
-    .threads g circle:nth-of-type(n+9) { display: none; }
-  }
   @media (orientation: landscape) and (max-height: 560px) {
-    .wrap { padding: 12px 10px 24px; }
-    .stage { width: min(128vh, 96vw); }
-    .wordmark { font-size: clamp(24px, 4vw, 38px); margin-top: 4px; }
+    .wrap { padding: 10px 0 22px; }
+    .parade { height: clamp(240px, 58svh, 340px); }
+    .wordmark { font-size: clamp(24px, 4vw, 38px); margin-top: 8px; }
     .coming { margin-top: 6px; font-size: clamp(17px, 2.6vw, 26px); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .coming { animation: none !important; opacity: 1 !important; transform: none !important; }
-    .agent { animation: none !important; opacity: 1 !important; transform: translate(-50%,-50%) !important; filter: none !important; }
-    .cat-wrap { animation: none !important; opacity: 1 !important; transform: translate(-50%,-50%) !important; }
-    .agent .pic, .agent .tag .dot, .orch .dot, .wordmark .dotp { animation: none; }
-    .threads path { animation: none; stroke-dashoffset: 0; }
-    .packet, .packet-halo { display: none; }
+    .reveal, .coming, .tile { animation: none !important; opacity: 1 !important; transform: none !important; }
+    .cat-wrap { animation: none !important; opacity: 1 !important; transform: translate(-50%, 0) !important; }
+    .track { animation: none !important; }
+    .tile .led, .orch .dot, .wordmark .dotp { animation: none; }
     .coming { background-position: 50% 0; }
   }
 </style>
@@ -252,42 +221,43 @@
 <div class="glow" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <main class="wrap">
-  <div class="stage" role="img" aria-label="A ginger cat orchestrator connected by threads of light to its team of AI agent cats: engineer, growth, designer, sales, analyst, and operations">
-    <svg class="threads" viewBox="0 0 1000 590" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="tgrad" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stop-color="rgba(242,179,102,.34)"/>
-          <stop offset=".45" stop-color="rgba(51,214,200,.30)"/>
-          <stop offset="1" stop-color="rgba(51,214,200,.12)"/>
-        </linearGradient>
-      </defs>
-      <path class="t1" pathLength="1" d="M500,352 C455,330 400,326 330,313"/>
-      <path class="t2" pathLength="1" d="M500,352 C545,330 600,326 670,313"/>
-      <path class="t3" pathLength="1" d="M500,352 C420,300 305,268 196,212"/>
-      <path class="t4" pathLength="1" d="M500,352 C580,300 695,268 804,212"/>
-      <path class="t5" pathLength="1" d="M500,352 C390,270 220,205 84,112"/>
-      <path class="t6" pathLength="1" d="M500,352 C610,270 780,205 916,112"/>
-      <g aria-hidden="true">
-        <circle class="packet-halo" r="5"><animateMotion dur="3.2s" begin="1.8s" repeatCount="indefinite" path="M330,313 C400,326 455,330 500,352"/></circle>
-        <circle class="packet" r="2.1"><animateMotion dur="3.2s" begin="1.8s" repeatCount="indefinite" path="M330,313 C400,326 455,330 500,352"/></circle>
-        <circle class="packet-halo" r="5"><animateMotion dur="3.4s" begin="2.5s" repeatCount="indefinite" path="M670,313 C600,326 545,330 500,352"/></circle>
-        <circle class="packet" r="2.1"><animateMotion dur="3.4s" begin="2.5s" repeatCount="indefinite" path="M670,313 C600,326 545,330 500,352"/></circle>
-        <circle class="packet-halo" r="4.6"><animateMotion dur="4s" begin="2.1s" repeatCount="indefinite" path="M196,212 C305,268 420,300 500,352"/></circle>
-        <circle class="packet" r="1.9"><animateMotion dur="4s" begin="2.1s" repeatCount="indefinite" path="M196,212 C305,268 420,300 500,352"/></circle>
-        <circle class="packet-halo" r="4.6"><animateMotion dur="4.2s" begin="3s" repeatCount="indefinite" path="M804,212 C695,268 580,300 500,352"/></circle>
-        <circle class="packet" r="1.9"><animateMotion dur="4.2s" begin="3s" repeatCount="indefinite" path="M804,212 C695,268 580,300 500,352"/></circle>
-        <circle class="packet-halo" r="4.2"><animateMotion dur="5s" begin="2.8s" repeatCount="indefinite" path="M84,112 C220,205 390,270 500,352"/></circle>
-        <circle class="packet" r="1.8"><animateMotion dur="5s" begin="2.8s" repeatCount="indefinite" path="M84,112 C220,205 390,270 500,352"/></circle>
-        <circle class="packet-halo" r="4.2"><animateMotion dur="5.2s" begin="3.6s" repeatCount="indefinite" path="M916,112 C780,205 610,270 500,352"/></circle>
-        <circle class="packet" r="1.8"><animateMotion dur="5.2s" begin="3.6s" repeatCount="indefinite" path="M916,112 C780,205 610,270 500,352"/></circle>
-      </g>
-    </svg>
-    <figure class="agent a1"><img class="pic" src="a-engineer.webp" alt="" width="640" height="640" /><figcaption class="tag"><span class="dot" aria-hidden="true"></span><span class="role">Engineer</span><span class="st">compiling</span></figcaption></figure>
-    <figure class="agent a2"><img class="pic" src="a-growth.webp" alt="" width="640" height="640" /><figcaption class="tag"><span class="dot" aria-hidden="true"></span><span class="role">Growth</span><span class="st">launching</span></figcaption></figure>
-    <figure class="agent a3"><img class="pic" src="a-designer.webp" alt="" width="640" height="640" /><figcaption class="tag"><span class="dot" aria-hidden="true"></span><span class="role">Designer</span><span class="st">sketching</span></figcaption></figure>
-    <figure class="agent a4"><img class="pic" src="a-sales.webp" alt="" width="640" height="640" /><figcaption class="tag"><span class="dot" aria-hidden="true"></span><span class="role">Sales</span><span class="st">closing</span></figcaption></figure>
-    <figure class="agent a5"><img class="pic" src="a-analyst.webp" alt="" width="640" height="640" /><figcaption class="tag"><span class="dot" aria-hidden="true"></span><span class="role">Analyst</span><span class="st">crunching</span></figcaption></figure>
-    <figure class="agent a6"><img class="pic" src="a-ops.webp" alt="" width="640" height="640" /><figcaption class="tag"><span class="dot" aria-hidden="true"></span><span class="role">Ops</span><span class="st">reconciling</span></figcaption></figure>
+  <div class="parade" role="img" aria-label="A ginger cat orchestrator in front of a flowing panel of its AI agent team — the same cat dressed as a scientist, developer, judge, artist, security guard, doctor, detective, writer, chef, professor, librarian, and mission control">
+    <div class="row row-far" aria-hidden="true">
+      <div class="track">
+        <div class="tile"><img src="b-detective.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-chef.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-scribe.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-professor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-librarian.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-ops.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-aviator.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-detective.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-chef.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-scribe.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-professor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-librarian.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-ops.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-aviator.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+      </div>
+    </div>
+    <div class="row row-near" aria-hidden="true">
+      <div class="track">
+        <div class="tile"><img src="b-scientist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-dev.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-judge.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-artist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-guard.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-doctor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-toolsmith.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-scientist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-dev.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-judge.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="b-artist.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-guard.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-doctor.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+        <div class="tile"><img src="c-toolsmith.webp" alt="" width="640" height="640" loading="eager" /><span class="led"></span></div>
+      </div>
+    </div>
     <span class="cat-wrap">
       <img class="cat" src="cat.webp" width="316" height="316"
            alt="A fluffy ginger cat, the OpenMeow orchestrator, gazing calmly at you" />
@@ -394,22 +364,19 @@
   if (rm) return;
   const cat = document.querySelector('.cat');
   const glow = document.querySelector('.glow');
-  const agents = [...document.querySelectorAll('.agent')];
-  const depths = agents.map(a => parseFloat(getComputedStyle(a).getPropertyValue('--d')) || .6);
+  const near = document.querySelector('.row-near');
+  const far = document.querySelector('.row-far');
   let tx = 0, ty = 0, x = 0, y = 0;
   const aim = (cx, cy) => { tx = (cx / innerWidth - .5) * 2; ty = (cy / innerHeight - .5) * 2; };
   addEventListener('pointermove', e => aim(e.clientX, e.clientY), { passive: true });
   addEventListener('touchmove', e => { const t = e.touches[0]; if (t) aim(t.clientX, t.clientY); }, { passive: true });
   (function loop(now) {
     x += (tx - x) * .045; y += (ty - y) * .045;
-    const bob = Math.sin(now * 0.00088) * 7;
+    const bob = Math.sin(now * 0.00088) * 6;
     cat.style.transform = `translate(${(-x * 8).toFixed(2)}px, ${(-y * 5 + bob).toFixed(2)}px)`;
     glow.style.transform = `translate(${(x * 13).toFixed(2)}px, ${(y * 9).toFixed(2)}px)`;
-    for (let i = 0; i < agents.length; i++) {
-      const d = depths[i];
-      agents[i].style.marginLeft = (x * 14 * d).toFixed(2) + 'px';
-      agents[i].style.marginTop = (y * 10 * d).toFixed(2) + 'px';
-    }
+    near.style.transform = `translate(${(x * 7).toFixed(2)}px, ${(y * 4).toFixed(2)}px)`;
+    far.style.transform = `translate(${(x * 15).toFixed(2)}px, ${(y * 8).toFixed(2)}px)`;
     requestAnimationFrame(loop);
   })(0);
 })();
