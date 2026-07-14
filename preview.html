@@ -127,6 +127,21 @@
   .tile:nth-child(odd) .led { animation-delay: -1.1s; }
   .tile:nth-child(3n) .led { animation-delay: -.6s; }
   @keyframes beat { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .3; transform: scale(.68);} }
+  .led.burst {
+    background: var(--gold) !important;
+    box-shadow: 0 0 10px rgba(242,179,102,.95), 0 0 22px rgba(242,179,102,.5) !important;
+  }
+  .fly {
+    position: fixed; left: 0; top: 0; width: 7px; height: 7px; border-radius: 50%;
+    background: #A5F6EE;
+    box-shadow: 0 0 10px rgba(134,241,231,.9), 0 0 22px rgba(51,214,200,.5);
+    z-index: 4; pointer-events: none;
+  }
+  .heropulse {
+    position: absolute; inset: -14%; z-index: 0; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,190,120,.34) 0%, transparent 62%);
+    opacity: 0; pointer-events: none;
+  }
   .cat-wrap {
     position: absolute; z-index: 5;
     left: 50%; bottom: 0;
@@ -140,6 +155,7 @@
     to   { opacity: 1; transform: translate(-50%, 0); }
   }
   .cat {
+    position: relative; z-index: 1;
     width: 100%; height: auto;
     aspect-ratio: 1 / 1;
     object-fit: contain;
@@ -280,6 +296,7 @@
       </div>
     </div>
     <span class="cat-wrap">
+      <span class="heropulse" aria-hidden="true"></span>
       <img class="cat" src="cat.webp" width="316" height="316"
            alt="A fluffy ginger cat, the OpenMeow orchestrator, gazing calmly at you" />
     </span>
@@ -399,6 +416,55 @@
     far.style.transform = `translate(${(x * 15).toFixed(2)}px, ${(y * 8).toFixed(2)}px)`;
     requestAnimationFrame(loop);
   })(0);
+})();
+(() => {
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (rm) return;
+  const hero = document.querySelector('.cat-wrap');
+  const pulse = document.querySelector('.heropulse');
+  const leds = [...document.querySelectorAll('.tile .led')];
+  const visTiles = () => [...document.querySelectorAll('.tile img')].filter(el => {
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.right > 40 && r.left < innerWidth - 40;
+  });
+  const quad = (p0, p1, p2, t) => {
+    const u = 1 - t;
+    return { x: u*u*p0.x + 2*u*t*p1.x + t*t*p2.x, y: u*u*p0.y + 2*u*t*p1.y + t*t*p2.y };
+  };
+  function firePacket() {
+    if (document.hidden) return;
+    const tiles = visTiles();
+    if (!tiles.length) return;
+    const el = tiles[(Math.random() * tiles.length) | 0];
+    const a = el.getBoundingClientRect();
+    const hb = hero.getBoundingClientRect();
+    const p0 = { x: a.left + a.width / 2, y: a.top + a.height / 2 };
+    const p2 = { x: hb.left + hb.width / 2, y: hb.top + hb.height * 0.42 };
+    const p1 = { x: (p0.x + p2.x) / 2, y: Math.min(p0.y, p2.y) - 60 - Math.random() * 60 };
+    const d = document.createElement('span');
+    d.className = 'fly';
+    document.body.appendChild(d);
+    const N = 26, frames = [];
+    for (let i = 0; i <= N; i++) {
+      const q = quad(p0, p1, p2, i / N);
+      frames.push({ transform: `translate(${(q.x - 3.5).toFixed(1)}px, ${(q.y - 3.5).toFixed(1)}px)`,
+                    opacity: i < 2 ? 0.15 : (i > N - 3 ? 0.3 : 0.95) });
+    }
+    const anim = d.animate(frames, { duration: 980 + Math.random() * 380, easing: 'ease-in' });
+    anim.onfinish = () => {
+      d.remove();
+      pulse.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 640, easing: 'ease-out' });
+    };
+  }
+  function blip() {
+    if (document.hidden) return;
+    const led = leds[(Math.random() * leds.length) | 0];
+    led.classList.add('burst');
+    setTimeout(() => led.classList.remove('burst'), 650);
+  }
+  setTimeout(firePacket, 1900);
+  setInterval(firePacket, 3100);
+  setInterval(blip, 1600);
 })();
 </script>
 </body>
