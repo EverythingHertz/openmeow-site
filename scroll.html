@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenMeow — The Founder's Tower</title>
+<meta name="description" content="Scroll through the Founder's Tower — six floors of agents at work. OpenMeow, the open-source observability layer for AI agents." />
+<meta name="theme-color" content="#0B0A09" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%23F2B366'/><path d='M24 34 L30 11 L47 29 Z M76 34 L70 11 L53 29 Z' fill='%23F2B366'/><circle cx='40' cy='53' r='4' fill='%23140F0A'/><circle cx='60' cy='53' r='4' fill='%23140F0A'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0B0A09; --ink: #F4EFE7; --muted: #9A8F82; --faint: #6A6157;
+    --gold: #F2B366; --gold-hi: #FFD9A0;
+    --teal-hi: #86F1E7; --teal: #33D6C8; --teal-lo: #15AEA4;
+    --display: 'Space Grotesk', system-ui, sans-serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  ::selection { background: rgba(51,214,200,.30); color: #EAFFFB; }
+  html { scroll-behavior: auto; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  #track { height: 880vh; position: relative; }
+  #stage {
+    position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+    background: var(--bg);
+  }
+  #stage video, #stage img.still {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0;
+  }
+  #stage .vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(5,3,2,.55) 100%);
+  }
+  #loader {
+    position: absolute; inset: 0; z-index: 30;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    background: var(--bg); transition: opacity .8s var(--ease);
+  }
+  #loader.done { opacity: 0; pointer-events: none; }
+  #loader .mark { font-family: var(--display); font-weight: 700; font-size: 30px; letter-spacing: -.04em; }
+  #loader .mark .m { color: var(--teal); }
+  #loader .bar { width: min(260px, 60vw); height: 3px; border-radius: 99px; background: rgba(255,232,205,.12); overflow: hidden; }
+  #loader .bar i { display: block; height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--gold), var(--teal)); transition: width .3s var(--ease); }
+  #loader .hint { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--faint); text-transform: uppercase; }
+  .card {
+    position: absolute; z-index: 10;
+    left: clamp(20px, 6vw, 84px); bottom: clamp(24px, 9vh, 96px);
+    max-width: min(460px, 82vw);
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .5s var(--ease), transform .5s var(--ease);
+    pointer-events: none;
+  }
+  .card.on { opacity: 1; transform: translateY(0); }
+  .card .eyebrow {
+    font-family: var(--mono); font-size: clamp(10px, 1.1vw, 12px);
+    letter-spacing: .14em; text-transform: uppercase; color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .card h2 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(26px, 4vw, 44px); letter-spacing: -.03em; line-height: 1.04;
+    text-shadow: 0 4px 26px rgba(0,0,0,.75);
+  }
+  .card p {
+    margin-top: 10px; font-size: clamp(14px, 1.6vw, 17px); line-height: 1.5;
+    color: #D8CFC2; text-shadow: 0 2px 14px rgba(0,0,0,.8);
+  }
+  #finale {
+    position: absolute; inset: 0; z-index: 12;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    opacity: 0; transition: opacity .7s var(--ease); pointer-events: none;
+    background: radial-gradient(80% 60% at 50% 55%, rgba(5,3,2,.45) 0%, transparent 100%);
+  }
+  #finale.on { opacity: 1; pointer-events: auto; }
+  #finale .wordmark {
+    font-family: var(--display); font-weight: 700; font-size: clamp(40px, 8vw, 88px);
+    letter-spacing: -.05em; line-height: 1; display: flex; align-items: baseline;
+    filter: drop-shadow(0 8px 28px rgba(0,0,0,.65));
+  }
+  #finale .wordmark .meow {
+    background: linear-gradient(178deg, var(--teal-hi) 0%, var(--teal) 55%, var(--teal-lo) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 22px rgba(51,214,200,.5));
+  }
+  #finale .wordmark .dot { width: .115em; height: .115em; border-radius: 50%; background: var(--teal); margin-left: .05em; box-shadow: 0 0 12px rgba(51,214,200,.9); }
+  #finale .coming {
+    margin-top: 14px; font-family: var(--display); font-weight: 600;
+    font-size: clamp(20px, 3vw, 34px); letter-spacing: -.02em;
+    background: linear-gradient(100deg, #34E0D0, #7DF0EA 22%, #EAFEFF 50%, #93E0FF 74%, #46B4F2);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 22px rgba(79,208,232,.4));
+  }
+  #rail {
+    position: fixed; right: clamp(10px, 2.2vw, 26px); top: 50%; transform: translateY(-50%);
+    z-index: 20; display: flex; flex-direction: column; gap: 14px;
+  }
+  #rail button {
+    width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(255,232,205,.28);
+    background: transparent; cursor: pointer; padding: 0;
+    transition: background .3s var(--ease), transform .3s var(--ease), border-color .3s var(--ease);
+  }
+  #rail button.on { background: var(--teal); border-color: var(--teal); transform: scale(1.35); box-shadow: 0 0 10px rgba(51,214,200,.7); }
+  #hint {
+    position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+    z-index: 11; font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    transition: opacity .5s var(--ease);
+  }
+  #hint .chev { width: 14px; height: 14px; border-right: 1.5px solid var(--gold); border-bottom: 1.5px solid var(--gold); transform: rotate(45deg); animation: dip 1.8s var(--ease) infinite; }
+  @keyframes dip { 0%,100% { transform: rotate(45deg) translate(0,0); opacity: 1; } 50% { transform: rotate(45deg) translate(4px,4px); opacity: .4; } }
+  #hint.off { opacity: 0; }
+  #fallback { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    #track { display: none; }
+    #rail { display: none; }
+    #fallback { display: block; }
+    #fallback section { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; gap: 14px; }
+    #fallback img { width: 100%; max-width: 900px; border-radius: 14px; }
+  }
+</style>
+</head>
+<body>
+<div id="track">
+  <div id="stage">
+    <div class="vignette" aria-hidden="true"></div>
+    <div id="loader"><div class="mark">Open<span class="m">Meow</span></div><div class="bar"><i id="lbar"></i></div><div class="hint" id="lhint">Building the tower</div></div>
+    <div id="cards"></div>
+    <div id="finale">
+      <div class="wordmark"><span>Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></div>
+      <div class="coming">Coming&nbsp;soon</div>
+    </div>
+    <div id="hint"><span>Scroll</span><span class="chev" aria-hidden="true"></span></div>
+  </div>
+</div>
+<div id="rail" aria-label="Tour progress"></div>
+<div id="fallback"></div>
+<script>
+(() => {
+  const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3DlCVdjo8RXELA5Sxeob2Uxh8GX/';
+  const LEGS = [
+    { file: 'hf_20260714_111420_3c8e29d2-abd7-48cb-b4fb-5534bf971cf8.mp4', dur: 8 },
+    { file: 'hf_20260714_111424_57e52a97-a131-41be-b78a-ddb2baaa22c6.mp4', dur: 10 },
+    { file: 'hf_20260714_111428_14c9f92e-9880-45a9-95a4-5dd75e0e2a48.mp4', dur: 10 },
+    { file: 'hf_20260714_111440_4d4d6f29-78f1-45a8-8675-09eb48a3984a.mp4', dur: 10 },
+    { file: 'hf_20260714_111444_93664962-bcd7-4a65-b9fe-1468334f4eb9.mp4', dur: 10 },
+    { file: 'hf_20260714_111449_7502bb02-66e6-4200-8688-eefa8ae0fc71.mp4', dur: 10 }
+  ];
+  const STILLS = [
+    'hf_20260714_111303_138dd2cc-0c32-4458-ae44-67fedc89e33d.png',
+    'hf_20260714_110017_6cc633c9-8e12-48cb-8f06-3873031131e3.png',
+    'hf_20260714_110021_58243cb9-4f26-4795-b3f6-85cd5f647f6d.png',
+    'hf_20260714_110023_3391206b-4051-47bd-9105-d64d5630b42b.png',
+    'hf_20260714_110051_59055b0a-fc3d-405e-8d39-015a26debe40.png',
+    'hf_20260714_110055_28156d06-6a67-47b3-9557-a0c87a4816c0.png',
+    'hf_20260714_110058_5088c049-8fc6-4a7e-96ae-41b2d7cbac49.png'
+  ];
+  const COPY = [
+    { at: 0, eyebrow: 'OpenMeow presents', title: "The Founder's Tower.", body: 'Six floors. One founder. A staff of agents. Scroll to take the tour.' },
+    { at: 1, eyebrow: 'You', title: 'Founder. CEO. Intern.', body: 'Every job is yours. The sticky notes are winning. For now.' },
+    { at: 2, eyebrow: 'Agents', title: 'Staff up in seconds.', body: 'Specialists for every job — research, code, ops, evals. They never sleep. They barely nap.' },
+    { at: 3, eyebrow: 'Orchestration', title: 'One conductor. Many players.', body: 'Plans fan out. Work flows back. Nothing gets lost in the middle.' },
+    { at: 4, eyebrow: 'Observability', title: 'See your agents work.', body: 'Every step, every token, every decision — one pane of glass.' },
+    { at: 5, eyebrow: 'Reliability', title: '2 a.m., handled.', body: 'When something breaks, you know first. Trace it, fix it, back to sleep.' }
+  ];
+  const RAIL = ['Tower','2 a.m.','Hire','Orchestrate','Observe','Incident','Launch'];
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stage = document.getElementById('stage');
+  const loader = document.getElementById('loader');
+  const lbar = document.getElementById('lbar');
+  const lhint = document.getElementById('lhint');
+  const cardsEl = document.getElementById('cards');
+  const finale = document.getElementById('finale');
+  const hint = document.getElementById('hint');
+  const rail = document.getElementById('rail');
+  if (rm) {
+    const fb = document.getElementById('fallback');
+    for (let i = 0; i < COPY.length; i++) {
+      const s = document.createElement('section');
+      s.innerHTML = `<div class="card on" style="position:static"><div class="eyebrow">${COPY[i].eyebrow}</div><h2>${COPY[i].title}</h2><p>${COPY[i].body}</p></div><img src="${CDN}${STILLS[i]}" alt="" loading="lazy" />`;
+      fb.appendChild(s);
+    }
+    const end = document.createElement('section');
+    end.innerHTML = `<div class="card on" style="position:static"><h2>OpenMeow.</h2><p>Coming soon.</p></div><img src="${CDN}${STILLS[6]}" alt="" loading="lazy" />`;
+    fb.appendChild(end);
+    loader.classList.add('done');
+    return;
+  }
+  const cardNodes = COPY.map(c => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.innerHTML = `<div class="eyebrow">${c.eyebrow}</div><h2>${c.title}</h2><p>${c.body}</p>`;
+    cardsEl.appendChild(d);
+    return d;
+  });
+  const railBtns = RAIL.map((label, i) => {
+    const b = document.createElement('button');
+    b.title = label;
+    b.onclick = () => {
+      const total = document.getElementById('track').offsetHeight - innerHeight;
+      const p = i < 6 ? bounds[i].a + (bounds[i].b - bounds[i].a) * 0.12 : 0.99;
+      scrollTo({ top: p * total, behavior: 'smooth' });
+    };
+    rail.appendChild(b);
+    return b;
+  });
+  const vids = LEGS.map(() => {
+    const v = document.createElement('video');
+    v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
+    stage.insertBefore(v, stage.querySelector('.vignette'));
+    return v;
+  });
+  let loaded = 0, ready = false;
+  async function loadAll() {
+    for (let i = 0; i < LEGS.length; i++) {
+      try {
+        const r = await fetch(CDN + LEGS[i].file, { mode: 'cors' });
+        const b = await r.blob();
+        vids[i].src = URL.createObjectURL(b);
+        await new Promise(res => { vids[i].onloadedmetadata = res; setTimeout(res, 4000); });
+      } catch (e) {  }
+      loaded++;
+      lbar.style.width = Math.round(loaded / LEGS.length * 100) + '%';
+      if (i === 1 && !ready) { ready = true; loader.classList.add('done'); }
+    }
+    if (!ready) { ready = true; loader.classList.add('done'); }
+    lhint.textContent = 'Ready';
+  }
+  loadAll();
+  const totalDur = LEGS.reduce((a, l) => a + l.dur, 0);
+  const bounds = []; let acc = 0;
+  for (const l of LEGS) { bounds.push({ a: acc / totalDur, b: (acc + l.dur) / totalDur }); acc += l.dur; }
+  let targetP = 0, smoothP = 0, cur = -1;
+  const seekBusy = new Array(LEGS.length).fill(false);
+  const seekPending = new Array(LEGS.length).fill(null);
+  vids.forEach((v, i) => {
+    v.addEventListener('seeking', () => { seekBusy[i] = true; });
+    v.addEventListener('seeked', () => {
+      seekBusy[i] = false;
+      if (seekPending[i] !== null) { const t = seekPending[i]; seekPending[i] = null; safeSeek(i, t); }
+    });
+  });
+  function safeSeek(i, t) {
+    const v = vids[i];
+    if (!v.duration) return;
+    const ct = Math.min(Math.max(t, 0), v.duration - 0.03);
+    if (seekBusy[i]) { seekPending[i] = ct; return; }
+    if (Math.abs(v.currentTime - ct) > 0.001) v.currentTime = ct;
+  }
+  function onScroll() {
+    const total = document.getElementById('track').offsetHeight - innerHeight;
+    targetP = Math.min(1, Math.max(0, scrollY / total));
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  const FIN_START = 0.965;
+  function frame() {
+    smoothP += (targetP - smoothP) * 0.12;
+    const p = smoothP;
+    let li = 0;
+    for (let i = 0; i < bounds.length; i++) if (p >= bounds[i].a) li = i;
+    const seg = bounds[li];
+    const local = Math.min(1, Math.max(0, (p - seg.a) / (seg.b - seg.a)));
+    if (li !== cur) {
+      vids.forEach((v, i) => { v.style.opacity = i === li ? 1 : 0; });
+      cur = li;
+    }
+    safeSeek(li, local * (vids[li].duration || LEGS[li].dur));
+    if (local > 0.96 && li < LEGS.length - 1) safeSeek(li + 1, 0);
+    if (local < 0.04 && li > 0) safeSeek(li - 1, (vids[li - 1].duration || LEGS[li - 1].dur) - 0.05);
+    cardNodes.forEach((cd, i) => {
+      const on = (i === 0) ? (li === 0 && local < 0.85) : (li === i && local > 0.06 && local < 0.5);
+      cd.classList.toggle('on', on);
+    });
+    finale.classList.toggle('on', p > FIN_START);
+    hint.classList.toggle('off', p > 0.02);
+    let stop = 0;
+    for (let i = 0; i < bounds.length; i++) if (p >= bounds[i].a + 0.01) stop = i;
+    if (p > FIN_START) stop = 6;
+    railBtns.forEach((b, i) => b.classList.toggle('on', i === stop));
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
