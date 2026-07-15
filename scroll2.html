@@ -24,7 +24,7 @@
   ::selection { background: rgba(51,214,200,.30); color: #EAFFFB; }
   html { scroll-behavior: auto; }
   body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
-  #track { height: 1150vh; position: relative; }
+  #track { height: 1250vh; position: relative; }
   #stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--bg); }
   #stage video, #stage img.layer {
     position: absolute; inset: 0; width: 100%; height: 100%;
@@ -97,6 +97,46 @@
   #hint .chev { width: 10px; height: 10px; border-right: 1.6px solid rgba(242,179,102,.9); border-bottom: 1.6px solid rgba(242,179,102,.9); transform: rotate(45deg); animation: chev 1.7s infinite var(--ease); }
   @keyframes chev { 0%,100% { transform: rotate(45deg) translate(0,0); opacity: .55; } 50% { transform: rotate(45deg) translate(4px,4px); opacity: 1; } }
   #hint.off { opacity: 0; }
+  #intro {
+    position: absolute; inset: 0; z-index: 22;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 16px; pointer-events: none;
+    background: radial-gradient(70% 60% at 50% 44%, rgba(5,4,3,.72), rgba(5,4,3,.28) 62%, rgba(5,4,3,.08));
+    transition: opacity .6s var(--ease), visibility .6s;
+  }
+  #intro.off { opacity: 0; visibility: hidden; }
+  #intro .eyebrow {
+    font-family: var(--mono); font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: .3em; text-transform: uppercase; color: var(--teal);
+  }
+  #intro .big {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 7.5vw, 96px); letter-spacing: -.04em; line-height: 1.02;
+    display: flex; align-items: baseline;
+    filter: drop-shadow(0 6px 40px rgba(0,0,0,.7));
+  }
+  #intro .big .meow { background: linear-gradient(115deg, var(--teal-lo), var(--teal) 45%, var(--teal-hi)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #intro h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(22px, 3.2vw, 40px); letter-spacing: -.02em; color: var(--gold-hi);
+    text-shadow: 0 2px 24px rgba(0,0,0,.8);
+  }
+  #intro p {
+    max-width: 46ch; color: rgba(244,239,231,.85);
+    font-size: clamp(14px, 1.6vw, 18px); line-height: 1.55;
+    text-shadow: 0 1px 14px rgba(0,0,0,.85);
+  }
+  #begin {
+    pointer-events: auto; cursor: pointer; margin-top: 14px;
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--display); font-weight: 600; font-size: clamp(15px, 1.7vw, 19px);
+    color: #06201D; background: linear-gradient(115deg, var(--teal-hi), var(--teal));
+    border: none; border-radius: 999px; padding: 15px 30px;
+    box-shadow: 0 8px 34px rgba(51,214,200,.4), inset 0 1px 0 rgba(255,255,255,.5);
+    animation: pulsebtn 2.2s var(--ease) infinite;
+  }
+  #begin .bchev { width: 11px; height: 11px; border-right: 2.2px solid #06201D; border-bottom: 2.2px solid #06201D; transform: rotate(45deg) translate(-1px,-1px); animation: chev 1.7s infinite var(--ease); }
+  @keyframes pulsebtn { 0%,100% { transform: scale(1); box-shadow: 0 8px 34px rgba(51,214,200,.4), inset 0 1px 0 rgba(255,255,255,.5); } 50% { transform: scale(1.045); box-shadow: 0 10px 44px rgba(51,214,200,.62), inset 0 1px 0 rgba(255,255,255,.5); } }
   #rail { position: fixed; right: clamp(10px, 2vw, 26px); top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 12px; }
   #rail button {
     width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(244,239,231,.3);
@@ -126,6 +166,13 @@
       <div class="coming">Coming&nbsp;soon</div>
     </div>
     <div id="hint"><span>Scroll</span><span class="chev" aria-hidden="true"></span></div>
+    <div id="intro">
+      <div class="eyebrow">OpenMeow presents</div>
+      <div class="big"><span>Open</span><span class="meow">Meow</span></div>
+      <h1>The Observatory: a guided tour</h1>
+      <p>One empty tower. A full staff of AI agents about to move in. Scroll to watch it come alive — then step onto every floor.</p>
+      <button id="begin" type="button"><span>Scroll to begin</span><span class="bchev" aria-hidden="true"></span></button>
+    </div>
   </div>
 </div>
 <div id="rail" aria-label="Tour progress"></div>
@@ -138,7 +185,8 @@
     'hf_20260715_042856_3ef1ae40-fb2d-4046-ab4f-42f909180bfd_min.webp'
   ];
   const VIDS = [
-    { file: 'hf_20260715_043318_a0475b12-4840-4519-a0c7-03ad7d12fc6f.mp4', dur: 10 },
+    { file: 'hf_20260715_060008_237283a7-2399-405f-9042-4684859f77db.mp4', dur: 8 },
+    { file: 'hf_20260715_060010_6fa2372c-ff19-406f-923a-afe400edf2f5.mp4', dur: 10 },
     { file: 'hf_20260715_052639_f9ff5220-3aec-4459-be97-20792ed2e891.mp4', dur: 8 },
     { file: 'hf_20260715_052642_30566d21-b19e-445e-b8e0-7859385e22c7.mp4', dur: 8 },
     { file: 'hf_20260715_051809_b9be0f73-0c86-423b-9221-6271a645e796.mp4', dur: 8 },
@@ -153,7 +201,7 @@
     'hf_20260715_043336_83283dde-d603-4f46-a70e-da62819c3675_min.webp'
   ];
   const COPY = [
-    { eyebrow: 'OpenMeow presents', title: 'The Observatory.', body: 'Day one: an empty tower, a set of brass plaques, and a plan. Scroll to move in.' },
+    { eyebrow: 'Overture', title: 'Every system needs a conductor.', body: 'The baton is up. Keep scrolling.' },
     { eyebrow: 'Move-in day', title: 'Your agent staff, installed.', body: 'Every floor a system. Every desk a specialist. Lights on.' },
     { eyebrow: 'Execution', title: 'Tool calls, on the record.', body: 'The toolsmith logs every call, so you never wonder what actually ran.' },
     { eyebrow: 'Cost', title: 'Every token, weighed.', body: 'The kibble budget balances itself — and shows its work.' },
@@ -162,22 +210,24 @@
     { eyebrow: 'Observability', title: 'The whole system, watched.', body: 'From up here, you can see every trace land.' }
   ];
   const SEGS = [
-    { img: 0, w: .55, card: 0 },
-    { v: 0, dir: 1, w: 1.25 },
+    { img: 0, w: .45 },
+    { v: 0, dir: 1, w: .8 },   { v: 0, hold: 1, w: .35, card: 0 },
+    { v: 1, dir: 1, w: 1.3 },
     { img: 1, w: .5, card: 1 },
-    { v: 1, dir: 1, w: .85 },  { v: 1, hold: 1, w: .45, card: 2 },  { v: 1, dir: -1, w: .65 },
-    { v: 2, dir: 1, w: .85 },  { v: 2, hold: 1, w: .45, card: 3 },  { v: 2, dir: -1, w: .65 },
-    { v: 3, dir: 1, w: .85 },  { v: 3, hold: 1, w: .45, card: 4 },  { v: 3, dir: -1, w: .65 },
-    { v: 4, dir: 1, w: .85 },  { v: 4, hold: 1, w: .45, card: 5 },  { v: 4, dir: -1, w: .65 },
-    { v: 5, dir: 1, w: 1.0 },  { v: 5, hold: 1, w: .55, card: 6 },
-    { v: 5, hold: 1, w: .45 }
+    { v: 2, dir: 1, w: .85 },  { v: 2, hold: 1, w: .45, card: 2 },  { v: 2, dir: -1, w: .65 },
+    { v: 3, dir: 1, w: .85 },  { v: 3, hold: 1, w: .45, card: 3 },  { v: 3, dir: -1, w: .65 },
+    { v: 4, dir: 1, w: .85 },  { v: 4, hold: 1, w: .45, card: 4 },  { v: 4, dir: -1, w: .65 },
+    { v: 5, dir: 1, w: .85 },  { v: 5, hold: 1, w: .45, card: 5 },  { v: 5, dir: -1, w: .65 },
+    { v: 6, dir: 1, w: 1.0 },  { v: 6, hold: 1, w: .55, card: 6 },
+    { v: 6, hold: 1, w: .45 }
   ];
   const RAIL = [
-    { label: 'Empty shell', seg: 0 }, { label: 'Build-out', seg: 1 }, { label: 'The tower', seg: 2 },
-    { label: 'Tool Calls', seg: 4 }, { label: 'Kibble Budget', seg: 7 }, { label: 'Approval Gate', seg: 10 },
-    { label: 'Phantom Vault', seg: 13 }, { label: 'Rooftop', seg: 16 }, { label: 'Coming soon', seg: 17 }
+    { label: 'Empty shell', seg: 0 }, { label: 'Overture', seg: 2 }, { label: 'Build-out', seg: 3 },
+    { label: 'The tower', seg: 4 },
+    { label: 'Tool Calls', seg: 6 }, { label: 'Kibble Budget', seg: 9 }, { label: 'Approval Gate', seg: 12 },
+    { label: 'Phantom Vault', seg: 15 }, { label: 'Rooftop', seg: 18 }, { label: 'Coming soon', seg: 19 }
   ];
-  const FIN_SEG = 17;
+  const FIN_SEG = 19;
   const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const stage = document.getElementById('stage');
   const loader = document.getElementById('loader');
@@ -284,6 +334,12 @@
   }
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+  const intro = document.getElementById('intro');
+  document.getElementById('begin').onclick = () => {
+    const total = document.getElementById('track').offsetHeight - innerHeight;
+    const seg = bounds[2];
+    scrollTo({ top: (seg.a + (seg.b - seg.a) * 0.6) * total, behavior: 'smooth' });
+  };
   function frame() {
     smoothP += (targetP - smoothP) * 0.12;
     const p = smoothP;
@@ -306,7 +362,8 @@
       cd.classList.toggle('on', on);
     });
     finale.classList.toggle('on', si >= FIN_SEG);
-    hint.classList.toggle('off', p > 0.012);
+    intro.classList.toggle('off', p > 0.008);
+    hint.classList.toggle('off', p < 0.012 || p > 0.06);
     let stop = 0;
     RAIL.forEach((r, i) => { if (si >= r.seg) stop = i; });
     railBtns.forEach((b, i) => b.classList.toggle('on', i === stop));
