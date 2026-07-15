@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>OpenMeow — The Agent Colony</title>
-<meta name="description" content="Scroll through the OpenMeow agent colony — a Brooklyn loft full of agents at work. Open-source observability for AI agents." />
+<title>OpenMeow — The Founder's Tower</title>
+<meta name="description" content="Scroll through the Founder's Tower — six floors of agents at work. OpenMeow, the open-source observability layer for AI agents." />
 <meta name="theme-color" content="#0B0A09" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%23F2B366'/><path d='M24 34 L30 11 L47 29 Z M76 34 L70 11 L53 29 Z' fill='%23F2B366'/><circle cx='40' cy='53' r='4' fill='%23140F0A'/><circle cx='60' cy='53' r='4' fill='%23140F0A'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,109 +24,113 @@
   ::selection { background: rgba(51,214,200,.30); color: #EAFFFB; }
   html { scroll-behavior: auto; }
   body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
-  #track { height: 1040vh; position: relative; }
+  #track { height: 880vh; position: relative; }
   #stage {
     position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
     background: var(--bg);
   }
-  #cam { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .vignette {
-    position: absolute; inset: 0; pointer-events: none;
-    background:
-      radial-gradient(120% 90% at 50% 42%, transparent 55%, rgba(6,5,4,.42) 100%),
-      linear-gradient(to bottom, rgba(6,5,4,.30), transparent 14% 84%, rgba(6,5,4,.44));
+  #stage video, #stage img.still {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0;
   }
-  .grain { position: absolute; inset: 0; pointer-events: none; opacity: .05; mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.6'/></svg>");
+  #stage .vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(5,3,2,.55) 100%);
   }
   #loader {
-    position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 18px; background: var(--bg);
-    transition: opacity .7s var(--ease), visibility .7s;
+    position: absolute; inset: 0; z-index: 30;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    background: var(--bg); transition: opacity .8s var(--ease);
   }
-  #loader.done { opacity: 0; visibility: hidden; }
+  #loader.done { opacity: 0; pointer-events: none; }
   #loader .mark { font-family: var(--display); font-weight: 700; font-size: 30px; letter-spacing: -.04em; }
-  #loader .mark .m { background: linear-gradient(115deg, var(--teal-lo), var(--teal) 45%, var(--teal-hi)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  #loader .bar { width: 190px; height: 2px; background: rgba(244,239,231,.12); border-radius: 2px; overflow: hidden; }
-  #loader .bar i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal-lo), var(--teal-hi)); transition: width .4s var(--ease); }
+  #loader .mark .m { color: var(--teal); }
+  #loader .bar { width: min(260px, 60vw); height: 3px; border-radius: 99px; background: rgba(255,232,205,.12); overflow: hidden; }
+  #loader .bar i { display: block; height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--gold), var(--teal)); transition: width .3s var(--ease); }
   #loader .hint { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--faint); text-transform: uppercase; }
-  #cards { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
   .card {
-    position: absolute; left: clamp(20px, 5vw, 72px); bottom: clamp(26px, 7vh, 84px);
-    max-width: min(440px, 82vw);
+    position: absolute; z-index: 10;
+    left: clamp(20px, 6vw, 84px); bottom: clamp(24px, 9vh, 96px);
+    max-width: min(460px, 82vw);
     opacity: 0; transform: translateY(14px);
-    transition: opacity .55s var(--ease), transform .55s var(--ease);
+    transition: opacity .5s var(--ease), transform .5s var(--ease);
+    pointer-events: none;
   }
-  .card.on { opacity: 1; transform: none; }
-  .card.right { left: auto; right: clamp(44px, 6vw, 96px); }
+  .card.on { opacity: 1; transform: translateY(0); }
   .card .eyebrow {
     font-family: var(--mono); font-size: clamp(10px, 1.1vw, 12px);
-    letter-spacing: .16em; text-transform: uppercase; color: var(--teal);
+    letter-spacing: .14em; text-transform: uppercase; color: var(--teal);
     margin-bottom: 10px;
   }
   .card h2 {
     font-family: var(--display); font-weight: 700;
-    font-size: clamp(26px, 3.6vw, 44px); letter-spacing: -.03em; line-height: 1.04;
-    text-shadow: 0 2px 26px rgba(6,5,4,.85), 0 1px 3px rgba(6,5,4,.9);
+    font-size: clamp(26px, 4vw, 44px); letter-spacing: -.03em; line-height: 1.04;
+    text-shadow: 0 4px 26px rgba(0,0,0,.75);
   }
   .card p {
-    margin-top: 10px; color: rgba(244,239,231,.86);
-    font-size: clamp(14px, 1.5vw, 17px); line-height: 1.5; max-width: 40ch;
-    text-shadow: 0 1px 14px rgba(6,5,4,.9);
+    margin-top: 10px; font-size: clamp(14px, 1.6vw, 17px); line-height: 1.5;
+    color: #D8CFC2; text-shadow: 0 2px 14px rgba(0,0,0,.8);
   }
   #finale {
-    position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 14px; pointer-events: none;
-    opacity: 0; transition: opacity .8s var(--ease);
-    background: radial-gradient(60% 52% at 50% 47%, rgba(6,5,4,.66), rgba(6,5,4,.18) 68%, transparent);
+    position: absolute; inset: 0; z-index: 12;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    opacity: 0; transition: opacity .7s var(--ease); pointer-events: none;
+    background: radial-gradient(80% 60% at 50% 55%, rgba(5,3,2,.45) 0%, transparent 100%);
   }
-  #finale.on { opacity: 1; }
-  .wordmark { font-family: var(--display); font-weight: 700; font-size: clamp(44px, 8.5vw, 108px); letter-spacing: -.045em; line-height: 1; display: flex; align-items: baseline; filter: drop-shadow(0 6px 40px rgba(51,214,200,.24)); }
-  .wordmark .meow { background: linear-gradient(115deg, var(--teal-lo), var(--teal) 45%, var(--teal-hi)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .wordmark .dot { width: .16em; height: .16em; margin-left: .07em; border-radius: 50%; background: radial-gradient(circle at 34% 30%, var(--gold-hi), var(--gold)); box-shadow: 0 0 18px rgba(242,179,102,.65); align-self: flex-end; margin-bottom: .09em; }
-  .coming {
-    font-family: var(--display); font-weight: 600; font-size: clamp(17px, 2.5vw, 26px); letter-spacing: .01em;
+  #finale.on { opacity: 1; pointer-events: auto; }
+  #finale .wordmark {
+    font-family: var(--display); font-weight: 700; font-size: clamp(40px, 8vw, 88px);
+    letter-spacing: -.05em; line-height: 1; display: flex; align-items: baseline;
+    filter: drop-shadow(0 8px 28px rgba(0,0,0,.65));
+  }
+  #finale .wordmark .meow {
+    background: linear-gradient(178deg, var(--teal-hi) 0%, var(--teal) 55%, var(--teal-lo) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 22px rgba(51,214,200,.5));
+  }
+  #finale .wordmark .dot { width: .115em; height: .115em; border-radius: 50%; background: var(--teal); margin-left: .05em; box-shadow: 0 0 12px rgba(51,214,200,.9); }
+  #finale .coming {
+    margin-top: 14px; font-family: var(--display); font-weight: 600;
+    font-size: clamp(20px, 3vw, 34px); letter-spacing: -.02em;
     background: linear-gradient(100deg, #34E0D0, #7DF0EA 22%, #EAFEFF 50%, #93E0FF 74%, #46B4F2);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 2px 18px rgba(70,180,242,.35));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 22px rgba(79,208,232,.4));
   }
-  #hint {
-    position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
-    z-index: 12; display: flex; flex-direction: column; align-items: center; gap: 7px;
-    font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-    color: rgba(244,239,231,.55); transition: opacity .5s var(--ease);
-  }
-  #hint .chev { width: 10px; height: 10px; border-right: 1.6px solid rgba(134,241,231,.8); border-bottom: 1.6px solid rgba(134,241,231,.8); transform: rotate(45deg); animation: chev 1.6s infinite var(--ease); }
-  @keyframes chev { 0%,100% { transform: rotate(45deg) translate(0,0); opacity: .55; } 50% { transform: rotate(45deg) translate(4px,4px); opacity: 1; } }
-  #hint.off { opacity: 0; }
   #rail {
-    position: fixed; right: clamp(10px, 2vw, 26px); top: 50%; transform: translateY(-50%);
-    z-index: 40; display: flex; flex-direction: column; gap: 12px;
+    position: fixed; right: clamp(10px, 2.2vw, 26px); top: 50%; transform: translateY(-50%);
+    z-index: 20; display: flex; flex-direction: column; gap: 14px;
   }
   #rail button {
-    width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(244,239,231,.3);
+    width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(255,232,205,.28);
     background: transparent; cursor: pointer; padding: 0;
-    transition: background .3s, border-color .3s, box-shadow .3s;
+    transition: background .3s var(--ease), transform .3s var(--ease), border-color .3s var(--ease);
   }
-  #rail button.on { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 10px rgba(51,214,200,.7); }
+  #rail button.on { background: var(--teal); border-color: var(--teal); transform: scale(1.35); box-shadow: 0 0 10px rgba(51,214,200,.7); }
+  #hint {
+    position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+    z-index: 11; font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    transition: opacity .5s var(--ease);
+  }
+  #hint .chev { width: 14px; height: 14px; border-right: 1.5px solid var(--gold); border-bottom: 1.5px solid var(--gold); transform: rotate(45deg); animation: dip 1.8s var(--ease) infinite; }
+  @keyframes dip { 0%,100% { transform: rotate(45deg) translate(0,0); opacity: 1; } 50% { transform: rotate(45deg) translate(4px,4px); opacity: .4; } }
+  #hint.off { opacity: 0; }
   #fallback { display: none; }
   @media (prefers-reduced-motion: reduce) {
-    #track, #rail, #hint { display: none; }
-    #fallback { display: block; padding: 8vh 6vw; }
-    #fallback section { max-width: 900px; margin: 0 auto 9vh; }
-    #fallback .shot { width: 100%; aspect-ratio: 16/9; border-radius: 14px; background-repeat: no-repeat; box-shadow: 0 18px 60px rgba(0,0,0,.5); }
-    #fallback img { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 18px 60px rgba(0,0,0,.5); }
-    #fallback .card { position: static; opacity: 1; transform: none; margin-bottom: 18px; }
+    #track { display: none; }
+    #rail { display: none; }
+    #fallback { display: block; }
+    #fallback section { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; padding: 8vh 6vw; gap: 14px; }
+    #fallback img { width: 100%; max-width: 900px; border-radius: 14px; }
   }
 </style>
 </head>
 <body>
 <div id="track">
   <div id="stage">
-    <canvas id="cam"></canvas>
-    <div class="vignette"></div>
-    <div class="grain"></div>
-    <div id="loader"><div class="mark">Open<span class="m">Meow</span></div><div class="bar"><i id="lbar"></i></div><div class="hint" id="lhint">Opening the colony</div></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div id="loader"><div class="mark">Open<span class="m">Meow</span></div><div class="bar"><i id="lbar"></i></div><div class="hint" id="lhint">Building the tower</div></div>
     <div id="cards"></div>
     <div id="finale">
       <div class="wordmark"><span>Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></div>
@@ -139,35 +143,33 @@
 <div id="fallback"></div>
 <script>
 (() => {
-  const HIRES = 'loft-4k.webp';
-  const LOCAL = 'loft.jpg';
-  const WAY = [
-    { cx: .500, cy: .500, w: 1.00 },
-    { cx: .120, cy: .745, w: .26 },
-    { cx: .373, cy: .615, w: .30 },
-    { cx: .423, cy: .408, w: .26 },
-    { cx: .526, cy: .207, w: .26 },
-    { cx: .640, cy: .415, w: .22 },
-    { cx: .837, cy: .628, w: .30 },
-    { cx: .782, cy: .404, w: .24 },
-    { cx: .882, cy: .171, w: .34 },
-    { cx: .500, cy: .500, w: 1.00 }
+  const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3DlCVdjo8RXELA5Sxeob2Uxh8GX/';
+  const LEGS = [
+    { file: 'hf_20260714_111420_3c8e29d2-abd7-48cb-b4fb-5534bf971cf8.mp4', dur: 8 },
+    { file: 'hf_20260714_111424_57e52a97-a131-41be-b78a-ddb2baaa22c6.mp4', dur: 10 },
+    { file: 'hf_20260714_111428_14c9f92e-9880-45a9-95a4-5dd75e0e2a48.mp4', dur: 10 },
+    { file: 'hf_20260714_111440_4d4d6f29-78f1-45a8-8675-09eb48a3984a.mp4', dur: 10 },
+    { file: 'hf_20260714_111444_93664962-bcd7-4a65-b9fe-1468334f4eb9.mp4', dur: 10 },
+    { file: 'hf_20260714_111449_7502bb02-66e6-4200-8688-eefa8ae0fc71.mp4', dur: 10 }
+  ];
+  const STILLS = [
+    'hf_20260714_111303_138dd2cc-0c32-4458-ae44-67fedc89e33d.png',
+    'hf_20260714_110017_6cc633c9-8e12-48cb-8f06-3873031131e3.png',
+    'hf_20260714_110021_58243cb9-4f26-4795-b3f6-85cd5f647f6d.png',
+    'hf_20260714_110023_3391206b-4051-47bd-9105-d64d5630b42b.png',
+    'hf_20260714_110051_59055b0a-fc3d-405e-8d39-015a26debe40.png',
+    'hf_20260714_110055_28156d06-6a67-47b3-9557-a0c87a4816c0.png',
+    'hf_20260714_110058_5088c049-8fc6-4a7e-96ae-41b2d7cbac49.png'
   ];
   const COPY = [
-    { eyebrow: 'OpenMeow presents', title: 'The Agent Colony.', body: 'One Brooklyn loft. A full staff of agents. Scroll to look inside.' },
-    { eyebrow: 'Intake', title: 'Every request checks in.', body: 'The lobby knows who’s on it before you finish asking.' },
-    { eyebrow: 'Retrieval', title: 'Reference + learn.', body: 'Your agents do the reading. All of it. Footnotes included.' },
-    { eyebrow: 'Orchestration', title: 'Plan + coordinate.', body: 'One plan fans out. Many paws execute. Nothing gets lost.' },
-    { eyebrow: 'Research', title: 'Where the thinking happens.', body: 'Big questions in. Traced reasoning out.' },
-    { eyebrow: 'Observability', title: 'Every step, on the record.', body: 'The glass spine of the colony — every decision, token, and handoff, visible.' },
-    { eyebrow: 'Reliability', title: '2 a.m., handled.', body: 'When something breaks, the right cat already knows.' },
-    { eyebrow: 'Recovery', title: 'Agents rest. Logs don’t.', body: 'Breathe in. Breathe out. The audit trail keeps purring.' },
-    { eyebrow: 'Rooftop', title: 'Reset + recharge.', body: 'Ship it, then watch the city hum. The colony keeps working.' }
+    { at: 0, eyebrow: 'OpenMeow presents', title: "The Founder's Tower.", body: 'Six floors. One founder. A staff of agents. Scroll to take the tour.' },
+    { at: 1, eyebrow: 'You', title: 'Founder. CEO. Intern.', body: 'Every job is yours. The sticky notes are winning. For now.' },
+    { at: 2, eyebrow: 'Agents', title: 'Staff up in seconds.', body: 'Specialists for every job — research, code, ops, evals. They never sleep. They barely nap.' },
+    { at: 3, eyebrow: 'Orchestration', title: 'One conductor. Many players.', body: 'Plans fan out. Work flows back. Nothing gets lost in the middle.' },
+    { at: 4, eyebrow: 'Observability', title: 'See your agents work.', body: 'Every step, every token, every decision — one pane of glass.' },
+    { at: 5, eyebrow: 'Reliability', title: '2 a.m., handled.', body: 'When something breaks, you know first. Trace it, fix it, back to sleep.' }
   ];
-  const RAIL = ['Colony', 'Lobby', 'Library', 'War Room', 'Braincase', 'Trace Tower', 'Incidents', 'Zen Room', 'Rooftop', 'Coming soon'];
-  const S = WAY.length - 1;      
-  const FLY = 0.66;              
-  const FIN_START = 0.975;
+  const RAIL = ['Tower','2 a.m.','Hire','Orchestrate','Observe','Incident','Launch'];
   const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const stage = document.getElementById('stage');
   const loader = document.getElementById('loader');
@@ -181,23 +183,18 @@
     const fb = document.getElementById('fallback');
     for (let i = 0; i < COPY.length; i++) {
       const s = document.createElement('section');
-      const c = COPY[i];
-      const shot = i === 0
-        ? `<img src="${LOCAL}" alt="The OpenMeow agent colony" loading="lazy" />`
-        : `<div class="shot" style="background-image:url('${LOCAL}');background-size:${(100 / WAY[i].w).toFixed(1)}% auto;background-position:${(WAY[i].cx * 100).toFixed(1)}% ${(WAY[i].cy * 100).toFixed(1)}%"></div>`;
-      s.innerHTML = `<div class="card on"><div class="eyebrow">${c.eyebrow}</div><h2>${c.title}</h2><p>${c.body}</p></div>${shot}`;
+      s.innerHTML = `<div class="card on" style="position:static"><div class="eyebrow">${COPY[i].eyebrow}</div><h2>${COPY[i].title}</h2><p>${COPY[i].body}</p></div><img src="${CDN}${STILLS[i]}" alt="" loading="lazy" />`;
       fb.appendChild(s);
     }
     const end = document.createElement('section');
-    end.innerHTML = `<div class="card on"><h2>OpenMeow.</h2><p>Coming soon.</p></div>`;
+    end.innerHTML = `<div class="card on" style="position:static"><h2>OpenMeow.</h2><p>Coming soon.</p></div><img src="${CDN}${STILLS[6]}" alt="" loading="lazy" />`;
     fb.appendChild(end);
     loader.classList.add('done');
     return;
   }
-  const RIGHT = [1, 3, 7];   
-  const cardNodes = COPY.map((c, i) => {
+  const cardNodes = COPY.map(c => {
     const d = document.createElement('div');
-    d.className = 'card' + (RIGHT.includes(i) ? ' right' : '');
+    d.className = 'card';
     d.innerHTML = `<div class="eyebrow">${c.eyebrow}</div><h2>${c.title}</h2><p>${c.body}</p>`;
     cardsEl.appendChild(d);
     return d;
@@ -207,103 +204,85 @@
     b.title = label;
     b.onclick = () => {
       const total = document.getElementById('track').offsetHeight - innerHeight;
-      const p = i === 0 ? 0 : i === S ? 1 : (i - 1 + FLY + (1 - FLY) * 0.55) / S;
+      const p = i < 6 ? bounds[i].a + (bounds[i].b - bounds[i].a) * 0.12 : 0.99;
       scrollTo({ top: p * total, behavior: 'smooth' });
     };
     rail.appendChild(b);
     return b;
   });
-  const canvas = document.getElementById('cam');
-  const ctx = canvas.getContext('2d');
-  let img = null, imgW = 0, imgH = 0;
-  function loadImage(src) {
-    return new Promise((res, rej) => {
-      const im = new Image();
-      im.crossOrigin = 'anonymous';
-      im.onload = () => res(im);
-      im.onerror = rej;
-      im.src = src;
-      setTimeout(() => rej(new Error('timeout')), 15000);
-    });
-  }
-  (async () => {
-    lbar.style.width = '30%';
-    try { img = await loadImage(HIRES); }
-    catch (e) { lhint.textContent = 'Loading colony'; try { img = await loadImage(LOCAL); } catch (e2) {} }
-    if (!img) { lhint.textContent = 'Could not load the colony'; return; }
-    imgW = img.naturalWidth; imgH = img.naturalHeight;
-    lbar.style.width = '100%';
+  const vids = LEGS.map(() => {
+    const v = document.createElement('video');
+    v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
+    stage.insertBefore(v, stage.querySelector('.vignette'));
+    return v;
+  });
+  let loaded = 0, ready = false;
+  async function loadAll() {
+    for (let i = 0; i < LEGS.length; i++) {
+      try {
+        const r = await fetch(CDN + LEGS[i].file, { mode: 'cors' });
+        const b = await r.blob();
+        vids[i].src = URL.createObjectURL(b);
+        await new Promise(res => { vids[i].onloadedmetadata = res; setTimeout(res, 4000); });
+      } catch (e) {  }
+      loaded++;
+      lbar.style.width = Math.round(loaded / LEGS.length * 100) + '%';
+      if (i === 1 && !ready) { ready = true; loader.classList.add('done'); }
+    }
+    if (!ready) { ready = true; loader.classList.add('done'); }
     lhint.textContent = 'Ready';
-    resize();
-    loader.classList.add('done');
-  })();
-  let cw = 0, ch = 0, dpr = 1;
-  function resize() {
-    dpr = Math.min(2, devicePixelRatio || 1);
-    cw = stage.clientWidth; ch = stage.clientHeight;
-    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
   }
-  addEventListener('resize', resize);
-  let targetP = 0, smoothP = 0;
+  loadAll();
+  const totalDur = LEGS.reduce((a, l) => a + l.dur, 0);
+  const bounds = []; let acc = 0;
+  for (const l of LEGS) { bounds.push({ a: acc / totalDur, b: (acc + l.dur) / totalDur }); acc += l.dur; }
+  let targetP = 0, smoothP = 0, cur = -1;
+  const seekBusy = new Array(LEGS.length).fill(false);
+  const seekPending = new Array(LEGS.length).fill(null);
+  vids.forEach((v, i) => {
+    v.addEventListener('seeking', () => { seekBusy[i] = true; });
+    v.addEventListener('seeked', () => {
+      seekBusy[i] = false;
+      if (seekPending[i] !== null) { const t = seekPending[i]; seekPending[i] = null; safeSeek(i, t); }
+    });
+  });
+  function safeSeek(i, t) {
+    const v = vids[i];
+    if (!v.duration) return;
+    const ct = Math.min(Math.max(t, 0), v.duration - 0.03);
+    if (seekBusy[i]) { seekPending[i] = ct; return; }
+    if (Math.abs(v.currentTime - ct) > 0.001) v.currentTime = ct;
+  }
   function onScroll() {
     const total = document.getElementById('track').offsetHeight - innerHeight;
     targetP = Math.min(1, Math.max(0, scrollY / total));
   }
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  const easeIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  function cameraAt(p) {
-    const x = Math.min(S - 1e-6, Math.max(0, p * S));
-    const i = Math.floor(x);
-    const u = x - i;
-    const a = WAY[i], b = WAY[i + 1];
-    let cx, cy, w;
-    if (u < FLY) {
-      const t = easeIO(u / FLY);
-      cx = a.cx + (b.cx - a.cx) * t;
-      cy = a.cy + (b.cy - a.cy) * t;
-      w = Math.exp(Math.log(a.w) + (Math.log(b.w) - Math.log(a.w)) * t);
-      const dist = Math.hypot(b.cx - a.cx, b.cy - a.cy);
-      const bump = Math.min(.4, dist * 1.1) * (a.w < .9 && b.w < .9 ? 1 : .25);
-      w *= 1 + bump * Math.sin(Math.PI * t);
-    } else {
-      const t = (u - FLY) / (1 - FLY);
-      cx = b.cx; cy = b.cy;
-      w = b.w * (1 - 0.03 * t);   
-    }
-    return { cx, cy, w, seg: i, u };
-  }
-  function draw(cam) {
-    if (!img || !cw) return;
-    let sw = Math.min(imgW, cam.w * imgW);
-    let sh = sw * (ch / cw);
-    if (sh > imgH) { sh = imgH; sw = sh * (cw / ch); }
-    let sx = cam.cx * imgW - sw / 2;
-    let sy = cam.cy * imgH - sh / 2;
-    sx = Math.max(0, Math.min(imgW - sw, sx));
-    sy = Math.max(0, Math.min(imgH - sh, sy));
-    ctx.fillStyle = '#0B0A09';
-    ctx.fillRect(0, 0, cw, ch);
-    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
-  }
+  const FIN_START = 0.965;
   function frame() {
     smoothP += (targetP - smoothP) * 0.12;
     const p = smoothP;
-    const cam = cameraAt(p);
-    draw(cam);
+    let li = 0;
+    for (let i = 0; i < bounds.length; i++) if (p >= bounds[i].a) li = i;
+    const seg = bounds[li];
+    const local = Math.min(1, Math.max(0, (p - seg.a) / (seg.b - seg.a)));
+    if (li !== cur) {
+      vids.forEach((v, i) => { v.style.opacity = i === li ? 1 : 0; });
+      cur = li;
+    }
+    safeSeek(li, local * (vids[li].duration || LEGS[li].dur));
+    if (local > 0.96 && li < LEGS.length - 1) safeSeek(li + 1, 0);
+    if (local < 0.04 && li > 0) safeSeek(li - 1, (vids[li - 1].duration || LEGS[li - 1].dur) - 0.05);
     cardNodes.forEach((cd, i) => {
-      const on = i === 0
-        ? (p * S < 0.30)
-        : (cam.seg === i - 1 && cam.u > FLY + (1 - FLY) * 0.12 && p < FIN_START);
+      const on = (i === 0) ? (li === 0 && local < 0.85) : (li === i && local > 0.06 && local < 0.5);
       cd.classList.toggle('on', on);
     });
     finale.classList.toggle('on', p > FIN_START);
-    hint.classList.toggle('off', p > 0.015);
-    let stop = Math.round(p * S);
-    if (p > FIN_START) stop = S;
+    hint.classList.toggle('off', p > 0.02);
+    let stop = 0;
+    for (let i = 0; i < bounds.length; i++) if (p >= bounds[i].a + 0.01) stop = i;
+    if (p > FIN_START) stop = 6;
     railBtns.forEach((b, i) => b.classList.toggle('on', i === stop));
     requestAnimationFrame(frame);
   }
