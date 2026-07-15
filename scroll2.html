@@ -145,6 +145,18 @@
   }
   #rail button.on { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 10px rgba(51,214,200,.7); transform: scale(1.3); }
   #fallback { display: none; }
+  @media (max-width: 640px) {
+    .card { left: 18px; right: 18px; bottom: max(22px, env(safe-area-inset-bottom, 0px) + 18px); max-width: none; }
+    .card h2 { font-size: 27px; }
+    .card p { font-size: 14px; }
+    #rail { right: 8px; gap: 14px; }
+    #rail button { width: 12px; height: 12px; }
+    #intro { gap: 13px; padding: 0 22px; }
+    #intro p { font-size: 14px; }
+    #begin { padding: 16px 34px; font-size: 17px; }
+    #finale .coming, .coming { font-size: 19px; }
+    #hint { bottom: max(20px, env(safe-area-inset-bottom, 0px) + 14px); }
+  }
   @media (prefers-reduced-motion: reduce) {
     #track, #rail, #hint { display: none; }
     #fallback { display: block; padding: 8vh 6vw; }
@@ -193,6 +205,11 @@
     { file: 'hf_20260715_051816_1fa564f5-8d78-45ca-afbe-a41d450f4c7d.mp4', dur: 8 },
     { file: 'hf_20260715_051813_7ff1175e-e6ec-4bd1-9f88-66d7df9e48fe.mp4', dur: 8 }
   ];
+  const VIDS_P = [
+    'hf_20260715_163114_70ccdee8-c679-4eb9-a123-a7739b1105b4.mp4', 'hf_20260715_155619_68cf50d0-a057-4f5f-a116-c25cedb3c90d.mp4', 'hf_20260715_163308_65b22dc3-5de0-41a1-aa9f-02919eb6cd19.mp4', 'hf_20260715_163325_d8396a90-6438-4415-811e-e9bc6fe0cce5.mp4', 'hf_20260715_164927_e8a0adfc-d474-426a-9ecf-2d1c2e4bf087.mp4', 'hf_20260715_051816_1fa564f5-8d78-45ca-afbe-a41d450f4c7d.mp4', 'hf_20260715_165810_c3af5a21-fce5-422a-ac5c-0cd7cbab395c.mp4'
+  ];
+  const PORTRAIT = innerHeight > innerWidth * 1.15;
+  if (PORTRAIT) VIDS.forEach((v, i) => { v.file = VIDS_P[i]; });
   const ZOOMS = [
     'hf_20260715_051800_8efda7ef-fea4-4b73-ab7f-8b7d05e5801f_min.webp',
     'hf_20260715_051805_de5a9386-1fe0-47d9-ab94-784f0ded5cfe_min.webp',
@@ -210,10 +227,10 @@
     { eyebrow: 'Observability', title: 'The whole system, watched.', body: 'From up here, you can see every trace land.' }
   ];
   const SEGS = [
-    { img: 0, w: .45 },
+    PORTRAIT ? { v: 0, hold: 1, at: 0, w: .45 } : { img: 0, w: .45 },
     { v: 0, dir: 1, w: .8 },   { v: 0, hold: 1, w: .35, card: 0 },
     { v: 1, dir: 1, w: 1.3 },
-    { img: 1, w: .5, card: 1 },
+    PORTRAIT ? { v: 1, hold: 1, w: .5, card: 1 } : { img: 1, w: .5, card: 1 },
     { v: 2, dir: 1, w: .85 },  { v: 2, hold: 1, w: .45, card: 2 },  { v: 2, dir: -1, w: .65 },
     { v: 3, dir: 1, w: .85 },  { v: 3, hold: 1, w: .45, card: 3 },  { v: 3, dir: -1, w: .65 },
     { v: 4, dir: 1, w: .85 },  { v: 4, hold: 1, w: .45, card: 4 },  { v: 4, dir: -1, w: .65 },
@@ -353,7 +370,7 @@
       const v = vidEls[seg.v];
       show(v);
       const dur = v.duration || VIDS[seg.v].dur;
-      if (seg.hold) safeSeek(seg.v, dur);
+      if (seg.hold) safeSeek(seg.v, seg.at === 0 ? 0.001 : dur);
       else safeSeek(seg.v, seg.dir === 1 ? local * dur : (1 - local) * dur);
       if (!seg.hold && local < 0.06 && seg.dir === 1) safeSeek(seg.v, 0.001);
     }
