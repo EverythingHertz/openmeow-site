@@ -88,6 +88,18 @@
     -webkit-background-clip: text; background-clip: text; color: transparent;
     filter: drop-shadow(0 2px 18px rgba(70,180,242,.4));
   }
+  #fparade { position: absolute; left: 0; right: 0; bottom: max(3.5vh, env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+  .prow { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+  .ptrack { display: flex; gap: clamp(10px, 1.6vw, 18px); width: max-content; animation-timing-function: linear; animation-iteration-count: infinite; animation-play-state: paused; }
+  #finale.on .ptrack { animation-play-state: running; }
+  .prow.far .ptrack { animation-name: pslideR; animation-duration: 150s; }
+  .prow.near .ptrack { animation-name: pslideL; animation-duration: 110s; margin-top: clamp(6px, 1vh, 12px); }
+  .ptrack img { width: clamp(52px, 6.5vw, 92px); height: clamp(52px, 6.5vw, 92px); flex: none; -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 76%); mask-image: radial-gradient(circle, #000 52%, transparent 76%); }
+  .prow.far img { width: clamp(40px, 5vw, 70px); height: clamp(40px, 5vw, 70px); }
+  .prow.far { opacity: .32; }
+  .prow.near { opacity: .48; }
+  @keyframes pslideL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes pslideR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
   #hint {
     position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
     z-index: 12; display: flex; flex-direction: column; align-items: center; gap: 7px;
@@ -172,6 +184,7 @@
     <div id="finale">
       <div class="wordmark"><span>Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></div>
       <div class="coming">Coming&nbsp;soon</div>
+      <div id="fparade" aria-hidden="true"><div class="prow far"><div class="ptrack"></div></div><div class="prow near"><div class="ptrack"></div></div></div>
     </div>
     <div id="hint"><span>Scroll</span><span class="chev" aria-hidden="true"></span></div>
     <div id="intro">
@@ -301,7 +314,7 @@
   function bump() {
     loadedCount++;
     lbar.style.width = Math.round(loadedCount / totalLoads * 100) + '%';
-    if (loadedCount >= totalLoads) lhint.textContent = 'Ready';
+    if (loadedCount >= totalLoads) { lhint.textContent = 'Ready'; buildParade(); }
   }
   imgEls.forEach(im => im.decode().catch(() => {}).then(bump));
   (async () => {
@@ -317,6 +330,22 @@
     }
     if (!ready) { ready = true; loader.classList.add('done'); }
   })();
+  const FAR_CATS = ['b-detective','c-chef','b-scribe','c-professor','c-librarian','b-ops','c-aviator','d-mailcat','d-photographer','d-miner','d-fortune','e-beekeeper','e-lifeguard','e-gardener','e-archaeologist'];
+  const NEAR_CATS = ['b-scientist','b-dev','c-judge','b-artist','c-guard','c-doctor','c-toolsmith','d-firefighter','d-referee','d-magician','d-banker','e-conductor','e-butler','e-operator','e-janitor'];
+  let paradeBuilt = false;
+  function buildParade() {
+    if (paradeBuilt) return;
+    paradeBuilt = true;
+    document.querySelectorAll('#fparade .prow').forEach((row, ri) => {
+      const names = ri === 0 ? FAR_CATS : NEAR_CATS;
+      const tr = row.querySelector('.ptrack');
+      [...names, ...names].forEach(n => {
+        const im = document.createElement('img');
+        im.src = n + '.webp'; im.alt = ''; im.decoding = 'async';
+        tr.appendChild(im);
+      });
+    });
+  }
   let targetP = 0, smoothP = 0, curLayer = null;
   const seekBusy = new Array(VIDS.length).fill(false);
   const seekPending = new Array(VIDS.length).fill(null);
@@ -373,6 +402,7 @@
       const on = seg.card === ci && local > 0.12 && local < 0.92 && si < FIN_SEG;
       cd.classList.toggle('on', on);
     });
+    if (si >= FIN_SEG - 3) buildParade();
     finale.classList.toggle('on', si >= FIN_SEG);
     intro.classList.toggle('off', p > 0.008);
     hint.classList.toggle('off', p < 0.012 || p > 0.06);
