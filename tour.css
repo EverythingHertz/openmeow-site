@@ -1,0 +1,75 @@
+/* Progressive enhancement: the readable tour works before JS and without motion. */
+html { color-scheme: dark; }
+body { overflow-x: clip; }
+#track, #rail, #mobile-nav, #progress { display: none; }
+#fallback { display: block; padding: 8vh max(22px,6vw); }
+#fallback section, #fallback header { max-width: 900px; margin: 0 auto 64px; }
+#fallback .card { position: static; opacity: 1; transform: none; margin: 0 0 20px; max-width: 52ch; }
+#fallback img { display: block; width: 100%; height: auto; border-radius: 16px; }
+#fallback h1 { font-family: var(--display); font-size: clamp(30px,5vw,54px); margin: 12px 0; }
+#fallback header p { color: var(--muted); line-height: 1.6; max-width: 50ch; }
+.tour #track { display: block; height: 1450vh; height: 1450svh; }
+.tour #fallback { display: none; }
+.tour #rail { display: flex; }
+.tour #progress { display: block; }
+#stage { height: 100vh; height: 100svh; isolation: isolate; }
+#world { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+#world .scene, #world .tour-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+#world .scene { transform-origin: 50% 48%; }
+#world .tour-video { z-index: 3; }
+.vignette { z-index: 3; }
+.grain { display: none; }
+#cards:has(.on) { background: linear-gradient(0deg,rgba(5,4,3,.8),transparent 48%); }
+.card { max-width: min(480px,78vw); }
+#intro { padding: 28px 64px; gap: 14px; }
+#intro .big { flex-shrink: 0; }
+#intro h1 { max-width: 22ch; }
+#intro p { max-width: 46ch; }
+#begin { animation: none; min-height: 52px; touch-action: manipulation; }
+#begin .bchev { animation: none; }
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 4px; }
+#rail { right: max(6px,env(safe-area-inset-right)); gap: 0; }
+#rail button { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 12px; background: transparent; box-shadow: none; transform: none; touch-action: manipulation; }
+#rail button span { width: 8px; height: 8px; border: 1px solid rgba(244,239,231,.55); border-radius: 50%; box-shadow: 0 0 0 3px rgba(11,10,9,.3); }
+#rail button.on { background: transparent; box-shadow: none; transform: none; }
+#rail button.on span { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 12px rgba(51,214,200,.6); }
+#rail button:hover { background: rgba(11,10,9,.5); }
+#progress { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 50; background: rgba(244,239,231,.08); pointer-events: none; }
+#progress-fill { height: 100%; background: linear-gradient(90deg,var(--gold),var(--teal)); transform: scaleX(0); transform-origin: left; }
+#mobile-nav { position: fixed; z-index: 40; bottom: max(12px,env(safe-area-inset-bottom)); left: max(16px,env(safe-area-inset-left)); right: max(16px,env(safe-area-inset-right)); align-items: center; justify-content: space-between; gap: 6px; border: 1px solid rgba(244,239,231,.2); border-radius: 18px; padding: 3px; background: rgba(11,10,9,.94); box-shadow: 0 8px 30px rgba(0,0,0,.24); max-width: 440px; margin-inline: auto; }
+#mobile-nav button { flex: 0 0 48px; width: 48px; height: 48px; border: 0; border-radius: 14px; color: var(--teal-hi); background: transparent; font-size: 24px; cursor: pointer; touch-action: manipulation; }
+#mobile-nav button:disabled { color: var(--faint); cursor: default; }
+#chapter { font: 11px var(--mono); color: var(--ink); text-align: center; line-height: 1.5; }
+#hint { pointer-events: none; }
+@media (max-width:767px), (max-height:650px), (any-pointer:coarse) {
+  .tour #rail { display: none; }
+  .tour #mobile-nav { display: flex; }
+  .card { left: max(22px,env(safe-area-inset-left)); right: max(22px,env(safe-area-inset-right)); bottom: calc(96px + env(safe-area-inset-bottom,0px)); max-width: 52ch; }
+  .card h2 { font-size: clamp(25px,6.5vw,34px); }
+  .card p { font-size: 15px; line-height: 1.5; max-width: 40ch; }
+  #intro { padding: 28px 24px 100px; }
+  #intro .big { font-size: clamp(40px,11vw,76px); }
+  #intro h1 { font-size: clamp(23px,6vw,36px); }
+  #intro p { font-size: 15px; }
+  #hint { bottom: 88px; }
+  #finale { padding-bottom: 70px; }
+  #fparade { bottom: 94px; }
+  #fallback { padding-inline: 22px; }
+}
+@media (max-height:500px) and (orientation:landscape) {
+  #intro { gap: 7px; padding: 16px 75px 76px; }
+  #intro .big { font-size: 38px; }
+  #intro h1 { font-size: 22px; max-width: none; }
+  #intro p { font-size: 13px; max-width: 60ch; }
+  #begin { margin-top: 4px; padding: 10px 24px; min-height: 44px; font-size: 14px; }
+  .card { bottom: 80px; }
+  .card h2 { font-size: 25px; }
+  .card p { font-size: 14px; margin-top: 6px; }
+  #fparade .far { display:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .tour #track, .tour #rail, .tour #mobile-nav, .tour #progress { display:none; }
+  #fallback, .tour #fallback { display:block; }
+  *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}

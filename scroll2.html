@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>OpenMeow — The Observatory</title>
 <meta name="description" content="Scroll the tower from empty shell to a full staff of agents — then step onto every floor. OpenMeow: open-source observability for AI agents." />
 <meta property="og:title" content="OpenMeow — open-source observability for AI agents" />
@@ -179,20 +179,21 @@
     #fallback .card { position: static; opacity: 1; transform: none; margin-bottom: 18px; }
   }
 </style>
+<link rel="stylesheet" href="tour.css" />
 </head>
 <body>
 <div id="track">
   <div id="stage">
+    <div id="world" aria-hidden="true"></div>
     <div class="vignette"></div>
     <div class="grain"></div>
-    <div id="loader"><div class="mark">Open<span class="m">Meow</span></div><div class="bar"><i id="lbar"></i></div><div class="hint" id="lhint">Unlocking the observatory</div></div>
     <div id="cards"></div>
     <div id="finale">
       <div class="wordmark"><span>Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></div>
       <div class="coming">Coming&nbsp;soon</div>
       <div id="fparade" aria-hidden="true"><div class="prow far"><div class="ptrack"></div></div><div class="prow near"><div class="ptrack"></div></div></div>
     </div>
-    <div id="hint"><span>Scroll</span><span class="chev" aria-hidden="true"></span></div>
+    <div id="hint" aria-hidden="true"><span>Scroll</span><span class="chev" aria-hidden="true"></span></div>
     <div id="intro">
       <div class="big"><span>Open</span><span class="meow">Meow</span></div>
       <h1>The Observatory: a guided tour</h1>
@@ -201,224 +202,23 @@
     </div>
   </div>
 </div>
-<div id="rail" aria-label="Tour progress"></div>
-<div id="fallback"></div>
-<script>
-(() => {
-  const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3DlCVdjo8RXELA5Sxeob2Uxh8GX/';
-  const IMGS = [
-    'hf_20260519_204356_76115971-1cc1-4a4e-b6a3-70a63bf058d9_min.webp',
-    'hf_20260715_042856_3ef1ae40-fb2d-4046-ab4f-42f909180bfd_min.webp'
-  ];
-  const VIDS = [
-    { file: 'hf_20260715_060008_237283a7-2399-405f-9042-4684859f77db.mp4', dur: 8 },
-    { file: 'hf_20260715_060010_6fa2372c-ff19-406f-923a-afe400edf2f5.mp4', dur: 10 },
-    { file: 'hf_20260715_052639_f9ff5220-3aec-4459-be97-20792ed2e891.mp4', dur: 8 },
-    { file: 'hf_20260715_052642_30566d21-b19e-445e-b8e0-7859385e22c7.mp4', dur: 8 },
-    { file: 'hf_20260715_051809_b9be0f73-0c86-423b-9221-6271a645e796.mp4', dur: 8 },
-    { file: 'hf_20260715_051816_1fa564f5-8d78-45ca-afbe-a41d450f4c7d.mp4', dur: 8 },
-    { file: 'hf_20260715_051813_7ff1175e-e6ec-4bd1-9f88-66d7df9e48fe.mp4', dur: 8 }
-  ];
-  const VIDS_P = [
-    'hf_20260715_163114_70ccdee8-c679-4eb9-a123-a7739b1105b4.mp4', 'hf_20260715_155619_68cf50d0-a057-4f5f-a116-c25cedb3c90d.mp4', 'hf_20260715_163308_65b22dc3-5de0-41a1-aa9f-02919eb6cd19.mp4', 'hf_20260715_163325_d8396a90-6438-4415-811e-e9bc6fe0cce5.mp4', 'hf_20260715_164927_e8a0adfc-d474-426a-9ecf-2d1c2e4bf087.mp4', 'hf_20260715_051816_1fa564f5-8d78-45ca-afbe-a41d450f4c7d.mp4', 'hf_20260715_165810_c3af5a21-fce5-422a-ac5c-0cd7cbab395c.mp4'
-  ];
-  const PORTRAIT = innerHeight > innerWidth * 1.15;
-  if (PORTRAIT) VIDS.forEach((v, i) => { v.file = VIDS_P[i]; });
-  const ZOOMS = [
-    'hf_20260715_051800_8efda7ef-fea4-4b73-ab7f-8b7d05e5801f_min.webp',
-    'hf_20260715_051805_de5a9386-1fe0-47d9-ab94-784f0ded5cfe_min.webp',
-    'hf_20260715_043327_1a46b86a-442d-4d7f-b692-1a3e4502fd34_min.webp',
-    'hf_20260715_043340_992b6a20-61fa-4828-887a-9a09c868d964_min.webp',
-    'hf_20260715_043336_83283dde-d603-4f46-a70e-da62819c3675_min.webp'
-  ];
-  const COPY = [
-    { eyebrow: 'Overture', title: 'Every system needs a conductor.', body: 'The baton is up. Keep scrolling.' },
-    { eyebrow: 'Move-in day', title: 'Your agent staff, installed.', body: 'Every floor a system. Every desk a specialist. Lights on.' },
-    { eyebrow: 'Execution', title: 'Tool calls, on the record.', body: 'The toolsmith logs every call, so you never wonder what actually ran.' },
-    { eyebrow: 'Cost', title: 'Every token, weighed.', body: 'The kibble budget balances itself — and shows its work.' },
-    { eyebrow: 'Evals', title: 'Nothing ships un-judged.', body: 'The approval gate holds until the gavel comes down.' },
-    { eyebrow: 'Memory', title: 'Secrets stay vaulted.', body: 'Keys, prompts, state — locked up tighter than the phantom mouse.' },
-    { eyebrow: 'Observability', title: 'The whole system, watched.', body: 'From up here, you can see every trace land.' }
-  ];
-  const SEGS = [
-    PORTRAIT ? { v: 0, hold: 1, at: 0, w: .45 } : { img: 0, w: .45 },
-    { v: 0, dir: 1, w: .8 },   { v: 0, hold: 1, w: .35, card: 0 },
-    { v: 1, dir: 1, w: 1.3 },
-    PORTRAIT ? { v: 1, hold: 1, w: .5, card: 1 } : { img: 1, w: .5, card: 1 },
-    { v: 2, dir: 1, w: .85 },  { v: 2, hold: 1, w: .45, card: 2 },  { v: 2, dir: -1, w: .65 },
-    { v: 3, dir: 1, w: .85 },  { v: 3, hold: 1, w: .45, card: 3 },  { v: 3, dir: -1, w: .65 },
-    { v: 4, dir: 1, w: .85 },  { v: 4, hold: 1, w: .45, card: 4 },  { v: 4, dir: -1, w: .65 },
-    { v: 5, dir: 1, w: .85 },  { v: 5, hold: 1, w: .45, card: 5 },  { v: 5, dir: -1, w: .65 },
-    { v: 6, dir: 1, w: 1.0 },  { v: 6, hold: 1, w: .55, card: 6 },
-    { v: 6, hold: 1, w: .45 }
-  ];
-  const RAIL = [
-    { label: 'Empty shell', seg: 0 }, { label: 'Overture', seg: 2 }, { label: 'Build-out', seg: 3 },
-    { label: 'The tower', seg: 4 },
-    { label: 'Tool Calls', seg: 6 }, { label: 'Kibble Budget', seg: 9 }, { label: 'Approval Gate', seg: 12 },
-    { label: 'Phantom Vault', seg: 15 }, { label: 'Rooftop', seg: 18 }, { label: 'Coming soon', seg: 19 }
-  ];
-  const FIN_SEG = 19;
-  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const stage = document.getElementById('stage');
-  const loader = document.getElementById('loader');
-  const lbar = document.getElementById('lbar');
-  const lhint = document.getElementById('lhint');
-  const cardsEl = document.getElementById('cards');
-  const finale = document.getElementById('finale');
-  const hint = document.getElementById('hint');
-  const rail = document.getElementById('rail');
-  if (rm) {
-    const fb = document.getElementById('fallback');
-    const shots = [CDN + IMGS[0], CDN + IMGS[1], ...ZOOMS.map(z => CDN + z)];
-    COPY.forEach((c, i) => {
-      const s = document.createElement('section');
-      s.innerHTML = `<div class="card on"><div class="eyebrow">${c.eyebrow}</div><h2>${c.title}</h2><p>${c.body}</p></div><img src="${shots[i]}" alt="" loading="lazy" />`;
-      fb.appendChild(s);
-    });
-    const end = document.createElement('section');
-    end.innerHTML = `<div class="card on"><h2>OpenMeow.</h2><p>Coming soon.</p></div>`;
-    fb.appendChild(end);
-    loader.classList.add('done');
-    return;
-  }
-  const imgEls = IMGS.map(f => {
-    const im = document.createElement('img');
-    im.className = 'layer'; im.decoding = 'async'; im.src = CDN + f;
-    stage.insertBefore(im, stage.querySelector('.vignette'));
-    return im;
-  });
-  const vidEls = VIDS.map(() => {
-    const v = document.createElement('video');
-    v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
-    stage.insertBefore(v, stage.querySelector('.vignette'));
-    return v;
-  });
-  const cardNodes = COPY.map(c => {
-    const d = document.createElement('div');
-    d.className = 'card';
-    d.innerHTML = `<div class="eyebrow">${c.eyebrow}</div><h2>${c.title}</h2><p>${c.body}</p>`;
-    cardsEl.appendChild(d);
-    return d;
-  });
-  const totalW = SEGS.reduce((a, s) => a + s.w, 0);
-  let acc = 0;
-  const bounds = SEGS.map(s => { const a = acc / totalW; acc += s.w; return { a, b: acc / totalW }; });
-  const railBtns = RAIL.map(r => {
-    const b = document.createElement('button');
-    b.title = r.label;
-    b.onclick = () => {
-      const total = document.getElementById('track').offsetHeight - innerHeight;
-      const seg = bounds[r.seg];
-      scrollTo({ top: (seg.a + (seg.b - seg.a) * 0.5) * total, behavior: 'smooth' });
-    };
-    rail.appendChild(b);
-    return b;
-  });
-  let ready = false, loadedCount = 0;
-  const totalLoads = VIDS.length + IMGS.length;
-  function bump() {
-    loadedCount++;
-    lbar.style.width = Math.round(loadedCount / totalLoads * 100) + '%';
-    if (loadedCount >= totalLoads) { lhint.textContent = 'Ready'; buildParade(); }
-  }
-  imgEls.forEach(im => im.decode().catch(() => {}).then(bump));
-  (async () => {
-    for (let i = 0; i < VIDS.length; i++) {
-      try {
-        const r = await fetch(CDN + VIDS[i].file, { mode: 'cors' });
-        const b = await r.blob();
-        vidEls[i].src = URL.createObjectURL(b);
-        await new Promise(res => { vidEls[i].onloadedmetadata = res; setTimeout(res, 4000); });
-      } catch (e) {}
-      bump();
-      if (i === 0 && !ready) { ready = true; loader.classList.add('done'); }
-    }
-    if (!ready) { ready = true; loader.classList.add('done'); }
-  })();
-  const FAR_CATS = ['b-detective','c-chef','b-scribe','c-professor','c-librarian','b-ops','c-aviator','d-mailcat','d-photographer','d-miner','d-fortune','e-beekeeper','e-lifeguard','e-gardener','e-archaeologist'];
-  const NEAR_CATS = ['b-scientist','b-dev','c-judge','b-artist','c-guard','c-doctor','c-toolsmith','d-firefighter','d-referee','d-magician','d-banker','e-conductor','e-butler','e-operator','e-janitor'];
-  let paradeBuilt = false;
-  function buildParade() {
-    if (paradeBuilt) return;
-    paradeBuilt = true;
-    document.querySelectorAll('#fparade .prow').forEach((row, ri) => {
-      const names = ri === 0 ? FAR_CATS : NEAR_CATS;
-      const tr = row.querySelector('.ptrack');
-      [...names, ...names].forEach(n => {
-        const im = document.createElement('img');
-        im.src = n + '.webp'; im.alt = ''; im.decoding = 'async';
-        tr.appendChild(im);
-      });
-    });
-  }
-  let targetP = 0, smoothP = 0, curLayer = null;
-  const seekBusy = new Array(VIDS.length).fill(false);
-  const seekPending = new Array(VIDS.length).fill(null);
-  vidEls.forEach((v, i) => {
-    v.addEventListener('seeking', () => { seekBusy[i] = true; });
-    v.addEventListener('seeked', () => {
-      seekBusy[i] = false;
-      if (seekPending[i] !== null) { const t = seekPending[i]; seekPending[i] = null; safeSeek(i, t); }
-    });
-  });
-  function safeSeek(i, t) {
-    const v = vidEls[i];
-    if (!v.duration) return;
-    const ct = Math.min(Math.max(t, 0), v.duration - 0.03);
-    if (seekBusy[i]) { seekPending[i] = ct; return; }
-    if (Math.abs(v.currentTime - ct) > 0.001) v.currentTime = ct;
-  }
-  function show(el) {
-    if (curLayer === el) return;
-    imgEls.forEach(x => { x.style.opacity = x === el ? 1 : 0; });
-    vidEls.forEach(x => { x.style.opacity = x === el ? 1 : 0; });
-    curLayer = el;
-  }
-  function onScroll() {
-    const total = document.getElementById('track').offsetHeight - innerHeight;
-    targetP = Math.min(1, Math.max(0, scrollY / total));
-  }
-  addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-  const intro = document.getElementById('intro');
-  document.getElementById('begin').onclick = () => {
-    const total = document.getElementById('track').offsetHeight - innerHeight;
-    const seg = bounds[2];
-    scrollTo({ top: (seg.a + (seg.b - seg.a) * 0.6) * total, behavior: 'smooth' });
-  };
-  function frame() {
-    smoothP += (targetP - smoothP) * 0.12;
-    const p = smoothP;
-    let si = 0;
-    for (let i = 0; i < bounds.length; i++) if (p >= bounds[i].a) si = i;
-    const seg = SEGS[si], bd = bounds[si];
-    const local = Math.min(1, Math.max(0, (p - bd.a) / (bd.b - bd.a)));
-    if (seg.img !== undefined) {
-      show(imgEls[seg.img]);
-    } else {
-      const v = vidEls[seg.v];
-      show(v);
-      const dur = v.duration || VIDS[seg.v].dur;
-      if (seg.hold) safeSeek(seg.v, seg.at === 0 ? 0.001 : dur);
-      else safeSeek(seg.v, seg.dir === 1 ? local * dur : (1 - local) * dur);
-      if (!seg.hold && local < 0.06 && seg.dir === 1) safeSeek(seg.v, 0.001);
-    }
-    cardNodes.forEach((cd, ci) => {
-      const on = seg.card === ci && local > 0.12 && local < 0.92 && si < FIN_SEG;
-      cd.classList.toggle('on', on);
-    });
-    if (si >= FIN_SEG - 3) buildParade();
-    finale.classList.toggle('on', si >= FIN_SEG);
-    intro.classList.toggle('off', p > 0.008);
-    hint.classList.toggle('off', p < 0.012 || p > 0.06);
-    let stop = 0;
-    RAIL.forEach((r, i) => { if (si >= r.seg) stop = i; });
-    railBtns.forEach((b, i) => b.classList.toggle('on', i === stop));
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-})();
-</script>
+<nav id="rail" aria-label="Tour chapters"></nav>
+<nav id="mobile-nav" aria-label="Tour chapters">
+  <button id="previous" type="button" aria-label="Previous chapter" disabled>←</button>
+  <span id="chapter" aria-live="polite">01 / 10 · Empty shell</span>
+  <button id="next" type="button" aria-label="Next chapter">→</button>
+</nav>
+<div id="progress" aria-hidden="true"><div id="progress-fill"></div></div>
+<main id="fallback">
+<header><div class="wordmark">Open<span class="meow">Meow</span></div><h1>The Observatory: a guided tour</h1><p>One empty tower. A full staff of AI agents about to move in. Explore every floor.</p></header>
+<section><div class="card"><div class="eyebrow">Overture</div><h2>Every system needs a conductor.</h2><p>The baton is up. Keep scrolling.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-1.webp" /><img src="media/landscape-1.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Move-in day</div><h2>Your agent staff, installed.</h2><p>Every floor a system. Every desk a specialist. Lights on.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-2.webp" /><img src="media/landscape-2.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Execution</div><h2>Tool calls, on the record.</h2><p>The toolsmith logs every call, so you never wonder what actually ran.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-3.webp" /><img src="media/landscape-3.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Cost</div><h2>Every token, weighed.</h2><p>The kibble budget balances itself — and shows its work.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-4.webp" /><img src="media/landscape-4.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Evals</div><h2>Nothing ships un-judged.</h2><p>The approval gate holds until the gavel comes down.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-5.webp" /><img src="media/landscape-5.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Memory</div><h2>Secrets stay vaulted.</h2><p>Keys, prompts, state — locked up tighter than the phantom mouse.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-6.webp" /><img src="media/landscape-6.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Observability</div><h2>The whole system, watched.</h2><p>From up here, you can see every trace land.</p></div><picture><source media="(orientation: portrait)" srcset="media/portrait-7.webp" /><img src="media/landscape-7.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><h2>OpenMeow.</h2><p>Coming soon.</p></section></main>
+<script type="module" src="tour.mjs"></script>
 </body>
 </html>
