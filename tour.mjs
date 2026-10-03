@@ -1,4 +1,4 @@
-import {clamp,progressAt,chooseMode,damp,seekTime,COPY,BOUNDS,STOPS,sceneAt,cameraAt} from './tour-model.mjs';
+import {clamp,progressAt,chooseMode,damp,seekTime,COPY,BOUNDS,STOPS,sceneAt,cameraAt} from './tour-model.mjs?v=film2';
 
 const root=document.documentElement;
 const track=document.getElementById('track');
@@ -19,7 +19,7 @@ const images=new Map(), videos=new Map();
 function wake() {
   if(!frameId && mode!=='reading' && !document.hidden) frameId=requestAnimationFrame(render);
 }
-function imageSource(index) { return `media/${portrait?'portrait':'landscape'}-${index}.webp`; }
+function imageSource(index) { return `media/poster-${portrait?'portrait':'landscape'}-v2-${index}.webp`; }
 function ensureImage(index) {
   if(images.has(index)) return images.get(index);
   const img=new Image(); img.className='scene'; img.alt=''; img.decoding='async';
@@ -37,10 +37,12 @@ function ensureVideo(index) {
   if(videos.has(index)) return videos.get(index);
   const video=document.createElement('video');
   video.className='tour-video'; video.muted=true; video.defaultMuted=true;
-  video.playsInline=true; video.preload='auto'; video.disableRemotePlayback=true;
+  video.playsInline=true; video.preload='metadata'; video.disableRemotePlayback=true;
   video.setAttribute('aria-hidden','true');
   // Native byte-range loading starts playback without a full-file blob download.
-  video.src=`media/desktop-${index}.mp4`;
+  // The vault's original clip is shared by both orientations.
+  const format=portrait && index!==5?'portrait':'landscape';
+  video.src=`media/film-${format}-v2-${index}.mp4`;
   ['loadeddata','loadedmetadata','seeked'].forEach(event=>video.addEventListener(event,wake));
   video.addEventListener('error',()=>{video.dataset.failed='true';video.style.opacity='0';wake();});
   world.append(video); videos.set(index,video);
@@ -53,7 +55,7 @@ function useVideo(index) {
   videos.forEach((v,i)=>{
     if(i!==index && i!==index+1) {v.removeAttribute('src');v.load();v.remove();videos.delete(i);}
   });
-  if(index>=0) {ensureVideo(index);if(index<6) ensureVideo(index+1);}
+  if(index>=0) {ensureVideo(index).preload='auto';if(index<6) ensureVideo(index+1);}
 }
 const cards=COPY.map(c=>{
   const card=document.createElement('section'); card.className='card';
@@ -95,6 +97,7 @@ function resize() {
   const rotated=(innerHeight>innerWidth)!==portrait;
   if(rotated) {
     portrait=innerHeight>innerWidth;
+    clearVideos();
     images.forEach((img,i)=>{img.src=imageSource(i);});
   }
   // Ignore mobile toolbar-only height changes. svh keeps the scroll world stable.

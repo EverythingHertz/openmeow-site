@@ -1,7 +1,7 @@
 export const clamp = (n, lo=0, hi=1) => Math.min(hi, Math.max(lo, n));
 export const progressAt = (y, range) => range > 0 ? clamp(y / range) : 0;
-export const chooseMode = ({width, coarse=false, saveData=false, reduced=false}) =>
-  reduced ? 'reading' : width <= 767 || coarse || saveData ? 'world' : 'video';
+export const chooseMode = ({saveData=false, reduced=false}) =>
+  reduced ? 'reading' : saveData ? 'world' : 'video';
 export const damp = (current, target, seconds) => current + (target-current) * (1-Math.exp(-seconds/0.075));
 export const seekTime = (target, duration) => Number.isFinite(duration) && duration > 0
   ? clamp(target, 0, Math.max(0,duration-0.04)) : null;

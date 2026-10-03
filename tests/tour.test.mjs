@@ -8,11 +8,15 @@ test('rubber-band scrolling and a zero scroll range never escape the tour', () =
   assert.equal(progressAt(500, 1000), 0.5);
   assert.equal(progressAt(0, 0), 0);
 });
-test('touch, narrow windows and data saving avoid video downloads', () => {
-  assert.equal(chooseMode({width:390,coarse:false}), 'world');
-  assert.equal(chooseMode({width:1024,coarse:true}), 'world');
-  assert.equal(chooseMode({width:1440,saveData:true}), 'world');
+test('phones and touch devices keep the full video tour by default', () => {
+  assert.equal(chooseMode({width:390,coarse:false}), 'video');
+  assert.equal(chooseMode({width:390,coarse:true}), 'video');
+  assert.equal(chooseMode({width:1024,coarse:true}), 'video');
   assert.equal(chooseMode({width:1440}), 'video');
+});
+test('explicit data-saving and reduced-motion preferences retain their fallbacks', () => {
+  assert.equal(chooseMode({width:1440,saveData:true}), 'world');
+  assert.equal(chooseMode({width:390,coarse:true,saveData:true}), 'world');
   assert.equal(chooseMode({width:1440,reduced:true}), 'reading');
 });
 test('the tour starts at the empty shell and ends on the rooftop', () => {
