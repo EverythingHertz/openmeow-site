@@ -1,5 +1,7 @@
 # OpenMeow cinematic world — pilot design
 
+> Historical three-scene pilot. The approved eight-room expansion and current spatial/content mapping are in [the room and scene brief](2026-10-04-room-scene-content-brief.md). Preserve this document and its assets as pilot history.
+
 Date: 2026-10-04
 Status: visual development; proposed production specification
 Approved direction: cinematic miniature world
