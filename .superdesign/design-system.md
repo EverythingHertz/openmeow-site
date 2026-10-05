@@ -1,0 +1,2 @@
+# OpenMeow modern world
+A cinematic miniature headquarters for adoptable agents, skills and workflows. Most characters are orange long-haired Norwegian Forest cats, with white ruffs. Gellphant is the grey elephant. Typography: Space Grotesk and system sans. Interface: ink #172B2A, paper #F3F4F0, teal #167C72, muted #586762, lines #D5DDDA. No gold/amber aesthetic. Scene labels live in HTML. Mobile uses portrait compositions; keep copy off character actions.

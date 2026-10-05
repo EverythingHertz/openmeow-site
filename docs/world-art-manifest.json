@@ -1,0 +1,207 @@
+{
+  "schema": "openmeow-modern-world/2",
+  "date": "2026-10-04",
+  "status": "18 selected modern plates; local responsive preview; no new films submitted",
+  "generator": "Built-in image_gen",
+  "style": "Modern glass/light concrete/light oak offices; predominantly orange long-haired Norwegian Forest cats; Gellphant elephant retained",
+  "assets": [
+    {
+      "id": "arrival",
+      "orientation": "landscape",
+      "version": 2,
+      "site_path": "media/world/arrival-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2237803,
+      "sha256": "6f40901a9b28e4dc19a0060b2b9542e802f3a643bf7a0e81668ea8e64c3c6419",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "arrival",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/arrival-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2360421,
+      "sha256": "ec169c2e1a16bfaeaf577639331aa4beaee6ad92dd5eb948ef034f86e3f2248f",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "creation",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/creation-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2021687,
+      "sha256": "67943bd16f95afebb4154558150f4b307e38cd9165af623ef22ec3c89206e3d5",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "creation",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/creation-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1961454,
+      "sha256": "fb2192a2210fc5e310f6432d4a88ae852819f9da660c2817a71823934483675f",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "gellphant",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/gellphant-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1780201,
+      "sha256": "54c62c65a72cdb0a50667f2369219f2c53071fa19a2693cd093ffd41b1852365",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "gellphant",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/gellphant-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1883161,
+      "sha256": "7fc66fb9983252c324265ea5d7c0b2728db0977c249ec4e21aae2f05a635c2a9",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "lobby",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/lobby-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2105518,
+      "sha256": "9cda00e700120ff2043f9dc15ac923509b21cdd31ee162fa19ce9e4545fd4a3f",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "lobby",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/lobby-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2141794,
+      "sha256": "bfa2c6a8ddbd01270b2ec8408c787f51bd3a55ba524ff7b2203b292c082a37f6",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "mission-control",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/mission-control-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1866810,
+      "sha256": "ef97bcfbc8a6387aeff0be6237683a4d6fa9de1c1d74d8f49c329add56042ce9",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "mission-control",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/mission-control-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2041062,
+      "sha256": "7c9c37c38c5c0a9c608bc797671f80d0705a6898504aba2a491bf0eebaed58ca",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "observatory",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/observatory-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2024455,
+      "sha256": "7cc0396f16e712a21793caaf5be60202d67ab628981d8f1deba0e95562d18f28",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "observatory",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/observatory-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2058812,
+      "sha256": "ad73d06443269c8dac009112911e59c7b82eadbe220e5a7f585b9be6f1a01807",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "operations",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/operations-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1993566,
+      "sha256": "4f3ee1cbdaae76eff7d1bd3b6a5c3ceb4ad725a3deb6321b48f0ab02aa4a5dfe",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "operations",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/operations-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1978602,
+      "sha256": "1d678505113976cf19571889d7e97e1aba550e13bd255122730012420d803c23",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "research",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/research-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1983270,
+      "sha256": "6ca805b9b6849f81f52ea66eab29c522979a9be2aeca74192d7ad93632c80d5b",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "research",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/research-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2053823,
+      "sha256": "83ef833eba370d90ad4c698c4cf84c4d20a14163c9a17bf37a766676bab0ffeb",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "workshop",
+      "orientation": "landscape",
+      "version": 1,
+      "site_path": "media/world/workshop-landscape.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2036826,
+      "sha256": "8f7f638eefba71c117484a1051c3c0e0ee9a94e523cc1dc92595d097767e0942",
+      "status": "selected concept plate; character film pending"
+    },
+    {
+      "id": "workshop",
+      "orientation": "portrait",
+      "version": 1,
+      "site_path": "media/world/workshop-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2074943,
+      "sha256": "eb3026a96171982da9cc170032e66acd64cbf8860a13b75e39f05b2163528c82",
+      "status": "selected concept plate; character film pending"
+    }
+  ]
+}

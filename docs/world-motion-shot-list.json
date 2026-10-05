@@ -1,0 +1,29 @@
+{
+  "status": "Prepared; no video jobs submitted",
+  "resolution": "1080p minimum",
+  "duration_seconds": 5,
+  "aspect_ratios": [
+    "16:9",
+    "9:16"
+  ],
+  "preserve": "Original full-quality frames, character identity, materials, prop relationships. Validate anatomy and mobile framing before integration. Camera motion on stills is not character animation.",
+  "shots": {
+    "arrival": "Very slow approach to the full building. Gentle cat gestures within rooms and subtle water movement. Maintain five floors, fixed room geometry and exactly one lift cabin; no forced loop.",
+    "lobby": "The concierge passes the teal starter folder a short distance toward the visitor, who looks from the brief to the matching diagram. Gentle blink and breathing.",
+    "operations": "The operator settles the chosen opportunity card into the calendar slot. The other cat glances from the checklist to the card. Pending tray remains unchanged.",
+    "mission-control": "Coordinator places one ready card onto its lane; specialists acknowledge with small head turns. Amber paused task remains paused; no invented completion.",
+    "workshop": "Maker lowers the compatible module into its matching socket while the second cat checks the role card. Keep paw anatomy and connector geometry stable.",
+    "creation": "Main cat aligns the transparent slide layer over the other editable sheets. Colleague taps the linked source card. Preserve chart structure and three independent layers.",
+    "gellphant": "Cat glances from the ambitious tablet chart to source evidence. Gellphant points to the lower source bars, gives a small questioning head tilt and blinks.",
+    "research": "Researcher traces from question card to reference and note. Colleague draws the matching handoff folder slightly out of the archive.",
+    "observatory": "Operator points at the amber run exception; colleague compares it with the corresponding receipt. Keep timeline and budget instrument stable; telescope remains secondary."
+  },
+  "quote": {
+    "provider": "Higgsfield",
+    "model": "flux_3_video",
+    "credits_per_shot": 45,
+    "complete_18_shot_pass": 810,
+    "balance_at_quote": 688.5,
+    "authorization": "Budget selection requested; pending"
+  }
+}
