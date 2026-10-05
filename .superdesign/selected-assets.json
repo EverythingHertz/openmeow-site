@@ -1,0 +1,37 @@
+{
+  "cat.webp": {
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/052cba2a-53ee-4139-8ca6-269a587dce32/brand-assets/cat.webp/cat.webp",
+    "assetKey": "cat.webp"
+  },
+  "media/world/gellphant-landscape.png": {
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-gellphant-landscape/gellphant-orange-landscape-v1.png",
+    "nodeId": "f46ced4b-4f1b-4902-9bb4-ac0a744f32e5"
+  },
+  "media/world/gellphant-portrait.png": {
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-gellphant-portrait/gellphant-portrait.png",
+    "storagePath": "projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-gellphant-portrait/gellphant-portrait.png",
+    "filename": "gellphant-portrait.png",
+    "mimeType": "image/png",
+    "size": 1883161,
+    "purpose": "content",
+    "contentHash": "7fc66fb9983252c324265ea5d7c0b2728db0977c249ec4e21aae2f05a635c2a9"
+  },
+  "media/world/arrival-landscape.png": {
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-arrival-landscape/arrival-landscape.png",
+    "storagePath": "projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-arrival-landscape/arrival-landscape.png",
+    "filename": "arrival-landscape.png",
+    "mimeType": "image/png",
+    "size": 2237803,
+    "purpose": "content",
+    "contentHash": "6f40901a9b28e4dc19a0060b2b9542e802f3a643bf7a0e81668ea8e64c3c6419"
+  },
+  "media/world/arrival-portrait.png": {
+    "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-arrival-portrait/arrival-portrait.png",
+    "storagePath": "projects/052cba2a-53ee-4139-8ca6-269a587dce32/content-assets/world-arrival-portrait/arrival-portrait.png",
+    "filename": "arrival-portrait.png",
+    "mimeType": "image/png",
+    "size": 2360421,
+    "purpose": "content",
+    "contentHash": "ec169c2e1a16bfaeaf577639331aa4beaee6ad92dd5eb948ef034f86e3f2248f"
+  }
+}

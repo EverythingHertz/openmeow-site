@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-04",
+  "check": "Independent reviewer: unauthenticated HEAD for all14 URLs, positive public control200; spot-check via web also404",
+  "result": "Every URL returned404; private/inaccessible status cannot be distinguished from missing. Do not advertise these as public launch/install destinations.",
+  "action": "Primary actions now use focusable internal capability briefs. Source URLs retained here for maintainers.",
+  "urls": [
+    "https://github.com/EverythingHertz/Subtle-Lasagne",
+    "https://github.com/EverythingHertz/agent-mint",
+    "https://github.com/EverythingHertz/DONTGASLIGHTME",
+    "https://github.com/EverythingHertz/gellphant",
+    "https://github.com/EverythingHertz/openmeow/tree/main/agents_cat/hiss",
+    "https://github.com/EverythingHertz/openmeow",
+    "https://github.com/EverythingHertz/SubtleLasagne.ai",
+    "https://github.com/EverythingHertz/voice-orchestrator",
+    "https://github.com/EverythingHertz/skills-library",
+    "https://github.com/EverythingHertz/EditMeow",
+    "https://github.com/EverythingHertz/blenderfleet",
+    "https://github.com/EverythingHertz/visual-workflows",
+    "https://github.com/EverythingHertz/ambient-loops",
+    "https://github.com/EverythingHertz/proof-mode"
+  ]
+}

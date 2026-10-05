@@ -72,10 +72,10 @@ Use diagonals and depth to organize wide equipment into tall compositions. Do no
 - Retain the /dontgaslightme layer/source action as the creation anchor; its older room images require a modern restyle before promotion.
 - Replace Gellphant's decorative forest-paper comparison with a claimed chart versus source chart that visibly disagree.
 - Revise the tower overview to show the eight-room placement and the corrected creation/review props. Use one physical elevator cabin; remove the repeated silhouettes implying simultaneous cabins.
-- Preserve earlier versions as history. The brass/amber room suite was rejected by the user and must not be used as the active style. Only the new modern Gellphant benchmark is being revised so far; a complete modern eighteen-image set does not yet exist.
+- Preserve earlier versions as history. The brass/amber room suite was rejected by the user and must not be used as the active style. The modern eighteen-image set is now complete: arrival and eight rooms, each with an independently composed portrait and landscape. The selected files, dimensions and hashes are recorded in `docs/world-art-manifest.json`.
 
 ## Acceptance before motion
 
 For every selected image, record whether the content/action fits, whether identity is preserved, whether the portrait retains key props and any remaining limitations. Verify files, dimensions and prompt records. Do not claim that separately generated views are exact geometric matches or a shared editable 3D set.
 
-The first completed room set is a concept-art milestone. Final video needs temporal review of characters, paws, paper edges, charts, structural stability and camera motion. No new video expenditure or site publication is part of this still-image pass.
+The completed room set is a concept-art milestone and is integrated into the local `world.html` preview. Gentle scroll-driven image movement is not finished character animation. Final video needs temporal review of characters, paws, paper edges, charts, structural stability and camera motion. No new video expenditure or site publication has occurred; the first film batch awaits the user's credit-budget choice.

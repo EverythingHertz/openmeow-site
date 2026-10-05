@@ -9,6 +9,19 @@ import {
 } from "../world-model.mjs";
 import { renderWorld } from "../scripts/build-world.mjs";
 
+test("preview actions have usable destinations without private repository access", () => {
+  for (const room of ROOMS)
+    if (room.href) assert.ok(room.href.startsWith("#"), room.id);
+  for (const item of searchCapabilities(""))
+    assert.equal(item.href, null, item.name);
+});
+test("skip navigation and every capability link target are keyboard focusable", () => {
+  const html = renderWorld();
+  assert.match(html, /<main id="main" tabindex="-1">/);
+  for (const item of searchCapabilities(""))
+    assert.ok(html.includes('id="' + item.id + '" tabindex="-1"'), item.id);
+});
+
 test("every destination has distinct portrait and landscape assets and a stable address", () => {
   assert.equal(ROOMS.length, 9);
   assert.equal(new Set(ROOMS.map((r) => r.id)).size, 9);

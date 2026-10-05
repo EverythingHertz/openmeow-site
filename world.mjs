@@ -7,6 +7,8 @@ import {
 
 const sections = ROOMS.map((room) => document.getElementById(room.id));
 const navLinks = [...document.querySelectorAll("[data-room]")];
+// Explicit room addresses own their scroll position, including interrupted jumps.
+if (location.hash) history.scrollRestoration = "manual";
 const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
 const button = document.getElementById("motion-toggle");
 let paused = false,
@@ -93,8 +95,26 @@ motionQuery.addEventListener("change", () => {
   wake();
 });
 addEventListener("scroll", wake, { passive: true });
-addEventListener("resize", wake, { passive: true });
-addEventListener("pageshow", wake);
+let previousWidth = innerWidth;
+addEventListener(
+  "resize",
+  () => {
+    const changed = Math.abs(innerWidth - previousWidth) > 80;
+    previousWidth = innerWidth;
+    if (changed && current !== "arrival")
+      document
+        .getElementById(current)
+        ?.scrollIntoView({ behavior: "instant", block: "start" });
+    wake();
+  },
+  { passive: true },
+);
+// A reload during a smooth jump can restore an intermediate scroll offset.
+// Resolve the explicit address again after the browser's initial layout.
+addEventListener("pageshow", (event) => {
+  if (location.hash && !event.persisted) onHash();
+  else wake();
+});
 document.addEventListener("visibilitychange", () => {
   if (document.hidden && frame) {
     cancelAnimationFrame(frame);
@@ -117,7 +137,9 @@ document.addEventListener("click", (event) => {
   const target = document.getElementById(link.hash.slice(1));
   if (!target) return;
   event.preventDefault();
+  revealCapability(target);
   history.pushState(null, "", link.hash);
+  history.scrollRestoration = "manual";
   target.scrollIntoView({
     behavior: enabled() ? "smooth" : "instant",
     block: "start",
@@ -129,6 +151,7 @@ function onHash() {
   const target =
     document.getElementById(id) ||
     document.getElementById(roomFromHash(location.hash));
+  revealCapability(target);
   target?.scrollIntoView({ behavior: "instant", block: "start" });
   wake();
 }
@@ -144,7 +167,7 @@ for (const image of document.querySelectorAll(".scene-art img")) {
 const search = document.getElementById("capability-search");
 const articles = [...document.querySelectorAll("[data-capability]")];
 document.querySelector(".search-control").hidden = false;
-search.addEventListener("input", () => {
+function filterCapabilities() {
   const matches = new Set(
     searchCapabilities(search.value).map((item) => item.id),
   );
@@ -153,6 +176,14 @@ search.addEventListener("input", () => {
   document.getElementById("search-status").textContent =
     matches.size + " " + (matches.size === 1 ? "capability" : "capabilities");
   document.getElementById("search-empty").hidden = matches.size !== 0;
-});
+}
+function revealCapability(target) {
+  if (target?.dataset.capability && target.hidden) {
+    search.value = "";
+    filterCapabilities();
+  }
+}
+search.addEventListener("input", filterCapabilities);
 updateButton();
-wake();
+if (location.hash) onHash();
+else wake();

@@ -32,13 +32,13 @@ export function renderWorld() {
 <header class="site-header">
 <a class="brand" href="#arrival" aria-label="OpenMeow home"><img src="cat.webp" width="44" height="44" alt=""><span>Open<span class="brand-meow">Meow</span><span class="brand-dot">.</span></span></a>
 <span class="preview-label">A world in the making</span>
-<div class="header-actions"><a href="#directory">Find a capability <span aria-hidden="true">↗</span></a><button id="motion-toggle" type="button" hidden aria-pressed="false">Pause motion</button></div>
+<div class="header-actions"><a href="#directory" aria-label="Find a capability"><span class="find-long">Find a capability</span><span class="find-short" aria-hidden="true">Find tools</span> <span aria-hidden="true">↗</span></a><button id="motion-toggle" type="button" hidden aria-pressed="false">Pause motion</button></div>
 </header>
 <nav class="room-nav" aria-label="Rooms in the OpenMeow world">
 <span class="nav-heading">The building</span>
 ${ROOMS.map((r, i) => `<a href="#${r.id}" data-room="${r.id}"${i === 0 ? ' aria-current="location"' : ""}><span class="nav-number">${i === 0 ? "◇" : String(i).padStart(2, "0")}</span><span>${e(i === 0 ? "Welcome" : r.name)}</span></a>`).join("")}
 </nav>
-<main id="main">
+<main id="main" tabindex="-1">
 <section id="arrival" class="arrival scene-section" aria-labelledby="arrival-title" tabindex="-1">
 <div class="arrival-art scene-art">${picture(arrival, true)}</div>
 <div class="arrival-copy"><p class="eyebrow"><span class="status-dot"></span> Agents. Skills. Possibilities.</p><h1 id="arrival-title">Big ideas.<br>Capable company.</h1><p class="intro">A world of tools that help you make, coordinate, question and move forward. Come meet the residents.</p><a class="primary-link" href="#lobby">Step inside <span aria-hidden="true">↓</span></a></div>
@@ -58,14 +58,14 @@ ${rooms
   )
   .join("")}
 <section id="directory" class="directory" aria-labelledby="directory-title" tabindex="-1">
-<div class="directory-intro"><p class="eyebrow">Choose your own route</p><h2 id="directory-title">What are you<br>working on?</h2><p>Products, reusable components and emerging workflows. Explore a source project or visit its room to see where it fits.</p></div>
+<div class="directory-intro"><p class="eyebrow">Choose your own route</p><h2 id="directory-title">What are you<br>working on?</h2><p>Products, reusable components and emerging workflows. Explore the briefs and visit each room to see where it fits. Public installation links are not available yet.</p></div>
 <div class="search-control" hidden><label for="capability-search">Search capabilities</label><input id="capability-search" type="search" placeholder="Try presentations, funding or review…" autocomplete="off"><p id="search-status" role="status">${CAPABILITIES.length} capabilities</p></div>
 <div class="capability-list">
-${CAPABILITIES.map((c) => `<article class="capability" data-capability="${c.id}"><div><p class="cap-type">${e(c.type)}</p><h3>${e(c.name)}</h3></div><p class="cap-description">${e(c.description)}</p><div class="cap-action"><span class="cap-status">${e(c.status)}</span><a href="${c.href ?? "#" + c.room}"${external(c.href ?? "")} aria-label="${c.href ? "View " + e(c.name) + " source project" : "Visit " + e(c.name) + " room"}">${c.href ? "View source" : "Visit room"} ↗</a></div></article>`).join("")}
+${CAPABILITIES.map((c) => `<article id="${c.id}" tabindex="-1" class="capability" data-capability="${c.id}"><div><p class="cap-type">${e(c.type)}</p><h3>${e(c.name)}</h3></div><p class="cap-description">${e(c.description)}</p><div class="cap-action"><span class="cap-status">${e(c.status)}</span><a href="${c.href ?? "#" + c.room}"${external(c.href ?? "")} aria-label="${c.href ? "View " + e(c.name) + " source project" : "Visit " + e(c.name) + " room"}">${c.href ? "View source" : "Visit room"} ↗</a></div></article>`).join("")}
 <p id="search-empty" hidden>No matching capabilities. Try a broader word such as “review” or “workflow”.</p>
 </div>
 </section>
-<footer class="site-footer"><a class="brand" href="#arrival">Open<span class="brand-meow">Meow</span>.</a><p>Independent tools. Shared curiosity.</p><p class="preview-note">World preview · Illustrative scenes. New character films are in production planning.</p><div><a href="index.html">Original film tour</a><a href="https://github.com/EverythingHertz/openmeow" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="#arrival">Back to the top ↑</a></div></footer>
+<footer class="site-footer"><a class="brand" href="#arrival">Open<span class="brand-meow">Meow</span>.</a><p>Independent tools. Shared curiosity.</p><p class="preview-note">World preview · Illustrative scenes. New character films are in production planning.</p><div><a href="index.html">Original film tour</a><a href="#directory">Capability index ↗</a><a href="#arrival">Back to the top ↑</a></div></footer>
 </main>
 <script type="module" src="world.mjs"></script>
 </body></html>`;

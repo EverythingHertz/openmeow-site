@@ -1,4 +1,4 @@
-// Public-facing capability summary. Private discovery evidence stays outside this bundle.
+// Public preview catalog. Public installation links are pending.
 export const ROOMS = [
   {
     id: "arrival",
@@ -32,7 +32,7 @@ export const ROOMS = [
     alt: "Two orange cats compare opportunity cards with a checklist and place a selected option into a calendar.",
     flow: ["Opportunities", "Requirements & blockers", "Next action"],
     anchor: "Explore the workflows",
-    href: "#directory",
+    href: "#cap-1",
     tag: "Workflow components · packaging in progress",
     landscape: "media/world/operations-landscape.png",
     portrait: "media/world/operations-portrait.png",
@@ -46,7 +46,7 @@ export const ROOMS = [
     alt: "Three orange cats route a brief into specialist tasks, with an amber paused task and a review checkpoint.",
     flow: ["Saved brief", "Bounded assignments", "Reviewed returns"],
     anchor: "Explore Subtle Lasagne",
-    href: "https://github.com/EverythingHertz/Subtle-Lasagne",
+    href: "#cap-4",
     tag: "Source project · integration in progress",
     landscape: "media/world/mission-control-landscape.png",
     portrait: "media/world/mission-control-portrait.png",
@@ -60,7 +60,7 @@ export const ROOMS = [
     alt: "Orange cats compare a role brief and skill cards while fitting a matching connector into a capability kit.",
     flow: ["Role & inputs", "Skills & connectors", "Inspectable package"],
     anchor: "Explore Agent Mint",
-    href: "https://github.com/EverythingHertz/agent-mint",
+    href: "#cap-8",
     tag: "Tooling & skills · setup required",
     landscape: "media/world/workshop-landscape.png",
     portrait: "media/world/workshop-portrait.png",
@@ -74,7 +74,7 @@ export const ROOMS = [
     alt: "Orange cats assemble separate presentation layers and connect the resulting slide to source cards.",
     flow: ["Sources & layers", "Deliberate edits", "Traceable artifact"],
     anchor: "Explore /dontgaslightme",
-    href: "https://github.com/EverythingHertz/DONTGASLIGHTME",
+    href: "#cap-10",
     tag: "Source project · provider setup required",
     landscape: "media/world/creation-landscape.png",
     portrait: "media/world/creation-portrait.png",
@@ -88,7 +88,7 @@ export const ROOMS = [
     alt: "Gellphant points to source evidence while an orange cat presents a more ambitious chart on a tablet.",
     flow: ["Claim", "Evidence & challenge", "Clearer judgment"],
     anchor: "Meet Gellphant",
-    href: "https://github.com/EverythingHertz/gellphant",
+    href: "#cap-15",
     tag: "Review tools & prompts · human judgment matters",
     landscape: "media/world/gellphant-landscape.png",
     portrait: "media/world/gellphant-portrait.png",
@@ -102,7 +102,7 @@ export const ROOMS = [
     alt: "Orange cats follow linked source cards and retrieve the matching handoff folder from a contemporary archive.",
     flow: ["Question", "Linked sources", "Resumable context"],
     anchor: "Explore HISS",
-    href: "https://github.com/EverythingHertz/openmeow/tree/main/agents_cat/hiss",
+    href: "#cap-19",
     tag: "Retrieval & handoff tools · setup required",
     landscape: "media/world/research-landscape.png",
     portrait: "media/world/research-portrait.png",
@@ -116,7 +116,7 @@ export const ROOMS = [
     alt: "Orange cats inspect an agent run timeline, an amber exception and a corresponding receipt in a glass rooftop observatory.",
     flow: ["Run events", "Costs & exceptions", "Inspectable record"],
     anchor: "Explore OpenMeow",
-    href: "https://github.com/EverythingHertz/openmeow",
+    href: "#cap-22",
     tag: "Observability components · connection required",
     landscape: "media/world/observatory-landscape.png",
     portrait: "media/world/observatory-portrait.png",
@@ -161,7 +161,7 @@ export const CAPABILITIES = [
       "Design workflows and coordinate bounded specialist assignments and returns.",
     type: "Platform",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/Subtle-Lasagne",
+    href: null,
   },
   {
     id: "cap-5",
@@ -171,7 +171,7 @@ export const CAPABILITIES = [
       "Inspect repository contracts and find dependency-ready mission tasks.",
     type: "CLI",
     status: "Component",
-    href: "https://github.com/EverythingHertz/SubtleLasagne.ai",
+    href: null,
   },
   {
     id: "cap-6",
@@ -190,7 +190,7 @@ export const CAPABILITIES = [
     description: "Supervise worker events, policy, cancellation and recovery.",
     type: "Runtime component",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/voice-orchestrator",
+    href: null,
   },
   {
     id: "cap-8",
@@ -200,7 +200,7 @@ export const CAPABILITIES = [
       "Prepare delegation contracts with inputs, authority and return requirements.",
     type: "Skill & CLI",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/agent-mint",
+    href: null,
   },
   {
     id: "cap-9",
@@ -210,7 +210,7 @@ export const CAPABILITIES = [
       "Reusable methods for browser work, visual review and artifact production.",
     type: "Skills",
     status: "Source library",
-    href: "https://github.com/EverythingHertz/skills-library",
+    href: null,
   },
   {
     id: "cap-10",
@@ -220,7 +220,7 @@ export const CAPABILITIES = [
       "Create editable decks with evidence, version-bound edits and receipts.",
     type: "Product",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/DONTGASLIGHTME",
+    href: null,
   },
   {
     id: "cap-11",
@@ -230,7 +230,7 @@ export const CAPABILITIES = [
       "Explore conversion from fixed graphics into editable elements.",
     type: "Integration",
     status: "Upstream-based project",
-    href: "https://github.com/EverythingHertz/EditMeow",
+    href: null,
   },
   {
     id: "cap-12",
@@ -239,7 +239,7 @@ export const CAPABILITIES = [
     description: "Build and measure 3D artifacts from sourced specifications.",
     type: "3D workflow",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/blenderfleet",
+    href: null,
   },
   {
     id: "cap-13",
@@ -249,7 +249,7 @@ export const CAPABILITIES = [
       "Review visual references and compose real text over generated imagery.",
     type: "Workbench",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/visual-workflows",
+    href: null,
   },
   {
     id: "cap-14",
@@ -258,7 +258,7 @@ export const CAPABILITIES = [
     description: "Produce atmospheric visuals, parallax and generative audio.",
     type: "Media workflow",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/ambient-loops",
+    href: null,
   },
   {
     id: "cap-15",
@@ -268,7 +268,7 @@ export const CAPABILITIES = [
       "Challenge unsupported claims, apparent compliance and weak verification.",
     type: "Review agent",
     status: "Tools & prompts",
-    href: "https://github.com/EverythingHertz/gellphant",
+    href: null,
   },
   {
     id: "cap-16",
@@ -288,7 +288,7 @@ export const CAPABILITIES = [
       "Collect browser and interaction evidence before calling work done.",
     type: "Verification skill",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/proof-mode",
+    href: null,
   },
   {
     id: "cap-18",
@@ -308,7 +308,7 @@ export const CAPABILITIES = [
       "Retrieve knowledge through interchangeable strategies with visible traces.",
     type: "Retrieval layer",
     status: "Component",
-    href: "https://github.com/EverythingHertz/openmeow",
+    href: null,
   },
   {
     id: "cap-20",
@@ -338,7 +338,7 @@ export const CAPABILITIES = [
       "Explore agent events, task traces, costs and structured receipts.",
     type: "Observability",
     status: "Source project",
-    href: "https://github.com/EverythingHertz/openmeow",
+    href: null,
   },
   {
     id: "cap-23",
