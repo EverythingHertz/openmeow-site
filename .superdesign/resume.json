@@ -21,20 +21,26 @@
         ".superdesign/design-system.md",
         "scripts/build-world.mjs",
         "world.css",
-        "world-model.mjs"
+        "world-model.mjs",
+        "world-scroll.css",
+        "world.mjs",
+        "world-motion.mjs"
       ],
       "fingerprints": {
         ".superdesign/design-system.md": "e5f04edbed94046ba7d1859c3497d2b76e22d9e6f227722bbcd53e0dfa3c8800",
-        "scripts/build-world.mjs": "bedb62ba8d3cdb53d9c9ea910b36322978d276d215d9988f43a515531b533a26",
+        "scripts/build-world.mjs": "532e48cfa17b1fd569a1025673454072f4041090ab7561c2c34830aff71b9ba6",
         "world.css": "36589a922b6a18dc9c87c9a24b1dbf7cc5e4df39bc2ad311e735110b08db1ec4",
-        "world-model.mjs": "42b85aa239c14e3f74c1b8998f84a6969f752af2c59036a791ae3f37afabf603"
+        "world-model.mjs": "42b85aa239c14e3f74c1b8998f84a6969f752af2c59036a791ae3f37afabf603",
+        "world-scroll.css": "51f4cfc2367c95cec4bf670904b1bdaaaee918ce3ca45b1438444f39a2858dc6",
+        "world.mjs": "a5a5ecef42e7e9ce16bb81300990dcdcd8f02b7d0be35c6de393f1d5ed30cc2b",
+        "world-motion.mjs": "e7921c58cbe18831601d3f51932f17cb7f16a6873b3d18a52af9f578f4e3e7ae"
       },
       "components": [],
       "drafts": {
         "d7c689bf-c6b5-4bab-b303-376815c35b16": {
           "title": "OpenMeow — Arrival",
-          "visualDirection": "Modern miniature office; orange long-haired cats",
-          "currentVersion": 1
+          "visualDirection": "Modern miniature office; scroll-world navigation; orange long-haired cats",
+          "currentVersion": 3
         },
         "7050a2c0-8e46-4dc7-a441-e9a24661608e": {
           "title": "OpenMeow — Gellphant room",
@@ -47,7 +53,7 @@
           "currentVersion": 1
         }
       },
-      "updatedAt": "2026-10-05T03:35:50.778Z"
+      "updatedAt": "2026-10-05T16:53:31.076Z"
     }
   }
 }

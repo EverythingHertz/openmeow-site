@@ -1,6 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { ROOMS, CAPABILITIES } from "../world-model.mjs";
+import { FLOORS } from "../world-motion.mjs";
 const e = (s) =>
   String(s).replace(
     /[&<>"']/g,
@@ -26,35 +27,51 @@ export function renderWorld() {
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="world.css">
+<link rel="stylesheet" href="world-scroll.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to the world</a>
 <header class="site-header">
 <a class="brand" href="#arrival" aria-label="OpenMeow home"><img src="cat.webp" width="44" height="44" alt=""><span>Open<span class="brand-meow">Meow</span><span class="brand-dot">.</span></span></a>
-<span class="preview-label">A world in the making</span>
+<span class="preview-label" id="journey-location">A world in the making</span>
 <div class="header-actions"><a href="#directory" aria-label="Find a capability"><span class="find-long">Find a capability</span><span class="find-short" aria-hidden="true">Find tools</span> <span aria-hidden="true">↗</span></a><button id="motion-toggle" type="button" hidden aria-pressed="false">Pause motion</button></div>
 </header>
+<div class="journey-progress" aria-hidden="true"><span></span></div>
 <nav class="room-nav" aria-label="Rooms in the OpenMeow world">
 <span class="nav-heading">The building</span>
+<button class="building-toggle" id="building-toggle" type="button" aria-haspopup="dialog" aria-label="Open building map" aria-controls="building-map" hidden><span class="floor-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span><span class="map-long">Building map</span><span class="map-short">Map</span> <span id="floor-readout">↗</span></span></button>
 ${ROOMS.map((r, i) => `<a href="#${r.id}" data-room="${r.id}"${i === 0 ? ' aria-current="location"' : ""}><span class="nav-number">${i === 0 ? "◇" : String(i).padStart(2, "0")}</span><span>${e(i === 0 ? "Welcome" : r.name)}</span></a>`).join("")}
 </nav>
+<dialog id="building-map" aria-labelledby="map-title">
+<div class="map-header"><div><p class="eyebrow">One connected world</p><h2 id="map-title">Choose a floor.</h2></div><button id="map-close" type="button" aria-label="Close building map" autofocus>Close <span aria-hidden="true">×</span></button></div>
+<div class="map-body"><div class="map-elevation"><div class="map-building"><img data-src="${arrival.landscape}" width="1672" height="941" alt="The OpenMeow building, with its six levels from ground to rooftop."><div class="map-floor-light" aria-hidden="true"></div></div><p class="map-caption">Eight rooms. Take your own route.</p></div><div class="map-stops">${[
+    ...FLOORS,
+  ]
+    .reverse()
+    .map(
+      (f) =>
+        `<div class="map-stop" data-floor="${f.code}"><span class="stop-code">${f.code}</span><div><p>${e(f.title)}</p>${f.rooms.map((id) => `<a href="#${id}">${e(ROOMS.find((r) => r.id === id).name)} <span aria-hidden="true">↗</span></a>`).join("")}</div></div>`,
+    )
+    .join("")}</div></div>
+</dialog>
 <main id="main" tabindex="-1">
 <section id="arrival" class="arrival scene-section" aria-labelledby="arrival-title" tabindex="-1">
 <div class="arrival-art scene-art">${picture(arrival, true)}</div>
 <div class="arrival-copy"><p class="eyebrow"><span class="status-dot"></span> Agents. Skills. Possibilities.</p><h1 id="arrival-title">Big ideas.<br>Capable company.</h1><p class="intro">A world of tools that help you make, coordinate, question and move forward. Come meet the residents.</p><a class="primary-link" href="#lobby">Step inside <span aria-hidden="true">↓</span></a></div>
-<div class="arrival-footer"><span>08 rooms · One connected world</span><span>Explore at your own pace ↓</span></div>
+<div class="arrival-footer"><span>08 rooms · One connected world</span><span class="scroll-invitation"><i aria-hidden="true"></i> Scroll to enter the world ↓</span></div>
 </section>
 ${rooms
   .map(
     (
       r,
       i,
-    ) => `<section id="${r.id}" class="room scene-section ${r.id === "observatory" ? "night" : ""}" aria-labelledby="${r.id}-title" tabindex="-1">
+    ) => `<section id="${r.id}" class="room scene-section ${r.id === "observatory" ? "night" : ""}" aria-labelledby="${r.id}-title" tabindex="-1"><div class="room-stage">
 <div class="room-heading"><p class="eyebrow">${e(r.floor)}</p><span>${e(r.name)}</span><span class="room-count">${String(i + 1).padStart(2, "0")} / 08</span></div>
 <div class="room-body"><div class="room-copy"><h2 id="${r.id}-title">${e(r.verb)}</h2><p>${e(r.body)}</p><a class="text-link" href="${r.href}"${external(r.href)}>${e(r.anchor)} <span aria-hidden="true">↗</span></a>${r.tag ? `<p class="availability">${e(r.tag)}</p>` : ""}</div>
-<div class="room-visual"><div class="scene-art">${picture(r)}</div><ol class="room-flow" aria-label="From input to outcome">${r.flow.map((s, j) => `<li><span>${String(j + 1).padStart(2, "0")}</span>${e(s)}</li>`).join("")}</ol></div></div>
+<div class="room-visual"><div class="scene-art">${picture(r)}<div class="window-frame" aria-hidden="true"></div></div><ol class="room-flow" aria-label="From input to outcome">${r.flow.map((s, j) => `<li><span>${String(j + 1).padStart(2, "0")}</span>${e(s)}</li>`).join("")}</ol></div></div>
+<div class="room-exit"><span class="room-scroll-note" aria-hidden="true">Scroll through the story <span>↓</span></span>
 <a class="next-room" href="#${rooms[i + 1]?.id ?? "directory"}">${rooms[i + 1] ? "Next · " + e(rooms[i + 1].name) : "Explore the capability index"} <span aria-hidden="true">↓</span></a>
-</section>`,
+</div></div></section>`,
   )
   .join("")}
 <section id="directory" class="directory" aria-labelledby="directory-title" tabindex="-1">
