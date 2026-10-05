@@ -1,4 +1,5 @@
 // Public preview catalog. Public installation links are pending.
+import { DEMOS } from './world-demos.mjs';
 export const ROOMS = [
   {
     id: "arrival",
@@ -121,7 +122,7 @@ export const ROOMS = [
     landscape: "media/world/observatory-landscape.png",
     portrait: "media/world/observatory-portrait.png",
   },
-];
+].map(room => DEMOS[room.id] ? { ...room, verb: DEMOS[room.id].headline, body: DEMOS[room.id].summary } : room);
 export const CAPABILITIES = [
   {
     id: "cap-1",
