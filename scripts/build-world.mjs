@@ -4,6 +4,7 @@ import { ROOMS, CAPABILITIES } from "../world-model.mjs";
 import { FLOORS } from "../world-motion.mjs";
 import { DEMOS, CAPABILITY_BRIEFS } from "../world-demos.mjs";
 import { renderDemo } from "./world-demo-markup.mjs";
+import { STATUS, ROOM_STATE } from "../world-readiness.mjs";
 const e = (s) =>
   String(s).replace(
     /[&<>"']/g,
@@ -17,10 +18,11 @@ const picture = (r, hero = false) =>
 const external = (href) =>
   href.startsWith("https:") ? ' target="_blank" rel="noopener noreferrer"' : "";
 const sceneArt = (r, cls = '') => `<div class="scene-art ${cls}">${picture(r)}<div class="window-frame" aria-hidden="true"></div><div class="scene-label" aria-hidden="true">${e(r.name)} <span>${e(r.floor.split(' · ')[0])}</span></div></div>`;
-const navNames = { lobby: 'Find your tool', operations: 'FundMeMeow & Ops', 'mission-control': 'Subtle Lasagne', workshop: 'Agent Mint & skills', creation: '/dontgaslightme', gellphant: 'Gellphant', research: 'Research & memory', observatory: 'Agent observatory' };
+const navNames = { lobby: 'Find your tool', operations: 'Operations', 'mission-control': 'Mission Control', workshop: 'Workshop', creation: 'Creation Studio', gellphant: 'Gellphant Review', research: 'Research', observatory: 'Observatory' };
 const featureBrief = id => {
-  const b = CAPABILITY_BRIEFS[id];
-  return b ? `<details class="cap-details"><summary>Features, output &amp; setup <span aria-hidden="true">+</span></summary><div class="brief-content"><dl><dt>You bring</dt><dd>${e(b.input)}</dd><dt>You get</dt><dd>${e(b.output)}</dd></dl><ul>${b.features.map(f=>`<li><strong>${e(f.name)}</strong><span>${e(f.text)}</span></li>`).join('')}</ul><div class="brief-benefit"><strong>Why it helps</strong><p>${e(b.benefit)}</p></div><p class="brief-setup"><strong>Current setup</strong> ${e(b.setup)}</p></div></details>` : '';
+  const c = CAPABILITIES.find(item => item.id === id);
+  const b = CAPABILITY_BRIEFS[id] ?? {input: c.description, output: c.output, features: [], benefit: c.output};
+  return b ? `<details class="cap-details"><summary>Features, output &amp; setup <span aria-hidden="true">+</span></summary><div class="brief-content"><dl><dt>You bring</dt><dd>${e(b.input)}</dd><dt>You get</dt><dd>${e(b.output)}</dd></dl><ul>${b.features.map(f=>`<li><strong>${e(f.name)}</strong><span>${e(f.text)}</span></li>`).join('')}</ul><div class="brief-benefit"><strong>Why it helps</strong><p>${e(b.benefit)}</p></div><p class="brief-setup"><strong>Current setup</strong> ${e(c.available)} ${e(c.remaining)}</p></div></details>` : '';
 };
 export function renderWorld() {
   const [arrival, ...rooms] = ROOMS;
@@ -42,7 +44,7 @@ export function renderWorld() {
 <a class="skip" href="#main">Skip to the world</a>
 <header class="site-header">
 <a class="brand" href="#arrival" aria-label="OpenMeow home"><img src="cat.webp" width="44" height="44" alt=""><span>Open<span class="brand-meow">Meow</span><span class="brand-dot">.</span></span></a>
-<span class="preview-label" id="journey-location">A world in the making</span>
+<span class="preview-label" id="journey-location">Explore tools & readiness</span>
 <div class="header-actions"><a href="#directory" aria-label="Find a capability"><span class="find-long">Find a capability</span><span class="find-short" aria-hidden="true">Find tools</span> <span aria-hidden="true">↗</span></a><button id="motion-toggle" type="button" hidden aria-pressed="false">Pause motion</button></div>
 </header>
 <div class="journey-progress" aria-hidden="true"><span></span></div>
@@ -66,7 +68,7 @@ ${ROOMS.map((r, i) => `<a href="#${r.id}" data-room="${r.id}"${i === 0 ? ' aria-
 <main id="main" tabindex="-1">
 <section id="arrival" class="arrival scene-section" aria-labelledby="arrival-title" tabindex="-1">
 <div class="arrival-art scene-art">${picture(arrival, true)}</div>
-<div class="arrival-copy"><p class="eyebrow"><span class="status-dot"></span> Agents · Skills · Workflows</p><h1 id="arrival-title">Put your agents<br>to useful work.</h1><p class="intro">Coordinate a team. Create editable slides. Challenge confident answers. Find the next funding move. Explore the tools and see how they work.</p><a class="primary-link" href="#lobby">Explore the tools <span aria-hidden="true">↓</span></a><div class="arrival-routes"><a href="#mission-control">Subtle Lasagne ↗</a><a href="#creation">/dontgaslightme ↗</a><a href="#gellphant">Gellphant ↗</a><a href="#operations">FundMeMeow ↗</a></div></div>
+<div class="arrival-copy"><p class="eyebrow"><span class="status-dot"></span> Agents · Skills · Workflows</p><h1 id="arrival-title">Put your agents<br>to useful work.</h1><p class="intro">Coordinate a team. Create editable slides. Challenge confident answers. Find the next funding move. Explore what each tool produces, what works today and what is still being developed.</p><a class="primary-link" href="#lobby">Explore the tools <span aria-hidden="true">↓</span></a><p class="readiness-intro">Working components · Tested pilots · In development</p><div class="arrival-routes"><a href="#mission-control">Subtle Lasagne ↗</a><a href="#creation">/dontgaslightme ↗</a><a href="#gellphant">Gellphant ↗</a><a href="#operations">FundMeMeow ↗</a></div></div>
 <div class="arrival-footer"><span>08 rooms · One connected world</span><span class="scroll-invitation"><i aria-hidden="true"></i> Scroll to enter the world ↓</span></div>
 </section>
 ${rooms
@@ -76,18 +78,20 @@ ${rooms
       i,
     ) => `<section id="${r.id}" class="room scene-section ${r.id === "observatory" ? "night" : ""}" aria-labelledby="${r.id}-title" tabindex="-1"><div class="room-stage">
 <div class="room-heading"><p class="eyebrow">${e(r.floor)}</p><span>${e(r.name)}</span><span class="room-count">${String(i + 1).padStart(2, "0")} / 08</span></div>
-<div class="room-body"><div class="room-copy"><p class="product-name">${e(DEMOS[r.id].product)}</p><h2 id="${r.id}-title">${e(DEMOS[r.id].headline)}</h2><p class="product-summary">${e(DEMOS[r.id].summary)}</p><div class="room-features"><p class="feature-label">What you can do</p><ul>${DEMOS[r.id].features.map(f=>`<li><strong>${e(f.name)}</strong><span>${e(f.text)}</span></li>`).join('')}</ul></div><div class="room-benefit"><span>Why it helps</span><p>${e(DEMOS[r.id].benefit)}</p></div><a class="text-link" href="${r.href}"${external(r.href)}>${e(r.anchor)} <span aria-hidden="true">↗</span></a>${r.tag ? `<p class="availability">${e(r.tag)}</p>` : ""}</div>
+<div class="room-body"><div class="room-copy"><p class="product-name">${e(DEMOS[r.id].product)}</p><h2 id="${r.id}-title">${e(DEMOS[r.id].headline)}</h2><p class="product-summary">${e(DEMOS[r.id].summary)}</p><a class="room-tool-link" href="#tools-${r.id}">See every tool in this room ↓</a><div class="room-features"><p class="feature-label">What you can do</p><ul>${DEMOS[r.id].features.map(f=>`<li><strong>${e(f.name)}</strong><span>${e(f.text)}</span></li>`).join('')}</ul></div><div class="room-benefit"><span>Why it helps</span><p>${e(DEMOS[r.id].benefit)}</p></div><a class="text-link" href="${r.href}"${external(r.href)}>${e(r.anchor)} <span aria-hidden="true">↗</span></a><div class="room-readiness"><p><strong>What works today</strong>${e(ROOM_STATE[r.id][0])}</p><p><strong>Still being developed</strong>${e(ROOM_STATE[r.id][1])}</p></div></div>
 <div class="room-visual">${sceneArt(r, 'compact-room-art')}${renderDemo(r.id, sceneArt(r, 'demo-room-context'))}</div></div>
 <div class="room-exit"><span class="room-scroll-note" aria-hidden="true">Scroll to see the work unfold <span>↓</span></span>
 <a class="next-room" href="#${rooms[i + 1]?.id ?? "directory"}">${rooms[i + 1] ? "Next · " + e(rooms[i + 1].name) : "Explore the capability index"} <span aria-hidden="true">↓</span></a>
 </div></div></section>`,
   )
   .join("")}
+<section class="shared-layers" aria-labelledby="shared-title"><p class="eyebrow">Across every room</p><h2 id="shared-title">Keep the context.<br>Keep the evidence.</h2><p>These layers connect the work, wherever you start.</p><div class="shared-grid"><a href="#cap-24"><strong>Continuity</strong><span>Find past operations and check for changed context.</span></a><a href="#cap-15"><strong>Gellphant evidence</strong><span>Compare what an agent claims with what was recorded.</span></a><a href="#cap-23"><strong>Run Ledger</strong><span>Find the run, its machine and its saved outputs.</span></a><a href="#cap-20"><strong>Portable Handoffs</strong><span>Carry files and next steps into another session.</span></a></div></section>
 <section id="directory" class="directory" aria-labelledby="directory-title" tabindex="-1">
-<div class="directory-intro"><p class="eyebrow">Choose your own route</p><h2 id="directory-title">What are you<br>working on?</h2><p>Read what each tool does, what you bring, what you get and why it helps. These source projects and local tools are being prepared for broader adoption; public installation links are not available yet.</p></div>
-<div class="search-control" hidden><label for="capability-search">Search capabilities</label><input id="capability-search" type="search" placeholder="Try presentations, funding or review…" autocomplete="off"><p id="search-status" role="status">${CAPABILITIES.length} capabilities</p></div>
+<div class="directory-intro"><p class="eyebrow">Choose your own route</p><h2 id="directory-title">What are you<br>working on?</h2><p>Choose by outcome, then check the implementation status. Working components require their own setup; this website does not launch them. Public installation links are not available yet.</p></div>
+<div class="status-guide">${Object.entries(STATUS).map(([key,s])=>`<div><span class="cap-status" data-stage="${key}">${e(s.label)}</span><p>${e(s.meaning)}</p></div>`).join('')}</div><p class="catalog-date">Readiness reviewed October 19, 2026. Recorded tests describe a specific scope; they are not a guarantee of production readiness.</p><div class="search-control" hidden><label for="capability-search">Search capabilities</label><input id="capability-search" type="search" placeholder="Try presentations, funding or review…" autocomplete="off"><div class="catalog-filters"><label>Status<select id="status-filter"><option value="">All stages</option>${Object.entries(STATUS).map(([key,s])=>`<option value="${key}">${e(s.label)}</option>`).join('')}</select></label><label>Room<select id="room-filter"><option value="">All rooms</option>${rooms.map(r=>`<option value="${r.id}">${e(navNames[r.id])}</option>`).join('')}</select></label></div><p id="search-status" role="status">${CAPABILITIES.length} capabilities</p></div>
 <div class="capability-list">
-${CAPABILITIES.map((c) => `<article id="${c.id}" tabindex="-1" class="capability" data-capability="${c.id}"><div><p class="cap-type">${e(c.type)}</p><h3>${e(c.name)}</h3></div><p class="cap-description">${e(c.description)}</p><div class="cap-action"><span class="cap-status">${e(c.status)}</span><a href="${c.href ?? "#" + c.room}"${external(c.href ?? "")} aria-label="${c.href ? "View " + e(c.name) + " source project" : "Visit " + e(c.name) + " room"}">${c.href ? "View source" : "Visit room"} ↗</a></div>${featureBrief(c.id)}</article>`).join("")}
+${rooms.filter(r => CAPABILITIES.some(c=>c.room===r.id)).map(r=>`<section class="room-catalog" id="tools-${r.id}" aria-labelledby="tools-${r.id}-title"><h3 id="tools-${r.id}-title">${e(navNames[r.id])}</h3>${CAPABILITIES.filter(c=>c.room===r.id).map(c=>`<article id="${c.id}" tabindex="-1" class="capability" data-capability="${c.id}"><div><p class="cap-type">${e(c.type)}</p><h4>${e(c.name)}</h4></div><div class="cap-description"><p>${e(c.description)}</p><p class="tool-output"><strong>You get</strong> ${e(c.output)}</p></div><div class="cap-action"><span class="cap-status" data-stage="${c.stage}">${e(c.status)}</span><a href="#${c.room}">Visit room ↗</a></div><dl class="cap-readiness"><div><dt>What works today</dt><dd>${e(c.available)}</dd></div><div><dt>Still being developed</dt><dd>${e(c.remaining)}</dd></div></dl>${featureBrief(c.id)}</article>`).join('')}</section>`).join('')}
+
 <p id="search-empty" hidden>No matching capabilities. Try a broader word such as “review” or “workflow”.</p>
 </div>
 </section>

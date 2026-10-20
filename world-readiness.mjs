@@ -1,0 +1,51 @@
+// Public summaries of the October 19 source audit. Private evidence stays in docs.
+export const STATUS = {
+  working: { label: 'Working component', meaning: 'Implemented in a source project or local tool. Setup is required; this website does not run it.' },
+  pilot: { label: 'Tested pilot', meaning: 'A bounded workflow has recorded test or run evidence. Broader integration is still being developed.' },
+  development: { label: 'In development', meaning: 'Design, prototype or unqualified integration. Not presented as ready to use.' },
+};
+const state = (stage, available, remaining, output) => ({ stage, available, remaining, output, status: STATUS[stage].label });
+export const READINESS = {
+  'cap-1': state('pilot', 'Compare supplied opportunities, eligibility assumptions and cash scenarios.', 'Broader funding-source connections and general onboarding.', 'A prioritized funding plan with visible blockers.'),
+  'cap-2': state('pilot', 'Keep accepted decision revisions and flag stale evidence in a local decision workspace.', 'Audience challenge packets prepare review; actual model or human review must still happen.', 'A decision packet with options, assumptions and a next test.'),
+  'cap-3': state('development', 'Architecture and recovery materials connect decisions, observation and memory.', 'A unified, installed FounderOS experience.', 'A blueprint for a connected operating workspace.'),
+  'cap-4': state('working', 'Source components prepare workflows, task boundaries and inspectable artifacts.', 'Connecting the separate execution, review and creation layers into one qualified experience.', 'A workflow with explicit assignments and review checkpoints.'),
+  'cap-5': state('working', 'Inspect repository contracts and dependency-ready tasks.', 'General onboarding and integration with the room navigator.', 'A task list grounded in repository contracts.'),
+  'cap-6': state('development', 'Task-loop components preserve checkpoints and result records.', 'A qualified integrated runtime and portable setup.', 'A proposed resumable task history.'),
+  'cap-7': state('working', 'Source runtime components handle worker events, cancellation and recovery.', 'Connecting and qualifying a chosen worker runtime.', 'Inspectable worker events and control boundaries.'),
+  'cap-8': state('pilot', 'Compile delegation packets with allowed inputs, writes and return contracts; a bounded read-only pilot is recorded.', 'Broader runtime admission and real-task evaluation.', 'A scoped agent assignment you can inspect before execution.'),
+  'cap-9': state('working', 'Reusable instructions for browser work, visual review and artifact production.', 'Consistent installation and qualification across hosts.', 'A repeatable method for a specific task.'),
+  'cap-10': state('development', 'Source implementation supports governed deck creation and version-bound editing.', 'Live-provider and user-deck acceptance remain unfinished.', 'An editable presentation with traceable revisions.'),
+  'cap-11': state('development', 'Source project explores turning fixed graphics into editable elements.', 'Reliable conversion quality and integrated setup.', 'Editable graphic elements for further revision.'),
+  'cap-12': state('working', 'Source pipelines build and measure 3D candidates against specifications.', 'Scene-specific acceptance and qualified production rendering.', 'A 3D candidate with measurements and provenance.'),
+  'cap-13': state('pilot', 'Recorded external image review, targeted repair and rereview; patched native composition has worked.', 'Portable rebuild, native provider review and removal of mock approval paths.', 'A reviewed visual candidate and a record of its revisions.'),
+  'cap-14': state('working', 'Source workflows assemble atmospheric visuals, parallax and audio.', 'Repeatable packaging and broader media-runtime integration.', 'Media assets and production instructions.'),
+  'cap-15': state('working', 'Compare completion claims with tool traces; distinguish missing or partial capture. Evidence-span and expiry modules also exist.', 'Connecting these modules to live workflows and evaluating factual claims. Evidence consistency is not proof of truth.', 'A claim review with observed evidence, gaps and safer wording.'),
+  'cap-16': state('working', 'Prepare adversarial questions, alternatives and verification gaps.', 'Connecting preparation to actual independent review and acceptance.', 'A review brief with the cheapest useful next test.'),
+  'cap-17': state('working', 'A reusable verification method asks for interaction and artifact evidence.', 'Host-specific setup and integration with release workflows.', 'A record of checks and unresolved failures.'),
+  'cap-18': state('pilot', 'Local backend connects claims, artifact versions, review and release records.', 'Live-provider drills, production acceptance and required human approvals.', 'A version-bound artifact and review trail.'),
+  'cap-19': state('working', 'Retrieval components expose search strategies and traces.', 'Task-specific relevance evaluation and connected source setup.', 'Source candidates with a visible retrieval trail.'),
+  'cap-20': state('working', 'Package context, files, checksums and explicit continuation steps.', 'Receiving-machine runtime checks; a package does not recreate credentials or every dependency.', 'A portable package another worker can verify and resume.'),
+  'cap-21': state('working', 'Check selected transferred files and configuration for changes.', 'Integration with a unified receiving-machine workflow.', 'A drift report identifying changed inputs.'),
+  'cap-22': state('working', 'Gateway and observability components expose recorded activity and receipts.', 'Joining feature branches and connecting live workers; the tour is illustrative.', 'A view of recorded work and exceptions.'),
+  'cap-23': state('working', 'Find recorded agent runs and open saved results on a configured machine.', 'Second-machine acceptance and complete capture across all runtimes.', 'The run, machine and artifact location you need to resume.'),
+};
+export const EXTRA_CAPABILITIES = [
+  ['cap-24','Continuity','research','Shared layer','Find past operations without remembering an ID and detect changed context.',state('pilot','History and transport have recorded Linux and Windows qualification.','Combined-branch, actual-engine and receiving-machine acceptance.','A paged history and an integrity-checked operation record.')],
+  ['cap-25','Repository Discovery','workshop','Discovery tool','Find reusable code and skills by purpose, with source and coverage attached.',state('pilot','A bounded read-only pilot searched two pinned repositories with recorded live acceptance.','Whole-estate parsing, held-out relevance and Windows qualification.','A searchable catalog with explicit missing-content labels.')],
+  ['cap-26','Intake Review','operations','Routing component','Review where incoming material belongs and correct the destination.',state('working','Managed copies, review states and transactional destination corrections exist.','Integrated portal qualification; oversized-file hashing gaps in the organizer.','A reviewed destination with the original proposal preserved.')],
+  ['cap-27','Routing Benchmark','observatory','Evaluation tool','Measure routing errors using reviewer-labelled examples.',state('development','Benchmark code reports confusion, precision, recall and insufficient support.','Representative held-out results and independently validated routing thresholds.','An evaluation report, not a claim of automatic accuracy.')],
+  ['cap-28','Durable Research','research','Research workflow','Keep questions, supporting and challenging evidence, and unfinished work together.',state('pilot','Local research storage, job recovery and scoped claims have retained fixture tests.','Actual provider and receiving-machine acceptance.','A resumable research record with evidence and open questions.')],
+  ['cap-29','Guarded Rendering','creation','Media utility','Check resources before rendering and resume from verified frames.',state('development','Memory gates, owned-process controls and frame validation have synthetic process evidence.','A qualified native GPU render on target hardware.','Verified frames and explicit reasons a render cannot start.')],
+  ['cap-30','Background Intake','operations','Planned workflow','Capture incoming material and prepare a digest for later review.',state('development','An asynchronous intake and hypothesis workflow is specified.','Watchers, background queues and overnight digests are not implemented by the specification.','A planned review queue and digest.')],
+].map(([id,name,room,type,description,s])=>({id,name,room,type,description,href:null,...s}));
+export const ROOM_STATE = {
+  lobby: ['Browse by outcome, search tools and compare readiness here.', 'Launching tools directly from the website.'],
+  operations: ['Local decision and funding pilots; intake correction components.', 'Connected opportunity discovery, independent review and background intake.'],
+  'mission-control': ['Workflow preparation, task contracts and source execution components.', 'A single qualified runtime joining the separate branches.'],
+  workshop: ['Reusable skills, bounded Agent Mint and repository-discovery pilots.', 'One-click installation and broad runtime qualification.'],
+  creation: ['Source creation pipelines; recorded native-composition and visual-repair pilots.', 'Portable native rebuild, provider acceptance and production rendering.'],
+  gellphant: ['Claim-to-trace checks, evidence modules and review preparation.', 'Live workflow integration and semantic claim validation.'],
+  research: ['Retrieval components, local research pilots and portable handoffs.', 'Connected-provider acceptance and broader retrieval evaluation.'],
+  observatory: ['Recorded-run discovery, source observability and benchmark code.', 'One connected live view and representative routing results.'],
+};

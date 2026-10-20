@@ -383,14 +383,19 @@ for (const image of document.querySelectorAll(".scene-art img")) {
   );
 }
 const search = document.getElementById("capability-search");
+const statusFilter = document.getElementById('status-filter');
+const roomFilter = document.getElementById('room-filter');
 const articles = [...document.querySelectorAll("[data-capability]")];
 document.querySelector(".search-control").hidden = false;
 function filterCapabilities() {
   const matches = new Set(
-    searchCapabilities(search.value).map((item) => item.id),
+    searchCapabilities(search.value, {stage: statusFilter.value, room: roomFilter.value}).map((item) => item.id),
   );
   for (const article of articles)
     article.hidden = !matches.has(article.dataset.capability);
+  document.querySelectorAll('.room-catalog').forEach(group => {
+    group.hidden = ![...group.querySelectorAll('[data-capability]')].some(item => !item.hidden);
+  });
   document.getElementById("search-status").textContent =
     matches.size + " " + (matches.size === 1 ? "capability" : "capabilities");
   document.getElementById("search-empty").hidden = matches.size !== 0;
@@ -398,6 +403,8 @@ function filterCapabilities() {
 function revealCapability(target) {
   if (target?.dataset.capability && target.hidden) {
     search.value = "";
+    statusFilter.value = '';
+    roomFilter.value = '';
     filterCapabilities();
   }
   if (target?.dataset.capability) {
@@ -406,6 +413,8 @@ function revealCapability(target) {
   }
 }
 search.addEventListener("input", filterCapabilities);
+statusFilter.addEventListener('change', filterCapabilities);
+roomFilter.addEventListener('change', filterCapabilities);
 mapToggle.hidden = false;
 mapToggle.addEventListener("click", () => {
   const image = map.querySelector("img");

@@ -98,9 +98,9 @@ export const DEMOS = {
     ],
   },
   research: {
-    product: 'HISS + Portable Handoffs',
+    product: 'Durable Research + HISS',
     headline: 'Find the source. Resume with the context.',
-    summary: 'Route knowledge searches through retrieval strategies with visible traces. Preserve decisions, artifacts and open questions for the next session.',
+    summary: 'Find source material, retain supporting and challenging evidence, and keep open questions visible. Shared continuity and handoffs carry the context into your next session.',
     features: [
       { name: 'Trace the retrieval', text: 'See the strategy and references behind a retrieved result.' },
       { name: 'Keep source links', text: 'Connect notes and conclusions to the material used.' },

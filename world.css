@@ -884,6 +884,42 @@ main {
   }
 }
 /* Keep the hero art behind its copy; .scene-art also serves normal-flow room images. */
+.room-readiness { margin-top: 22px; padding: 16px 0; border-top: 1px solid currentColor; font-size: 13px; line-height: 1.55; }
+.room-readiness p + p { margin-top: 12px; }
+.room-readiness strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+.room-tool-link { display: inline-block; margin: 14px 0; font-size: 13px; text-underline-offset: 4px; }
+.readiness-intro { font-size: 12px; margin-top: 18px; }
+.shared-layers { padding: 80px max(24px, 8vw); background: #e7ece8; color: #19332e; }
+.shared-layers h2 { font-size: clamp(32px, 5vw, 64px); line-height: 1.1; margin-bottom: 20px; }
+.shared-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+.shared-grid a { padding: 22px; border: 1px solid #a5b8b0; border-radius: 10px; color: inherit; text-decoration: none; }
+.shared-grid a:hover { background: #d7e4dd; }
+.shared-grid strong, .shared-grid span { display: block; }
+.shared-grid span { margin-top: 10px; font-size: 14px; line-height: 1.5; }
+.status-guide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0 18px; }
+.status-guide p, .catalog-date { font-size: 13px; line-height: 1.6; margin-top: 12px; }
+.catalog-date { margin-bottom: 24px; }
+.cap-status[data-stage] { display: inline-block; border-radius: 20px; padding: 6px 11px; font-size: 11px; font-weight: 600; }
+.cap-status[data-stage="working"] { color: #174d3e; background: #dceee4; }
+.cap-status[data-stage="pilot"] { color: #214b6a; background: #e0edf8; }
+.cap-status[data-stage="development"] { color: #644719; background: #f4e9d3; }
+.catalog-filters { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.catalog-filters label { flex: 1; min-width: 160px; }
+.catalog-filters select { display: block; width: 100%; min-height: 44px; margin-top: 8px; padding: 10px; font: inherit; background: white; color: #233c36; border: 1px solid #a5b8b0; border-radius: 6px; }
+.room-catalog { scroll-margin-top: calc(var(--header) + 24px); }
+.room-catalog > h3 { margin-top: 42px; padding-bottom: 14px; font-size: 24px; border-bottom: 2px solid #6c897f; }
+.capability h4 { font-size: 24px; margin-top: 8px; }
+.tool-output { margin-top: 10px; font-size: 13px; }
+.cap-readiness { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 16px 20px; background: #edf0eb; border-radius: 8px; }
+.cap-readiness dt { font-weight: 600; font-size: 12px; margin-bottom: 6px; }
+.cap-readiness dd { margin: 0; font-size: 13px; line-height: 1.6; }
+@media (max-width: 700px) {
+  .status-guide, .cap-readiness { grid-template-columns: 1fr; gap: 16px; }
+  .shared-grid { grid-template-columns: 1fr 1fr; }
+  .shared-grid a { padding: 16px; }
+  .shared-layers { padding: 48px 24px; }
+}
+@media (max-width: 380px) { .shared-grid { grid-template-columns: 1fr; } }
 html {
   scroll-padding-top: 0;
 }

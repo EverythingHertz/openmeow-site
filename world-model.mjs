@@ -1,5 +1,6 @@
 // Public preview catalog. Public installation links are pending.
 import { DEMOS } from './world-demos.mjs';
+import { READINESS, EXTRA_CAPABILITIES } from './world-readiness.mjs';
 export const ROOMS = [
   {
     id: "arrival",
@@ -351,7 +352,7 @@ export const CAPABILITIES = [
     status: "Local plugin",
     href: null,
   },
-];
+].map(c => ({ ...c, ...READINESS[c.id] })).concat(EXTRA_CAPABILITIES);
 export function roomFromHash(hash) {
   let id;
   try {
@@ -364,11 +365,12 @@ export function roomFromHash(hash) {
 export function motionEnabled({ reduced = false, paused = false } = {}) {
   return !reduced && !paused;
 }
-export function searchCapabilities(query = "") {
+export function searchCapabilities(query = "", { stage = '', room = '' } = {}) {
   const terms = String(query).trim().toLowerCase().split(/\s+/).filter(Boolean);
   return CAPABILITIES.filter((item) =>
+    (!stage || item.stage === stage) && (!room || item.room === room) &&
     terms.every((term) =>
-      (item.name + " " + item.description + " " + item.type)
+      (item.name + " " + item.description + " " + item.type + ' ' + item.output + ' ' + item.status)
         .toLowerCase()
         .includes(term),
     ),
