@@ -58,6 +58,9 @@ test("the shipped static page stays in sync and exposes every room without JavaS
     "utf8",
   );
   assert.equal(html, renderWorld());
+  assert.equal(await readFile(new URL('../index.html', import.meta.url), 'utf8'), html);
+  assert.ok(html.includes('href="film.html"'));
+  assert.ok(!html.includes('content="noindex"'));
   for (const room of ROOMS) assert.ok(html.includes('id="' + room.id + '"'));
   assert.ok(html.includes("/dontgaslightme"));
   assert.ok(!/EyeBiome|Ronda Lab|MANESHouse/.test(html));

@@ -1,7 +1,10 @@
 # OpenMeow Observatory
 
 The static site at openmeow.io is published by GitHub Pages from `main`.
-`index.html` and the previously shared `scroll2.html` use the same tour.
+`index.html` and `world.html` serve the room navigator and capability directory.
+The original full-resolution video tour remains at `film.html` and `scroll2.html`.
+Run `node scripts/build-world.mjs` to regenerate both navigator entrypoints and
+`node --test tests/*.test.mjs` to verify the site.
 
 ## Responsive tour
 

@@ -32,7 +32,7 @@ export function renderWorld() {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OpenMeow — Tools for work you can inspect</title>
 <meta name="description" content="Explore a world of agents, skills and workflows. Create with /dontgaslightme, question with Gellphant, coordinate with Subtle Lasagne.">
-<meta name="robots" content="noindex"><meta name="theme-color" content="#f3f4f0">
+<link rel="canonical" href="https://openmeow.io/"><meta name="theme-color" content="#f3f4f0">
 <link rel="icon" href="cat.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -95,10 +95,13 @@ ${rooms.filter(r => CAPABILITIES.some(c=>c.room===r.id)).map(r=>`<section class=
 <p id="search-empty" hidden>No matching capabilities. Try a broader word such as “review” or “workflow”.</p>
 </div>
 </section>
-<footer class="site-footer"><a class="brand" href="#arrival">Open<span class="brand-meow">Meow</span>.</a><p>Useful tools. Work you can inspect.</p><p class="preview-note">World preview · Demonstrations use synthetic examples and are not connected product sessions. Character films are in production planning.</p><div><a href="index.html">Original film tour</a><a href="#directory">Capability index ↗</a><a href="#arrival">Back to the top ↑</a></div></footer>
+<footer class="site-footer"><a class="brand" href="#arrival">Open<span class="brand-meow">Meow</span>.</a><p>Useful tools. Work you can inspect.</p><p class="preview-note">Demonstrations use synthetic examples and are not connected product sessions. Character films for the new rooms are in production planning.</p><div><a href="film.html">Original film tour</a><a href="#directory">Capability index ↗</a><a href="#arrival">Back to the top ↑</a></div></footer>
 </main>
 <script type="module" src="world.mjs"></script>
 </body></html>`;
 }
-if (process.argv[1] === fileURLToPath(import.meta.url))
-  await writeFile(new URL("../world.html", import.meta.url), renderWorld());
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const html = renderWorld();
+  await Promise.all(['world.html', 'index.html'].map(name =>
+    writeFile(new URL('../' + name, import.meta.url), html)));
+}

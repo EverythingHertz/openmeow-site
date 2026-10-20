@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>OpenMeow — The Observatory</title>
+<meta name="description" content="Scroll the tower from empty shell to a full staff of agents — then step onto every floor. OpenMeow: open-source observability for AI agents." />
+<meta property="og:title" content="OpenMeow — open-source observability for AI agents" />
+<meta property="og:description" content="Scroll the tower from empty shell to a full staff of agents — then step onto every floor. Coming soon." />
+<meta property="og:image" content="https://openmeow.io/og.jpg" />
+<meta property="og:url" content="https://openmeow.io/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#0B0A09" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='55' r='30' fill='%23F2B366'/><path d='M24 34 L30 11 L47 29 Z M76 34 L70 11 L53 29 Z' fill='%23F2B366'/><circle cx='40' cy='53' r='4' fill='%23140F0A'/><circle cx='60' cy='53' r='4' fill='%23140F0A'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0B0A09; --ink: #F4EFE7; --muted: #9A8F82; --faint: #6A6157;
+    --gold: #F2B366; --gold-hi: #FFD9A0;
+    --teal-hi: #86F1E7; --teal: #33D6C8; --teal-lo: #15AEA4;
+    --display: 'Space Grotesk', system-ui, sans-serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  ::selection { background: rgba(51,214,200,.30); color: #EAFFFB; }
+  html { scroll-behavior: auto; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  #track { height: 1250vh; position: relative; }
+  #stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--bg); }
+  #stage video, #stage img.layer {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0;
+  }
+  .vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 45%, transparent 56%, rgba(5,4,3,.5) 100%),
+                linear-gradient(to bottom, rgba(5,4,3,.22), transparent 13% 86%, rgba(5,4,3,.4));
+  }
+  .grain { position: absolute; inset: 0; pointer-events: none; opacity: .05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.6'/></svg>");
+  }
+  #loader {
+    position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px; background: var(--bg);
+    transition: opacity .8s var(--ease), visibility .8s;
+  }
+  #loader.done { opacity: 0; visibility: hidden; }
+  #loader .mark { font-family: var(--display); font-weight: 700; font-size: 30px; letter-spacing: -.04em; }
+  #loader .mark .m { background: linear-gradient(115deg, var(--teal-lo), var(--teal) 45%, var(--teal-hi)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #loader .bar { width: 200px; height: 2px; background: rgba(244,239,231,.12); border-radius: 2px; overflow: hidden; }
+  #loader .bar i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--teal)); transition: width .4s var(--ease); }
+  #loader .hint { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--faint); text-transform: uppercase; }
+  #cards { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+  .card {
+    position: absolute; left: clamp(20px, 5vw, 76px); bottom: clamp(26px, 8vh, 90px);
+    max-width: min(460px, 84vw);
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .55s var(--ease), transform .55s var(--ease);
+  }
+  .card.on { opacity: 1; transform: none; }
+  .card .eyebrow {
+    font-family: var(--mono); font-size: clamp(10px, 1.1vw, 12px);
+    letter-spacing: .16em; text-transform: uppercase; color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .card h2 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(26px, 3.6vw, 44px); letter-spacing: -.03em; line-height: 1.05;
+    text-shadow: 0 2px 26px rgba(5,4,3,.9), 0 1px 3px rgba(5,4,3,.9);
+  }
+  .card p {
+    margin-top: 10px; color: rgba(244,239,231,.87);
+    font-size: clamp(14px, 1.5vw, 17px); line-height: 1.5; max-width: 42ch;
+    text-shadow: 0 1px 14px rgba(5,4,3,.9);
+  }
+  #finale {
+    position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px; pointer-events: none;
+    opacity: 0; transition: opacity .9s var(--ease);
+    background: radial-gradient(62% 54% at 50% 46%, rgba(5,4,3,.62), rgba(5,4,3,.16) 66%, transparent);
+  }
+  #finale.on { opacity: 1; }
+  .wordmark { font-family: var(--display); font-weight: 700; font-size: clamp(44px, 8.5vw, 108px); letter-spacing: -.045em; line-height: 1; display: flex; align-items: baseline; filter: drop-shadow(0 6px 40px rgba(51,214,200,.25)); }
+  .wordmark .meow { background: linear-gradient(115deg, var(--teal-lo), var(--teal) 45%, var(--teal-hi)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .wordmark .dot { width: .16em; height: .16em; margin-left: .07em; border-radius: 50%; background: radial-gradient(circle at 34% 30%, var(--gold-hi), var(--gold)); box-shadow: 0 0 18px rgba(242,179,102,.7); align-self: flex-end; margin-bottom: .09em; }
+  .coming {
+    font-family: var(--display); font-weight: 600; font-size: clamp(17px, 2.5vw, 26px);
+    background: linear-gradient(100deg, #34E0D0, #7DF0EA 22%, #EAFEFF 50%, #93E0FF 74%, #46B4F2);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 2px 18px rgba(70,180,242,.4));
+  }
+  #fparade { position: absolute; left: 0; right: 0; bottom: max(3.5vh, env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+  .prow { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+  .ptrack { display: flex; gap: clamp(10px, 1.6vw, 18px); width: max-content; animation-timing-function: linear; animation-iteration-count: infinite; animation-play-state: paused; }
+  #finale.on .ptrack { animation-play-state: running; }
+  .prow.far .ptrack { animation-name: pslideR; animation-duration: 150s; }
+  .prow.near .ptrack { animation-name: pslideL; animation-duration: 110s; margin-top: clamp(6px, 1vh, 12px); }
+  .ptrack img { width: clamp(52px, 6.5vw, 92px); height: clamp(52px, 6.5vw, 92px); flex: none; -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 76%); mask-image: radial-gradient(circle, #000 52%, transparent 76%); }
+  .prow.far img { width: clamp(40px, 5vw, 70px); height: clamp(40px, 5vw, 70px); }
+  .prow.far { opacity: .32; }
+  .prow.near { opacity: .48; }
+  @keyframes pslideL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes pslideR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  #hint {
+    position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+    z-index: 12; display: flex; flex-direction: column; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: rgba(244,239,231,.6); transition: opacity .5s var(--ease);
+  }
+  #hint .chev { width: 10px; height: 10px; border-right: 1.6px solid rgba(242,179,102,.9); border-bottom: 1.6px solid rgba(242,179,102,.9); transform: rotate(45deg); animation: chev 1.7s infinite var(--ease); }
+  @keyframes chev { 0%,100% { transform: rotate(45deg) translate(0,0); opacity: .55; } 50% { transform: rotate(45deg) translate(4px,4px); opacity: 1; } }
+  #hint.off { opacity: 0; }
+  #intro {
+    position: absolute; inset: 0; z-index: 22;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 16px; pointer-events: none;
+    background: radial-gradient(70% 60% at 50% 44%, rgba(5,4,3,.72), rgba(5,4,3,.28) 62%, rgba(5,4,3,.08));
+    transition: opacity .6s var(--ease), visibility .6s;
+  }
+  #intro.off { opacity: 0; visibility: hidden; }
+  #intro .big {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 7.5vw, 96px); letter-spacing: -.04em; line-height: 1.02;
+    display: flex; align-items: baseline;
+    filter: drop-shadow(0 6px 40px rgba(0,0,0,.7));
+  }
+  #intro .big .meow { background: linear-gradient(115deg, var(--teal-lo), var(--teal) 45%, var(--teal-hi)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #intro h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(22px, 3.2vw, 40px); letter-spacing: -.02em; color: var(--gold-hi);
+    text-shadow: 0 2px 24px rgba(0,0,0,.8);
+  }
+  #intro p {
+    max-width: 46ch; color: rgba(244,239,231,.85);
+    font-size: clamp(14px, 1.6vw, 18px); line-height: 1.55;
+    text-shadow: 0 1px 14px rgba(0,0,0,.85);
+  }
+  #begin {
+    pointer-events: auto; cursor: pointer; margin-top: 14px;
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--display); font-weight: 600; font-size: clamp(15px, 1.7vw, 19px);
+    color: #06201D; background: linear-gradient(115deg, var(--teal-hi), var(--teal));
+    border: none; border-radius: 999px; padding: 15px 30px;
+    box-shadow: 0 8px 34px rgba(51,214,200,.4), inset 0 1px 0 rgba(255,255,255,.5);
+    animation: pulsebtn 2.2s var(--ease) infinite;
+  }
+  #begin .bchev { width: 11px; height: 11px; border-right: 2.2px solid #06201D; border-bottom: 2.2px solid #06201D; transform: rotate(45deg) translate(-1px,-1px); animation: chev 1.7s infinite var(--ease); }
+  @keyframes pulsebtn { 0%,100% { transform: scale(1); box-shadow: 0 8px 34px rgba(51,214,200,.4), inset 0 1px 0 rgba(255,255,255,.5); } 50% { transform: scale(1.045); box-shadow: 0 10px 44px rgba(51,214,200,.62), inset 0 1px 0 rgba(255,255,255,.5); } }
+  #rail { position: fixed; right: clamp(10px, 2vw, 26px); top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 12px; }
+  #rail button {
+    width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(244,239,231,.3);
+    background: transparent; cursor: pointer; padding: 0;
+    transition: background .3s, border-color .3s, box-shadow .3s, transform .3s;
+  }
+  #rail button.on { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 10px rgba(51,214,200,.7); transform: scale(1.3); }
+  #fallback { display: none; }
+  @media (max-width: 640px) {
+    .card { left: 18px; right: 18px; bottom: max(22px, env(safe-area-inset-bottom, 0px) + 18px); max-width: none; }
+    .card h2 { font-size: 27px; }
+    .card p { font-size: 14px; }
+    #rail { right: 8px; gap: 14px; }
+    #rail button { width: 12px; height: 12px; }
+    #intro { gap: 13px; padding: 0 22px; }
+    #intro p { font-size: 14px; }
+    #begin { padding: 16px 34px; font-size: 17px; }
+    #finale .coming, .coming { font-size: 19px; }
+    #hint { bottom: max(20px, env(safe-area-inset-bottom, 0px) + 14px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #track, #rail, #hint { display: none; }
+    #fallback { display: block; padding: 8vh 6vw; }
+    #fallback section { max-width: 940px; margin: 0 auto 9vh; }
+    #fallback img { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 18px 60px rgba(0,0,0,.5); }
+    #fallback .card { position: static; opacity: 1; transform: none; margin-bottom: 18px; }
+  }
+</style>
+<link rel="stylesheet" href="tour.css" />
+</head>
+<body>
+<a href="world.html" style="position:fixed;top:16px;right:16px;z-index:100;padding:12px 18px;border:1px solid #86F1E7;border-radius:24px;background:#102822;color:#ecfff7;font:600 13px system-ui;text-decoration:none">Explore tools &amp; readiness ↗</a>
+<div id="track">
+  <div id="stage">
+    <div id="world" aria-hidden="true"></div>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+    <div id="cards"></div>
+    <div id="finale">
+      <div class="wordmark"><span>Open</span><span class="meow">Meow</span><span class="dot" aria-hidden="true"></span></div>
+      <div class="coming">Coming&nbsp;soon</div>
+      <div id="fparade" aria-hidden="true"><div class="prow far"><div class="ptrack"></div></div><div class="prow near"><div class="ptrack"></div></div></div>
+    </div>
+    <div id="hint" aria-hidden="true"><span>Scroll</span><span class="chev" aria-hidden="true"></span></div>
+    <div id="intro">
+      <div class="big"><span>Open</span><span class="meow">Meow</span></div>
+      <h1>The Observatory: a guided tour</h1>
+      <p>One empty tower. A full staff of AI agents about to move in. Scroll to watch it come alive — then step onto every floor.</p>
+      <button id="begin" type="button"><span>Scroll to begin</span><span class="bchev" aria-hidden="true"></span></button>
+    </div>
+  </div>
+</div>
+<nav id="rail" aria-label="Tour chapters"></nav>
+<nav id="mobile-nav" aria-label="Tour chapters">
+  <button id="previous" type="button" aria-label="Previous chapter" disabled>←</button>
+  <span id="chapter" aria-live="polite">01 / 10 · Empty shell</span>
+  <button id="next" type="button" aria-label="Next chapter">→</button>
+</nav>
+<div id="progress" aria-hidden="true"><div id="progress-fill"></div></div>
+<main id="fallback">
+<header><div class="wordmark">Open<span class="meow">Meow</span></div><h1>The Observatory: a guided tour</h1><p>One empty tower. A full staff of AI agents about to move in. Explore every floor.</p></header>
+<section><div class="card"><div class="eyebrow">Overture</div><h2>Every system needs a conductor.</h2><p>The baton is up. Keep scrolling.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-1.webp" /><img src="media/poster-landscape-v2-1.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Move-in day</div><h2>Your agent staff, installed.</h2><p>Every floor a system. Every desk a specialist. Lights on.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-2.webp" /><img src="media/poster-landscape-v2-2.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Execution</div><h2>Tool calls, on the record.</h2><p>The toolsmith logs every call, so you never wonder what actually ran.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-3.webp" /><img src="media/poster-landscape-v2-3.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Cost</div><h2>Every token, weighed.</h2><p>The kibble budget balances itself — and shows its work.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-4.webp" /><img src="media/poster-landscape-v2-4.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Evals</div><h2>Nothing ships un-judged.</h2><p>The approval gate holds until the gavel comes down.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-5.webp" /><img src="media/poster-landscape-v2-5.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Memory</div><h2>Secrets stay vaulted.</h2><p>Keys, prompts, state — locked up tighter than the phantom mouse.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-6.webp" /><img src="media/poster-landscape-v2-6.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><div class="card"><div class="eyebrow">Observability</div><h2>The whole system, watched.</h2><p>From up here, you can see every trace land.</p></div><picture><source media="(orientation: portrait)" srcset="media/poster-portrait-v2-7.webp" /><img src="media/poster-landscape-v2-7.webp" alt="" loading="lazy" width="1280" height="720" /></picture></section>
+<section><h2>OpenMeow.</h2><p>Coming soon.</p></section></main>
+<script type="module" src="tour.mjs?v=film2"></script>
+</body>
+</html>
