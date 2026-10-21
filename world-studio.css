@@ -1,0 +1,69 @@
+/* Studio surfaces: sculpted navigation, clear silhouettes, quiet detail. */
+:root { --sidebar: 238px; --paper: #f2f3ef; --ink: #182c30; }
+.room-nav { padding: 22px 15px; background: #e9ece8; }
+.nav-heading { margin: 0 10px 18px; font-size: 10px; }
+.nav-group { display: block; margin: 21px 9px 10px; color: #53646a; font-size: 10px; font-weight: 600; letter-spacing: .05em; }
+.room-nav a { position: relative; gap: 12px; margin: 0 0 9px; padding: 9px 12px; min-height: 57px; border: 1px solid #fff; border-radius: 16px; background: linear-gradient(145deg, #fafbf8, #e2e7e2); box-shadow: 0 3px 0 #c8d0c9, 0 7px 12px #203b3010, inset 0 1px 0 #fff; font-size: 13px; font-weight: 600; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+.room-symbol { display: grid; place-items: center; flex: none; width: 36px; height: 36px; background: #e1e9e3; border-radius: 11px; color: #2d6156; box-shadow: inset 0 1px 2px #16382c12; }
+.room-symbol svg { width: 23px; height: 23px; }
+.nav-arrow { margin-left: auto; opacity: .45; font-size: 15px; }
+.room-nav a[data-room="creation"] .room-symbol { background: #e2def2; color: #5b4a8c; border-radius: 50%; }
+.room-nav a[data-room="gellphant"] .room-symbol { background: #f2dfd1; color: #83472d; border-radius: 12px 12px 18px 18px; }
+.room-nav a[data-room="research"] .room-symbol { background: #dbe8f1; color: #365f82; border-radius: 50%; }
+.room-nav a[aria-current] { color: #f6fff5; border-color: #4c6667; background: linear-gradient(145deg, #355053, #162c30); box-shadow: 0 4px 0 #0e1c20, 0 8px 15px #16313826, inset 0 1px 0 #748886; }
+.room-nav a[aria-current] .room-symbol { color: #d6f4b2; background: #ffffff10; box-shadow: inset 0 1px 1px #ffffff20; }
+@media (hover: hover) { .room-nav a:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #bec9c0, 0 10px 16px #203b301a; } .room-nav a[aria-current]:hover { background: #29464a; box-shadow: 0 5px 0 #0e1c20, 0 10px 18px #203b3028; } }
+.room-nav a:active { transform: translateY(2px); box-shadow: 0 1px 0 #a6b7ac; }
+.building-toggle { border: 1px solid #bbc9c1; border-radius: 14px; padding: 13px; background: #dde5dd; margin-bottom: 16px; min-height: 48px; }
+#floor-readout { display: none; }
+.room-heading { gap: 14px; font: 500 15px 'Space Grotesk', sans-serif; margin-bottom: 28px; }
+.room-heading .room-symbol { width: 55px; height: 55px; border-radius: 18px 18px 18px 5px; background: #d9e5db; }
+.room-heading .room-symbol svg { width: 30px; height: 30px; }
+#creation .room-heading .room-symbol { background: #e2dcf0; color: #645584; border-radius: 50%; }
+#gellphant .room-heading .room-symbol { background: #efddcd; color: #884e36; border-radius: 18px 18px 28px 28px; }
+#research .room-heading .room-symbol { background: #d9e7ef; color: #395d7c; border-radius: 50%; }
+.room-tool-link, .primary-link { padding: 15px 21px; border: 1px solid #496466; border-radius: 14px; color: #f3ffe6; background: linear-gradient(145deg, #365355, #182e32); box-shadow: 0 4px 0 #0e2023, inset 0 1px 0 #77918a; text-decoration: none; font-weight: 600; min-height: 48px; }
+.room-features { margin-top: 22px; }
+.room-features ul { display: grid; grid-template-columns: 1fr; gap: 9px; }
+.room-features li { margin: 0; padding: 0; border: 1px solid #d7dfd8; border-radius: 14px; background: #f9faf5; overflow: hidden; }
+.room-features li:before { content: none; }
+.room-features summary { min-height: 48px; padding: 14px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.room-features details p { padding: 0 16px 16px; line-height: 1.6; color: var(--muted); font-size: 13px; }
+.room-benefit { position: relative; margin-top: 20px; padding: 23px; border: 0; border-radius: 3px 24px 24px 24px; background: #dfe9d5; color: #263e2b; }
+.room-benefit > span { color: #416343; }
+.room-benefit p { font: 500 17px/1.4 'Space Grotesk', sans-serif; }
+.room-readiness { border: 1px solid var(--line); border-radius: 14px; padding: 0; overflow: hidden; }
+.room-readiness summary { display: flex; justify-content: space-between; cursor: pointer; padding: 16px; font-weight: 600; font-size: 12px; min-height: 48px; }
+.room-readiness p { padding: 0 16px 16px; font-size: 12px; }
+.room-readiness[open] summary span { transform: rotate(45deg); }
+summary:focus-visible { outline: 3px solid #167c72; outline-offset: -3px; }
+.night .room-features li { background: #233c3e; border-color: #466060; }
+.night .room-benefit { background: #cbdcc1; }
+.night .room-heading .room-symbol { background: #354e50; color: #ddedbb; }
+.shared-grid a { border: 1px solid #fff; border-radius: 24px 24px 24px 5px; background: #f7f8f2; box-shadow: 0 5px 0 #c6d2c7; padding: 26px; }
+.shared-grid a:nth-child(2) { background: #ece2d9; border-radius: 24px; }
+.shared-grid a:nth-child(3) { background: #dce8ee; }
+.shared-grid a:nth-child(4) { background: #e3dfed; border-radius: 24px; }
+.shared-grid strong { font: 500 21px 'Space Grotesk', sans-serif; }
+.capability { margin-top: 18px; padding: 26px; border: 1px solid #fff; background: #f8f9f4; border-radius: 22px; box-shadow: 0 4px 0 #cbd5cb; gap: 18px 24px; }
+.capability h4 { margin: 7px 0; font: 500 24px 'Space Grotesk', sans-serif; letter-spacing: -.04em; }
+.cap-details { padding-top: 8px; }
+.brief-setup p + p { margin-top: 14px; }
+.status-guide > div { padding: 20px; border: 1px solid #c6d2c9; border-radius: 18px; }
+.status-guide p { font-size: 12px; }
+.room-catalog > h3 { border-bottom: 0; padding: 18px 22px; border-radius: 18px 18px 3px 18px; background: #253f42; color: #eff7e8; }
+@media (max-width: 1150px) and (min-width: 901px) { :root { --sidebar: 218px; } .room-nav { padding-inline: 12px; } }
+@media (max-width: 900px) {
+ :root { --sidebar: 0px; --header: 146px; }
+ .room-nav { height: 74px; padding: 8px 12px; gap: 10px; }
+ .nav-group { display: none; }
+ .room-nav a { margin: 0 0 3px; min-height: 50px; padding: 7px 13px; font-size: 12px; gap: 9px; }
+ .room-symbol { width: 30px; height: 30px; border-radius: 9px; }
+ .room-symbol svg { width: 21px; height: 21px; }
+ .nav-arrow { display: none; }
+ .building-toggle { margin: 0 0 3px; min-height: 50px; border-radius: 14px; background: #dce5dc; }
+ .room-features ul { grid-template-columns: 1fr; }
+ .room-features li { margin: 0; }
+ .capability { padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .room-nav a { transition: none; } }

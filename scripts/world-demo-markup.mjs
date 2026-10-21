@@ -49,7 +49,7 @@ export function renderDemo(id, roomArt = '') {
   return `<div class="demo-track" data-demo-track><div class="demo-pin">${roomArt}
     <div class="demo-topline"><span><i aria-hidden="true"></i> ${id === 'lobby' ? 'Tool navigator' : e(d.product.split(' + ')[0])}</span><span>Illustrative example</span></div>
     <div class="demo-surface demo-${id}" id="${id}-demo" data-demo="${id}" data-step="2" aria-hidden="true">${scenes[id]()}</div>
-    <div class="demo-controls" hidden><div class="demo-steps" role="group" aria-label="${e(d.product)} example steps">${d.steps.map((s,i)=>`<button type="button" data-demo-step="${i}" aria-pressed="${i===2}" aria-controls="${id}-demo ${id}-demo-caption"><span>${String(i+1).padStart(2,'0')}</span>${e(s.label)}</button>`).join('')}</div><button class="demo-play" type="button" data-demo-play aria-label="Play ${e(d.product)} example"><span aria-hidden="true">▷</span> Play</button></div>
+    <div class="demo-controls" hidden><div class="demo-steps" role="group" aria-label="${e(d.product)} example steps">${d.steps.map((s,i)=>`<button type="button" data-demo-step="${i}" aria-pressed="${i===2}" aria-controls="${id}-demo ${id}-demo-caption">${e(s.label)}</button>`).join('')}</div><button class="demo-play" type="button" data-demo-play aria-label="Play ${e(d.product)} example"><span aria-hidden="true">▷</span> Play</button></div>
     <p class="demo-caption" id="${id}-demo-caption">${e(d.steps[2].caption)}</p>
     <span class="demo-announcement sr-only" role="status" aria-live="polite"></span>
   </div></div>`;

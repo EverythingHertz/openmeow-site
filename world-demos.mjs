@@ -4,7 +4,7 @@ export const DEMOS = {
   lobby: {
     product: 'The OpenMeow tool navigator',
     headline: 'Find the tool for the job.',
-    summary: 'Start with an outcome: coordinate agents, create an editable deck, challenge a claim or plan the next funding move.',
+    summary: 'Choose a goal. Find the tool, its output and its current readiness.',
     features: [
       { name: 'Browse by purpose', text: 'Eight rooms organize the work you want to do.' },
       { name: 'Compare capabilities', text: 'See what each tool takes in and produces.' },
@@ -20,7 +20,7 @@ export const DEMOS = {
   operations: {
     product: 'FundMeMeow + Founder Ops',
     headline: 'Know what to pursue. Know what is blocked.',
-    summary: 'FundMeMeow turns supplied funding opportunities into an actionable shortlist. Founder Ops prepares decision packets and source-linked weekly briefs.',
+    summary: 'Turn supplied funding opportunities into a shortlist. Prepare the next decision with its blockers in view.',
     features: [
       { name: 'Triage opportunities', text: 'Track intent, deadlines, preparation and reasons to defer.' },
       { name: 'Expose blockers', text: 'Keep missing prerequisites beside the opportunity.' },
@@ -36,7 +36,7 @@ export const DEMOS = {
   'mission-control': {
     product: 'Subtle Lasagne',
     headline: 'One brief. Clear jobs for every agent.',
-    summary: 'Design a workflow around a saved brief, bounded specialist assignments and inspectable returns. Keep dependencies and human checkpoints visible.',
+    summary: 'Give specialists clear assignments. Track dependencies and bring their results back for review.',
     features: [
       { name: 'Define the work', text: 'Give each specialist a task, context and expected return.' },
       { name: 'Coordinate dependencies', text: 'Distinguish ready work from tasks waiting on an input.' },
@@ -52,7 +52,7 @@ export const DEMOS = {
   workshop: {
     product: 'Agent Mint + reusable skills',
     headline: 'Make delegation explicit before agents start.',
-    summary: 'Agent Mint compiles task briefs into delegation packets with defined inputs, write boundaries, authority and return requirements.',
+    summary: 'Turn a brief into an agent handoff: inputs, permissions, skills and expected results.',
     features: [
       { name: 'Define the contract', text: 'Specify the role, source files, allowed writes and verifier.' },
       { name: 'Reuse the method', text: 'Attach skills for browser work, visual review or artifact creation.' },
@@ -68,7 +68,7 @@ export const DEMOS = {
   creation: {
     product: '/dontgaslightme',
     headline: 'Editable slides. Evidence you can trace.',
-    summary: 'Build presentations from source packages, keep text, charts and diagrams separate, and bind revisions to a specific deck version.',
+    summary: 'Create source-linked presentations with editable text, charts and diagrams.',
     features: [
       { name: 'Keep elements editable', text: 'Work with slide structure, text, charts and diagram layers.' },
       { name: 'Link claims to sources', text: 'Carry evidence references alongside the artifact.' },
@@ -84,7 +84,7 @@ export const DEMOS = {
   gellphant: {
     product: 'Gellphant',
     headline: 'Challenge the claim. Check the actual work.',
-    summary: 'An anti-sycophancy review layer for claims, plans and agent output. Ask for evidence, surface uncertainty and inspect signs of apparent compliance.',
+    summary: 'Question confident answers. Surface missing evidence, shaky assumptions and fake fixes.',
     features: [
       { name: 'Challenge agreement', text: 'Ask what would disprove the recommendation.' },
       { name: 'Inspect fake fixes', text: 'Review placeholders, swallowed errors and weakened assertions.' },
@@ -100,7 +100,7 @@ export const DEMOS = {
   research: {
     product: 'Durable Research + HISS',
     headline: 'Find the source. Resume with the context.',
-    summary: 'Find source material, retain supporting and challenging evidence, and keep open questions visible. Shared continuity and handoffs carry the context into your next session.',
+    summary: 'Keep sources, open questions and decisions together. Carry the context into your next session.',
     features: [
       { name: 'Trace the retrieval', text: 'See the strategy and references behind a retrieved result.' },
       { name: 'Keep source links', text: 'Connect notes and conclusions to the material used.' },
@@ -116,7 +116,7 @@ export const DEMOS = {
   observatory: {
     product: 'OpenMeow + Agent Run Ledger',
     headline: 'See the run. Find the result. Spot the gap.',
-    summary: 'Follow agent events, task traces, costs and exceptions. Agent Run Ledger helps locate prior work, the machine that ran it and its saved outputs.',
+    summary: 'Follow agent activity, costs and exceptions. Find the saved output behind a completion claim.',
     features: [
       { name: 'Follow activity', text: 'Connect task events and returns to the work they belong to.' },
       { name: 'Inspect cost and exceptions', text: 'See accounting records and work that needs attention.' },
