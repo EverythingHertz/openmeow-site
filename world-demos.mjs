@@ -3,7 +3,7 @@
 export const DEMOS = {
   lobby: {
     product: 'The OpenMeow tool navigator',
-    headline: 'Find the tool for the job.',
+    headline: 'What do you want done?',
     summary: 'Choose a goal. Find the tool, its output and its current readiness.',
     features: [
       { name: 'Browse by purpose', text: 'Eight rooms organize the work you want to do.' },
@@ -19,7 +19,7 @@ export const DEMOS = {
   },
   operations: {
     product: 'FundMeMeow + Founder Ops',
-    headline: 'Know what to pursue. Know what is blocked.',
+    headline: 'Find your next funding move.',
     summary: 'Turn supplied funding opportunities into a shortlist. Prepare the next decision with its blockers in view.',
     features: [
       { name: 'Triage opportunities', text: 'Track intent, deadlines, preparation and reasons to defer.' },
@@ -35,7 +35,7 @@ export const DEMOS = {
   },
   'mission-control': {
     product: 'Subtle Lasagne',
-    headline: 'One brief. Clear jobs for every agent.',
+    headline: 'Give every agent a clear job.',
     summary: 'Give specialists clear assignments. Track dependencies and bring their results back for review.',
     features: [
       { name: 'Define the work', text: 'Give each specialist a task, context and expected return.' },
@@ -51,7 +51,7 @@ export const DEMOS = {
   },
   workshop: {
     product: 'Agent Mint + reusable skills',
-    headline: 'Make delegation explicit before agents start.',
+    headline: 'Build an agent with boundaries.',
     summary: 'Turn a brief into an agent handoff: inputs, permissions, skills and expected results.',
     features: [
       { name: 'Define the contract', text: 'Specify the role, source files, allowed writes and verifier.' },
@@ -67,7 +67,7 @@ export const DEMOS = {
   },
   creation: {
     product: '/dontgaslightme',
-    headline: 'Editable slides. Evidence you can trace.',
+    headline: 'Make slides you can actually edit.',
     summary: 'Create source-linked presentations with editable text, charts and diagrams.',
     features: [
       { name: 'Keep elements editable', text: 'Work with slide structure, text, charts and diagram layers.' },
@@ -83,7 +83,7 @@ export const DEMOS = {
   },
   gellphant: {
     product: 'Gellphant',
-    headline: 'Challenge the claim. Check the actual work.',
+    headline: 'Does that answer hold up?',
     summary: 'Question confident answers. Surface missing evidence, shaky assumptions and fake fixes.',
     features: [
       { name: 'Challenge agreement', text: 'Ask what would disprove the recommendation.' },
@@ -99,7 +99,7 @@ export const DEMOS = {
   },
   research: {
     product: 'Durable Research + HISS',
-    headline: 'Find the source. Resume with the context.',
+    headline: 'Find it. Pick up where you left off.',
     summary: 'Keep sources, open questions and decisions together. Carry the context into your next session.',
     features: [
       { name: 'Trace the retrieval', text: 'See the strategy and references behind a retrieved result.' },
@@ -115,7 +115,7 @@ export const DEMOS = {
   },
   observatory: {
     product: 'OpenMeow + Agent Run Ledger',
-    headline: 'See the run. Find the result. Spot the gap.',
+    headline: 'See what your agents actually did.',
     summary: 'Follow agent activity, costs and exceptions. Find the saved output behind a completion claim.',
     features: [
       { name: 'Follow activity', text: 'Connect task events and returns to the work they belong to.' },

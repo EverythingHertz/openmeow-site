@@ -272,6 +272,14 @@ function render(now = performance.now()) {
     );
     if (floor) showFloor(floor);
   }
+  // The directory is a destination of its own, not the last room above it.
+  for (const link of navLinks) {
+    if (link.dataset.room === (directoryInView ? 'lobby' : current)) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
+  document.getElementById('journey-location').textContent = directoryInView
+    ? 'All tools' : (ROOMS.find(room => room.id === current)?.name ?? 'The studio');
+
 }
 function wake() {
   if (!frame && !document.hidden) frame = requestAnimationFrame(render);
