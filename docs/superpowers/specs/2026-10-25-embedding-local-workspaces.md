@@ -66,4 +66,35 @@ No browser restrictions at all. Already has the drop surface, the bridge client 
 
 ## Open and unmeasured
 
-Which of the six workspaces currently permit framing; whether Firefox and Safari behave as Chrome does here (only Chrome was measured); what the runner should do when two workspaces claim the same port; and whether the portal should host the runner's UI or embed it.
+Whether Firefox and Safari behave as Chrome does here — only Chrome was measured — and whether the portal should host the runner's UI or embed it.
+
+## Frame verdicts, measured 2026-10-25 (drift task H3)
+
+Method for every `ok` row: serve a page on loopback, insert an `<iframe>` pointing at the workspace, wait, and **assert on rendered content via a screenshot**. The spec's own rule applies — a `load` event fired on a blocked embed during the original measurements and is never evidence. No workspace this session does not own was started; a workspace that was not running is `unknown`, not `refused`.
+
+| Workspace | Port | Verdict | Method | Date |
+| --- | --- | --- | --- | --- |
+| Studio board | 8899 | **ok** | iframed from `http://localhost:8781`; rendered content confirmed by screenshot — sidebar, Deck/Pages/Appendix counts, slide 01 and its caption all visible | 2026-10-25 |
+| Review desk | 8892 | unknown · not running | another lane's; down since its `watch_queue.py` launcher hit `PermissionError WinError 5` on the queue-watcher status replace. Not started | 2026-10-25 |
+| Review desk (second listener) | 8893 | unknown · not running | same store, same lane. Not started | 2026-10-25 |
+| Lookbook | 8768 | unknown · not running | another lane's. Not started | 2026-10-25 |
+| Screening room | 8799 | unknown · not running | Codex lane. Not started | 2026-10-25 |
+| Portal bridge | 9137 | unknown · not running | PR #47 is unmerged; no bridge process exists | 2026-10-25 |
+
+**Why 8899 frames, and what it implies for the rest.** It returns neither `X-Frame-Options` nor a `Content-Security-Policy`, so nothing forbids an ancestor. It is `SimpleHTTP/0.6 Python/3.11.15` serving static files — a stock Python static server sends no framing headers at all. The Review desk, the screening room and the Lookbook all run their own Python servers with explicit origin checks, so their verdicts cannot be inferred from this one and remain genuinely unknown until each is running and testable by its owner.
+
+**Claude Desktop's bundled Node: unknown.** Required by phase L3-4, which needs `node:sqlite` and therefore Node 24. No `node.exe` was found under `AppData\Local\AnthropicClaude`, `AppData\Local\Programs` or either `Program Files` tree; the install is not at any standard path on this machine. The system Node is v24.21.0, which is **not** evidence about the bundled runtime. This must be measured on a machine where the install can be located before L3-4 relies on it.
+
+## Port collision: the proposed rule
+
+The runner binds `127.0.0.1:7777`, and that port is not incidental — it is written into the MCP recipes a visitor pastes into Claude Code and Codex, and into the bearer secret's scope. A runner that silently migrates to another port breaks every pasted recipe and splits state across two instances.
+
+Proposed, for implementation in O8:
+
+1. Probe 7777 before binding.
+2. If free, bind and print the URL with its launch token.
+3. If occupied, request a runner identity endpoint on it. If the occupant answers as a runner for this library, **do not start a second one**: print "already running" with that URL and exit 0.
+4. If the occupant is a stranger, **exit non-zero**, name the port and the owning PID, and say that `--port` is available for a deliberate override. Do not migrate automatically.
+5. A deliberate `--port` prints a warning that pasted MCP recipes naming 7777 will not reach this instance, and prints the corrected recipe line.
+
+The principle matches the rest of this spec: fail visibly rather than succeed in a way the visitor cannot see.
