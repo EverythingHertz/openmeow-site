@@ -6,6 +6,8 @@ Back to [[plans/2026-10-25-grand-plan/overview]]
 
 Five test files, 32 tests, run with `node --test tests/*.test.mjs`. On the 2026-10-21 checkout all 32 pass (`docs/2026-10-19-room-readiness.md`). On a sparse Windows clone with `core.autocrlf=true`, 30 pass: `tests/world.test.mjs:55` fails because the generated HTML is CRLF-converted, and `:68` fails because `media/world/*.png` is not checked out. Both are environment, not product, and phase 0 makes the first one impossible.
 
+**Re-checked against `main` at `7f69fc8` (drift check H1, 2026-10-25).** The count is **unchanged at 32** — tour 8, world 8, world-demos 9, world-motion 4, world-readiness 3, identical on both revisions — so every count in this file still holds. Two cited line numbers moved and are corrected in the table below: `world.test.mjs:55` is still the sync test but its name is now "the shipped static page stays in sync and exposes every room without JavaScript"; `world-motion.test.mjs:63` now asserts `new Set(ids).size === 8` rather than the six-floor shape. `world.test.mjs:68` still asserts the 18 plates. `.room-flow` is still absent from the generated HTML, so `storyBeat` remains dead code as this plan states.
+
 | File | Tests | Guards | Layer | Fate in this plan |
 | --- | --- | --- | --- | --- |
 | `tests/tour.test.mjs` | 8 | scroll clamp `:5`; mode choice `:11`, `:17`; first and last scene `:22`; reverse back to the tower `:27`; identical damping at 60 and 120 Hz `:33`; seek clamp `:38`; no camera jump at segment boundaries `:43` | film | keep unchanged; becomes the story page's suite (phase 7) |
