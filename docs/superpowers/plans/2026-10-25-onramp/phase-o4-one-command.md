@@ -6,6 +6,8 @@ Back to [[plans/2026-10-25-onramp/overview]]
 
 End every visit with something runnable: one copy-paste line that starts the workspace on the visitor's own folder, with its prerequisites stated plainly and verified on a machine that has never run it.
 
+**The command worth copying is `npx openmeow`**, which starts the local runner (phase O8) — the same site served from loopback, where it can actually see and embed the workspaces. The per-workspace commands below remain, for someone who wants only one tool. This phase builds the manifest both modes read; O8 builds the runner. See [the embedding spec](../../specs/2026-10-25-embedding-local-workspaces.md) for why the split exists.
+
 ## Changes
 
 - `world-workspaces.mjs` (new): the launch manifest the chooser reads — one record per workspace, from the workspace map's five (Library, Review, Studio, Dispatch, Observatory) plus the standalone tools that already launch cleanly (the Lookbook, the studio board).

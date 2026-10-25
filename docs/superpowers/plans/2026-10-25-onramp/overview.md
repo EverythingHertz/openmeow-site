@@ -32,8 +32,10 @@ Nothing on that path requires choosing between thirty tools, reading a tagline, 
 The site must be exact about which level it is offering, because the difference is trust.
 
 - **L1 — in the browser, now.** Drop a file. Name, type and size are read client-side; nothing is uploaded, nothing leaves the page. The visitor's filename appears inside the worked example, so the example becomes *about their thing*. Zero install, instant.
-- **L2 — one command.** Copy-paste starts that workspace locally against a folder they choose. Install is required and is stated plainly, with what it needs and what it will not do.
+- **L2 — one command.** `npx openmeow` serves this same site from `http://127.0.0.1:7777`, where the browser's local-network restrictions do not apply, so the page can see which workspaces are responding and embed them. Install is required and is stated plainly.
 - **L3 — connected.** Bring-your-own-agent through the gateway. **Out of scope here.** The site must not imply it exists.
+
+**Why L2 is a separate mode and not a nicer L1.** Measured on Chrome 152 against the live site: an HTTPS page's `fetch` to `http://127.0.0.1` is blocked in 1 ms and an iframe of it renders blank, while the identical calls from a page served on loopback succeed in 4 ms and render fully. A top-level link from HTTPS to localhost still works. The full matrix and what it rules out is in [the embedding spec](../../specs/2026-10-25-embedding-local-workspaces.md); it is the reason this plan ships one build in two modes rather than one page that tries to detect everything.
 
 ## Scope
 
@@ -70,8 +72,9 @@ Plus the user's standing instruction for this plan: *brainless to follow, immedi
 5. [[plans/2026-10-25-onramp/phase-o5-craft-pass]] — type, motion, the Dot, both schemes, gated by Gellphant 1/2/3/5.
 6. [[plans/2026-10-25-onramp/phase-o6-keyboard-and-play]] — number keys, interchanges, the running train, the toy quality.
 7. [[plans/2026-10-25-onramp/phase-o7-sixty-second-test]] — a timed cold read against the promise table.
+8. [[plans/2026-10-25-onramp/phase-o8-local-runner]] — `npx openmeow`: the same build served from loopback, where it can probe and embed the workspaces.
 
-O1 needs grand phases 1–4. O2 and O4 are independent of each other and can run in parallel. O3 extends grand phase 8 and needs O2. O5 and O6 need O1. O7 is last and gates release.
+O1 needs grand phases 1–4. O2 and O4 are independent of each other and can run in parallel. O3 extends grand phase 8 and needs O2. O5 and O6 need O1. O8 needs O4's manifest and is what makes L2 real. O7 is last and gates release.
 
 ## Verification
 

@@ -12,6 +12,8 @@ Make the first screen do four things at once: say what this is in one sentence, 
 - `chooser.css`: the spine's grid, sized so the map and both doors fit in one viewport at 1440×1000 and at 390×844 without scrolling; the map takes the remaining height rather than a fixed aspect.
 - `chooser.mjs`: the two doors' behaviour — **Try an example** selects the line whose example has the strongest evidence and scrolls nothing; **Drop a file** focuses the drop region (built in O3; until then it is hidden, not a dead control).
 
+**No live state on the public site.** The spine must not probe for running workspaces or render a status dot: a public HTTPS page cannot reach localhost (measured — see [the embedding spec](../../specs/2026-10-25-embedding-local-workspaces.md)), so any such indicator would be a guess presented as fact. Live state belongs to the local runner in phase O8.
+
 ## Data structures
 
 A **door**: `{ id, label, hint, action, enabled }` — the drop door is disabled by capability detection, never rendered broken. A **spine state**: which line is selected, which door was used, whether an example is showing. The sentence and door labels live in the build data beside `ROOMS`, not in markup, so they can be tested.
