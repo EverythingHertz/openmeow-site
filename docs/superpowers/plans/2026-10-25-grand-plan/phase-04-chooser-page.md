@@ -8,7 +8,9 @@ Replace the homepage with the one-screen chooser: pick a destination, the route 
 
 ## Changes
 
-- `scripts/build-chooser.mjs` (new): emits `index.html` from `ROOMS`, `FLOWS`, `DEMOS`, `CAPABILITY_BRIEFS` and readiness — header, line index, the server-rendered system map, the detail card, footer. Reuses the escaping, picture and brief helpers from `build-world.mjs` by importing them (export them there; no copy).
+- `scripts/build-chooser.mjs` (new): emits `index.html` from `ROOMS`, `FLOWS`, `DEMOS`, `CAPABILITY_BRIEFS` and readiness — header, line index, the server-rendered system map, the detail card, footer. Reuses the escaping and brief helpers from `build-world.mjs` by importing them (export them there; no copy). It does **not** import `picture`: see below.
+
+**Vector only** (decided by the user, 2026-10-25). The chooser references no raster artwork at all — no room plates in the card header, no tower in a map dialog, no `cat.webp`. The eighteen `media/world/*.png` plates are cat scenes, and a cast-free page cannot show them. Everything on this page is live text, the Transit SVG and the Dot mark. The gain is not only honesty: the current homepage ships ~2 MB of PNG before anything is readable, and the chooser ships none.
 - `chooser.css` (new): the page's own stylesheet on the design-system tokens; `world.css` is not loaded on the chooser.
 - `chooser.mjs` (new): selection by click or hash, hover highlighting, the route draw-on and one-shot travelling marker, keyboard navigation of the index, and card updates. No scroll logic. Ported from `world.mjs`, not rewritten: the motion toggle with its existing `sessionStorage['openmeow-world-paused']` key (`:43-70`, `:279-286`), the image-error class (`:377-384`), and the hidden-target recovery rule (`:403-414`) as a pure function with a test.
 

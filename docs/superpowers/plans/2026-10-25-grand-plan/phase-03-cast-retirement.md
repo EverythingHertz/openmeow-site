@@ -4,7 +4,9 @@ Back to [[plans/2026-10-25-grand-plan/overview]]
 
 ## Goal
 
-Remove the cat cast from every string the builds consume and introduce the brand mark, before the first visible page ships — so the chooser launches with no cat in a favicon, a label or an alt text. Scenes (the 18 plates and the film) are not touched here; they stay with the long page and the story page until replaced.
+Remove the cat cast from every string the builds consume and introduce the brand mark, before the first visible page ships — so the chooser launches with no cat in a favicon, a label or an alt text. Scenes are not touched here: the eighteen plates and the film stay with the long page and the story page.
+
+**Consequence to track.** With the chooser decided vector-only (phase 4) and the long page retired (phase 9), the eighteen `media/world/*.png` plates end up referenced by nothing. They are a real asset — the complete modern eighteen-image set from 2026-10-04, recorded with dimensions and SHA-256s in `docs/world-art-manifest.json` — and the 9-shot video list was quoted against them. They are not deleted by this plan. Phase 9 lists them as retained-but-unreferenced, and what becomes of them (a second story chapter, a gallery, or archive) is the user's call, not a side effect of cast retirement.
 
 ## Changes
 

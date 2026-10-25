@@ -14,6 +14,8 @@ Once the chooser and catalogue have reached parity, remove the long scroll and t
 
 `preview.html`, `scroll.html`, `scroll2.html` and `film.html` remain as history and are not linked from navigation.
 
+**Retained but unreferenced after this phase:** the eighteen `media/world/*.png` plates and their portrait pairs. With the chooser vector-only (phase 4) and `world.html` gone, nothing links them. Keep them, keep their entries in `docs/world-art-manifest.json`, and record them in the completion note as unreferenced — so their future is an explicit decision rather than an accident. Do not delete them here.
+
 ## Data structures
 
 A **redirect map**: old hash → new hash, generated at build time from `ROOMS` and `CAPABILITIES`.
