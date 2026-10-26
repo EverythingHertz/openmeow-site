@@ -23,9 +23,17 @@ Files:
 
 ## The prerequisite, with corrected line numbers
 
-`playwright` and `axe-core` are in `gateway/package.json`'s **`dependencies`**. Left there, a stranger's `npx openmeow` downloads Chromium.
+`playwright` and `axe-core` are in `gateway/package.json`'s **`dependencies`**.
 
-They must move to `optionalDependencies`. The exact locations, **verified against `main` on 2026-10-25**:
+> **Corrected 2026-10-26.** This phase first said that, left there, "a stranger's `npx openmeow` downloads Chromium." That was wrong, and so is the fix it implied. Lane G found it during task H6 (`EverythingHertz/openmeow#56`), and the hub re-checked two of the three findings:
+>
+> 1. **No Chromium download.** `playwright` 1.64.1 declares no install script (`npm view playwright@1.64.1 scripts` returns nothing). It never downloaded a browser on install. *Re-checked.*
+> 2. **Moving them changes nothing on its own.** npm installs `optionalDependencies` by default, so `npx` still fetches both. *Standard npm behaviour; not re-run.*
+> 3. **Real optionality needs a code change.** `gateway/src/browser_audit.ts` imports `playwright` and `axe-core` statically on lines 1–2, and `gateway/src/server.ts` imports from it on line 2. So the server cannot load without both. Lane G reports `ERR_MODULE_NOT_FOUND 'playwright'` under `npm ci --omit=optional`. The fix is a lazy `import()` inside `browser_audit.ts`. *Import chain re-checked; the runtime error is Lane G's.*
+>
+> So the move below is still worth doing, but only alongside the lazy import. The goal is a gateway that loads and serves its tools when the browser-audit packages are absent — not a smaller download.
+
+They move to `optionalDependencies`, **and** `browser_audit.ts` imports them lazily. The exact locations, **verified against `main` on 2026-10-25**:
 
 | Package | Line | Block |
 | --- | --- | --- |
@@ -56,7 +64,7 @@ The package boundary, the names and the recipe function's contract: `claude` / `
 
 ## Verification
 
-**Static.** `npm pack --dry-run` in `gateway/` lists **no Playwright files**, and — because a devDependency is never packed and that check alone would pass on a no-op — two manifest-level assertions beside it: `dependencies` contains neither `axe-core` nor `playwright`, and `optionalDependencies` contains both at their current versions. `devDependencies.playwright-core` is unchanged.
+**Static.** `npm pack --dry-run` in `gateway/` lists **no Playwright files**, and — because a devDependency is never packed and that check alone would pass on a no-op — two manifest-level assertions beside it: `dependencies` contains neither `axe-core` nor `playwright`, and `optionalDependencies` contains both at their current versions. `devDependencies.playwright-core` is unchanged. And the check that proves the point: with `npm ci --omit=optional`, `node -e "import('./dist/src/server.js')"` loads without `ERR_MODULE_NOT_FOUND`, and only a browser-audit call reports the packages missing.
 
 **Runtime.** O4's clean-shell procedure, once per recipe row, recorded in `docs/LAUNCH_VERIFICATION.md` with OS, Node version and first-run time. Windows rows use `cmd /c npx`.
 

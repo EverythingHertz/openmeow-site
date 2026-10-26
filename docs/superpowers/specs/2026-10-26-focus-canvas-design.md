@@ -1,7 +1,7 @@
 ---
 id: 2026-10-26-focus-canvas
 created: 2026-10-26
-status: design approved section by section in chat; this written spec awaits review
+status: design approved section by section in chat; planning authorised 2026-10-26 (decision 8); the written spec has not been separately approved; the palette remains an assumption
 repo: EverythingHertz/openmeow-site
 refines: 2026-10-26-slide-board (pull request 2)
 builds-on: feat/slide-board-v0 at f909108 (local only, not pushed)
@@ -30,6 +30,7 @@ Each was made by the user in chat unless marked otherwise. Nothing here re-opens
 | 5 | The left rail lists agents, like the Claude Desktop sidebar, and their work lands in the centre | this session |
 | 6 | The shell is the focus canvas: one big slide, one change box, the corpus in a dock | this session; the recommended alternative (a three-pane shell) was declined, and its browsing advantage is recovered by Browse below |
 | 7 | Sections 1 to 4 of this design | approved one at a time, this session |
+| 8 | No canonical store yet. The focus canvas is built on v0's own iteration store as a parallel variant; the Review Desk loop keeps running alongside; nothing migrates. In the user's words: "Skip choosing for now — plan the focus canvas on v0 as a parallel variant and keep the Desk loop running alongside." | this session, about 10:00 PDT; relayed the same day to the v0 owner, Lane G, the plan's orchestrator, the session that started v0, the harness lane, and the Codex lane |
 
 **One assumption is not a decision yet: the palette.** The mockups use dark, quiet chrome with a single teal accent, matching the Claude Desktop window the user pointed at with "this is us". The user rejected the purple-gradient look of Stitch outright, but never explicitly approved this palette. It conflicts with `.superdesign/design-system.md`, which specifies a light paper-and-ink system. Approving this spec approves the dark chrome; rejecting it here costs nothing but a token change.
 
@@ -203,11 +204,11 @@ Done means each check below passes and was run, not described. The 14 existing v
 - With no agents, the empty-state words render.
 - The word "Working" does not appear in the rail, asserted by a test.
 
-## Open decision before planning
+## The store question — deferred by decision 8
 
-**Which store is canonical for one-change requests?** A second implementation of the same loop exists. On 2026-10-26 a Codex lane ran a one-change trial through an isolated copy of the Review Desk: a note bound to an exact source version, sent to a producer chat, returned through the Desk's existing packet-return API, compared, and kept across a restart. Its refusals are tested — wrong revision, out-of-packet file, duplicate replay — where v0's loop has no tests. It changed a Deck A cover through the slide's editable HTML, which v0 cannot reach at all.
+**Which store is canonical for one-change requests?** The user deferred this on 2026-10-26 (decision 8). The plan builds on v0's store as a parallel variant. The question and the map below become due when the user asks to choose. Recorded here so the choice is still an informed one when it comes. A second implementation of the same loop exists. On 2026-10-26 a Codex lane ran a one-change trial through an isolated copy of the Review Desk: a note bound to an exact source version, sent to a producer chat, returned through the Desk's existing packet-return API, compared, and kept across a restart. Its refusals are tested — wrong revision, out-of-packet file, duplicate replay — where v0's loop has no tests. It changed a Deck A cover through the slide's editable HTML, which v0 cannot reach at all.
 
-So there are two record schemas for one job: the Desk's packets and returns, and v0's request and version files. Decision 2.2's agent tools, `slides.requests` and `slides.submit`, must read exactly one of them. This is the user's decision. The implementation plan waits on it.
+So there are two record schemas for one job: the Desk's packets and returns, and v0's request and version files. Decision 2.2's agent tools, `slides.requests` and `slides.submit`, must read exactly one of them. Under decision 8 they read v0's store, for this variant only.
 
 The two differ in behaviour, not only in field names:
 
