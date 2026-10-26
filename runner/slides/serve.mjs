@@ -40,6 +40,7 @@ mkdirSync(THUMBS, { recursive: true });
 
 // Launch token: lives in memory and in a user-only file. It never goes into a URL.
 const TOKEN = randomBytes(32).toString('base64url');
+const COOKIE = `om_key_${PORT}`; // browsers share cookies across ports, so each board gets its own name
 const tokenFile = join(DATA, 'launch-token');
 writeFileSync(tokenFile, TOKEN + '\n', { mode: 0o600 });
 const launcher = join(DATA, 'open-board.html');
@@ -103,7 +104,7 @@ function sameToken(given) {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 function cookieToken(req) {
-  const m = /(?:^|;\s*)om_key=([^;]+)/.exec(req.headers.cookie || '');
+  const m = new RegExp(`(?:^|;\\s*)${COOKIE}=([^;]+)`).exec(req.headers.cookie || '');
   return m ? m[1] : null;
 }
 
@@ -137,7 +138,7 @@ const server = createServer(async (req, res) => {
   try {
     if (!HOSTS.has(req.headers.host || '')) return send(res, 403, 'Refused: foreign Host.');
     const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
-    if (['token', 'key', 'secret'].some((k) => url.searchParams.has(k))) return send(res, 400, 'Refused: keys never go in a URL.');
+    if ([...url.searchParams.keys()].some((k) => /token|key|secret/i.test(k))) return send(res, 400, 'Refused: keys never go in a URL.');
     const origin = req.headers.origin;
 
     if (url.pathname === '/session' && req.method === 'POST') {
@@ -146,7 +147,7 @@ const server = createServer(async (req, res) => {
       if (!sameToken(key)) return signin(res, 401, '<p class="err">That key did not match. Copy it again from the file.</p>');
       // A same-site refresh, not a 303, so the Strict cookie rides along even after a file:// launcher post.
       return send(res, 200, '<!doctype html><meta http-equiv="refresh" content="0;url=/"><a href="/">Open board</a>',
-        'text/html; charset=utf-8', { 'Set-Cookie': `om_key=${TOKEN}; HttpOnly; SameSite=Strict; Path=/` });
+        'text/html; charset=utf-8', { 'Set-Cookie': `${COOKIE}=${TOKEN}; HttpOnly; SameSite=Strict; Path=/` });
     }
 
     const headerToken = req.headers['x-openmeow-token'];

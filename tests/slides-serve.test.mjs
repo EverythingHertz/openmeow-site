@@ -50,10 +50,11 @@ test('refuses a foreign Host even with the token', async () => {
 
 test('refuses a key in the URL', async () => {
   assert.equal((await get(`/api/cards?token=${token}`, { 'X-OpenMeow-Token': token })).status, 400);
+  assert.equal((await get(`/api/cards?om_key=${token}`, { 'X-OpenMeow-Token': token })).status, 400);
 });
 
 test('refuses a cookie-authed POST from a foreign Origin', async () => {
-  const r = await get('/api/iterations/loc-00000000000000000000', { Cookie: `om_key=${token}`, Origin: 'http://evil.example', 'Content-Type': 'application/json' }, 'POST', '{}');
+  const r = await get('/api/iterations/loc-00000000000000000000', { Cookie: `om_key_${PORT}=${token}`, Origin: 'http://evil.example', 'Content-Type': 'application/json' }, 'POST', '{}');
   assert.equal(r.status, 403);
 });
 

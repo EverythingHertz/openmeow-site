@@ -51,7 +51,7 @@ function renderGrid() {
     img.src = `/thumb/${c.id}`;
     img.alt = c.title;
     img.decoding = 'async';
-    if (i >= 12) img.loading = 'lazy';
+    if (i >= 24) img.loading = 'lazy';
     const body = el('div', 'body');
     const t = el('p', 't', c.title);
     if (c.has_svg) t.append(el('span', 'tag svg', 'SVG'));
