@@ -33,7 +33,7 @@ The site must be exact about which level it is offering, because the difference 
 
 - **L1 — in the browser, now.** Drop a file. Name, type and size are read client-side; nothing is uploaded, nothing leaves the page. The visitor's filename appears inside the worked example, so the example becomes *about their thing*. Zero install, instant.
 - **L2 — one command.** `npx openmeow` serves this same site from `http://127.0.0.1:7777`, where the browser's local-network restrictions do not apply, so the page can see which workspaces are responding and embed them. Install is required and is stated plainly.
-- **L3 — connected.** Bring-your-own-agent through the gateway. **Out of scope here.** The site must not imply it exists.
+- **L3 — connected.** Bring-your-own-agent through the gateway. **Planned, see [[plans/2026-10-26-l3-connect/overview]]; the public site still must not imply it exists.**
 
 **Why L2 is a separate mode and not a nicer L1.** Measured on Chrome 152 against the live site: an HTTPS page's `fetch` to `http://127.0.0.1` is blocked in 1 ms and an iframe of it renders blank, while the identical calls from a page served on loopback succeed in 4 ms and render fully. A top-level link from HTTPS to localhost still works. The full matrix and what it rules out is in [the embedding spec](../../specs/2026-10-25-embedding-local-workspaces.md); it is the reason this plan ships one build in two modes rather than one page that tries to detect everything.
 
