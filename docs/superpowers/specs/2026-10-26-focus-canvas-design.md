@@ -162,7 +162,7 @@ Subtraction first. Every item names the file it lives in, on `feat/slide-board-v
 
 ### Deferred on purpose
 
-- **Changing PNG, PDF and PPTX slides.** SVG-only stays this round. The Can iterate filter makes the limit honest instead of solving it.
+- **Changing PNG, PDF and PPTX slides.** SVG-only stays this round. The Can iterate filter makes the limit honest instead of solving it. **This excludes every Deck Studio deck, including deck-a, the newest:** v0's Deck Studio reader sets `svg_path` to null for every card, so none of them can be changed. Only system-02 and `dist` slides with an SVG source can. The mockups' deck-a examples show the intended experience, not what v0 can do today.
 - **The live agent connection.** Already planned in the L3 plan in pull request 2, plus the amendment in decision 2.2. This design works without it and is ready for it.
 - **The 25 MB catalogue, background workers and live updates** (slide board phases SB-3 to SB-5). Focus is useful on the three manifest corpora alone.
 - **The wider "cut what's dead" list** — the cat cast, colony framing, the long world page. A separate item on the status page, not this screen.
@@ -201,6 +201,12 @@ Done means each check below passes and was run, not described. The 14 existing v
 - An agent appears only if it authored a delivered version or has an open request addressed to it.
 - With no agents, the empty-state words render.
 - The word "Working" does not appear in the rail, asserted by a test.
+
+## Open decision before planning
+
+**Which store is canonical for one-change requests?** A second implementation of the same loop exists. On 2026-10-26 a Codex lane ran a one-change trial through an isolated copy of the Review Desk: a note bound to an exact source version, sent to a producer chat, returned through the Desk's existing packet-return API, compared, and kept across a restart. Its refusals are tested — wrong revision, out-of-packet file, duplicate replay — where v0's loop has no tests. It changed a Deck A cover through the slide's editable HTML, which v0 cannot reach at all.
+
+So there are two record schemas for one job: the Desk's packets and returns, and v0's request and version files. Decision 2.2's agent tools, `slides.requests` and `slides.submit`, must read exactly one of them. This is the user's decision. The implementation plan waits on it. Evidence: the Codex record `C:/Users/jhert/Documents/Codex/2026-10-25/openmeow-integration-continuation/outputs/cover-typography-trial/README.md`, which this spec reports and has not re-verified.
 
 ## Risks outside this design
 
