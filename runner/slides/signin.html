@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenMeow · sign in</title>
+<style>
+  :root { --paper: #F3F4F0; --ink: #172B2A; --teal: #167C72; --line: #D5D8D0; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #182328; --ink: #EEF0EA; --line: #2E3B40; } }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 "Space Grotesk", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 440px; margin: 12vh auto; padding: 0 16px; }
+  h1 { font-size: 22px; font-weight: 600; }
+  label { display: block; font-size: 13px; margin: 20px 0 6px; }
+  input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: inherit; font: inherit; }
+  button { margin-top: 12px; padding: 10px 16px; border: 0; border-radius: 6px; background: var(--teal); color: #fff; font: inherit; cursor: pointer; }
+  code { font-size: 13px; }
+  .err { color: #B3412E; }
+</style>
+</head>
+<body>
+<main>
+  <h1>OpenMeow slides</h1>
+  <p>This board only opens with its launch key. Open <code>open-board.html</code> from the board's data folder, or paste the key from the <code>launch-token</code> file.</p>
+  <!--msg-->
+  <form method="post" action="/session">
+    <label for="key">Launch key</label>
+    <input id="key" name="key" type="password" autocomplete="off" required>
+    <button type="submit">Open board</button>
+  </form>
+</main>
+</body>
+</html>
