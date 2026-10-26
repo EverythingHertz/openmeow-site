@@ -8,6 +8,8 @@ layers-on: 2026-10-25-onramp
 
 # L3 — Connect your agent
 
+> **Amendment pending, from [[specs/2026-10-26-focus-canvas-design]] (decision 2.2).** The tool table below needs two more tools for slide iteration: `slides.requests` (read) and `slides.submit` (write, accepted only against an open request, with OpenMeow — not the agent — writing the file). `slides.propose` and `slides.apply` are unaffected. Not yet folded into the phases.
+
 ## Context
 
 The on-ramp calls L3 out of scope and says the site must not imply it exists. That was the right call for the on-ramp and it is now the thing to build, because the gateway it needs already exists: `openmeow/gateway` serves tools over stdio today, wraps every call in a receipt (`capability_tools.ts:31-48`), and keeps those receipts in SQLite at `~/OpenMeow Library/receipts.sqlite` (`stdio_main.ts:26`).

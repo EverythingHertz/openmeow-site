@@ -8,6 +8,8 @@ layers-on: 2026-10-25-onramp
 
 # The progressive slide board
 
+> **Amended 2026-10-26 by [[specs/2026-10-26-focus-canvas-design]].** The first screen is now the focus canvas — one slide, one change box, the corpus in a dock — and this plan's grid becomes its Browse state. Phases SB-3 to SB-5 (the catalogue, background workers and live updates) are deferred. Where the two disagree, the spec wins.
+
 ## Context
 
 Every slide this project has ever made is scattered across Deck Studio builds, a handoff tree, a `dist` repo, a 25.5 MB Review desk catalogue, and two Codex lineage folders. There is no surface that shows them together, and the one viewer that exists (`board.html`) reads a single corpus.
