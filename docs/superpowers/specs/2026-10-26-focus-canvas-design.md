@@ -39,7 +39,7 @@ One screen with three states, switched by a control in the top bar. Breadcrumb o
 
 **Layout.** A left rail of agents. A stage holding the slide and a narrow column beside it. A dock along the bottom holding the current deck as a filmstrip.
 
-**Focus** is the default. One slide, large. Beside it: who made this version and with what instruction, the version tabs (`v1 v2 v3`), three suggestion chips, and the change box. The chips teach the one-change grammar from the Stitch iteration template in the OpenMeow repository (`design/stitch-prompts/12-iteration-template.md`): say one change, plainly. The change box is addressed to an agent — `to Claude Code` — which is what ties the rail to the work.
+**Focus** is the default. One slide, large. Beside it: the name this version carries and the instruction behind it, the version tabs (`v1 v2 v3`), three suggestion chips, and the change box. The chips teach the one-change grammar from the Stitch iteration template in the OpenMeow repository (`design/stitch-prompts/12-iteration-template.md`): say one change, plainly. The change box is addressed to an agent — `to Claude Code` — which is what ties the rail to the work.
 
 **Compare** splits the stage into two versions side by side, any two the founder picks. This is where a founder decides whether a change was worth keeping, so it gets the whole stage.
 
@@ -120,7 +120,7 @@ Readable SVG and different from its parent are checked automatically. "Exactly o
 
 ### Decision 3.3 — Seen is not working
 
-The rail and the waiting state report only what OpenMeow observes: a request is open, an agent read it at a given time, an agent delivered a version. The rail's headings are **Has your request** and **Earlier**. Never "Working", "thinking" or a progress bar. (The first mockup used "Working"; this decision corrects it.)
+The rail and the waiting state report only what OpenMeow observes: a request is open, an agent read it at a given time, a version arrived carrying an agent's name. **Names are labels, not verified identity.** Today v0's prompt asks the agent to write its own name into `author`; once agents connect, the name is still the one the client declares about itself. OpenMeow binds a version to a request and, after L3, to a connection — never to a proven producer. The rail's headings are **Has your request** and **Earlier**. Never "Working", "thinking" or a progress bar. (The first mockup used "Working"; this decision corrects it.)
 
 ## 4. What v0 keeps, cuts, changes and adds
 
@@ -151,7 +151,7 @@ Subtraction first. Every item names the file it lives in, on `feat/slide-board-v
 
 - Tests for the iteration loop. It has none today, and it is the file every decision above touches.
 - Focus, Compare and Browse, reusing the existing grid and version chips (`slides.html`, `slides.mjs`, `slides.css`).
-- The agent rail, built from evidence: who delivered versions (`author` in each `vN.json`) and who has an open request (`to`). No probing.
+- The agent rail, built from what the records say: the name each delivered version carries (`author` in each `vN.json`) and the agent each open request is addressed to (`to`). Both are labels — v0's prompt asks the agent to write its own name, and nothing verifies it — so the rail shows them as names, never as verified identities. No probing.
 
 ### Order of work
 
@@ -198,7 +198,8 @@ Done means each check below passes and was run, not described. The 14 existing v
 
 **Step 4 — the rail.**
 
-- An agent appears only if it authored a delivered version or has an open request addressed to it.
+- An agent appears only if a delivered version carries its name or an open request is addressed to it.
+- No rail element, tooltip or label presents an agent's name as verified.
 - With no agents, the empty-state words render.
 - The word "Working" does not appear in the rail, asserted by a test.
 
@@ -206,7 +207,16 @@ Done means each check below passes and was run, not described. The 14 existing v
 
 **Which store is canonical for one-change requests?** A second implementation of the same loop exists. On 2026-10-26 a Codex lane ran a one-change trial through an isolated copy of the Review Desk: a note bound to an exact source version, sent to a producer chat, returned through the Desk's existing packet-return API, compared, and kept across a restart. Its refusals are tested — wrong revision, out-of-packet file, duplicate replay — where v0's loop has no tests. It changed a Deck A cover through the slide's editable HTML, which v0 cannot reach at all.
 
-So there are two record schemas for one job: the Desk's packets and returns, and v0's request and version files. Decision 2.2's agent tools, `slides.requests` and `slides.submit`, must read exactly one of them. This is the user's decision. The implementation plan waits on it. Evidence: the Codex record `C:/Users/jhert/Documents/Codex/2026-10-25/openmeow-integration-continuation/outputs/cover-typography-trial/README.md`, which this spec reports and has not re-verified.
+So there are two record schemas for one job: the Desk's packets and returns, and v0's request and version files. Decision 2.2's agent tools, `slides.requests` and `slides.submit`, must read exactly one of them. This is the user's decision. The implementation plan waits on it.
+
+The two differ in behaviour, not only in field names:
+
+- **Revisions.** A Desk return can be revised against an expected revision number. A v0 request names one target, filled once.
+- **Source binding.** The Desk binds the source by hash (`source_sha`). v0's `v1.json` records the source by path only, so v0 cannot tell if the original changes after it is copied.
+- **Withdrawal.** The Desk's comments already carry a `withdrawn` field. v0 has no withdrawal until decision 3.1.
+- **Identity.** In both, the agent's name is a label the agent supplies. Neither authenticates a producer.
+
+Both lanes recommend a side-by-side schema and behaviour map before this choice is put to the user: what each direction loses or gains, source formats, revisions, retries, withdrawal, human judgement, export and recovery. A shared read-only projection may let both screens run in parallel without migrating any data. Evidence: the Codex records `…/outputs/cover-typography-trial/README.md` and `…/outputs/coordination/CODEX-REPLY-01.md` under `C:/Users/jhert/Documents/Codex/2026-10-25/openmeow-integration-continuation/`, which this spec reports and has not re-verified.
 
 ## Risks outside this design
 
