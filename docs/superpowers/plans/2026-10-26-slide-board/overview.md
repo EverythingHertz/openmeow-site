@@ -8,6 +8,14 @@ layers-on: 2026-10-25-onramp
 
 # The progressive slide board
 
+## Current execution boundary
+
+The 2026-11-02 [integration reconciliation](../../specs/2026-11-02-integration-reconciliation.md)
+records the implemented Tier-0 board and its reliability checks. SSE, deeper
+workers, FTS, cancellation, and agent connection are still planned. Replace
+the unbounded fan-out described below with resource-bounded jobs before
+implementing it. Historical timings in this plan need fresh measurement.
+
 ## Context
 
 Every slide this project has ever made is scattered across Deck Studio builds, a handoff tree, a `dist` repo, a 25.5 MB Review desk catalogue, and two Codex lineage folders. There is no surface that shows them together, and the one viewer that exists (`board.html`) reads a single corpus.

@@ -8,6 +8,14 @@ layers-on: 2026-10-25-onramp
 
 # L3 — Connect your agent
 
+## Current execution boundary
+
+The 2026-11-02 [integration reconciliation](../../specs/2026-11-02-integration-reconciliation.md)
+records what exists in this checkout. The local board is implemented, but this
+site has no MCP endpoint or initialized-agent session receipts. Manual iteration
+prompts must not be presented as a connected agent. Gateway work and live
+terminal apprenticeship require their own repository owners and approval.
+
 ## Context
 
 The on-ramp calls L3 out of scope and says the site must not imply it exists. That was the right call for the on-ramp and it is now the thing to build, because the gateway it needs already exists: `openmeow/gateway` serves tools over stdio today, wraps every call in a receipt (`capability_tools.ts:31-48`), and keeps those receipts in SQLite at `~/OpenMeow Library/receipts.sqlite` (`stdio_main.ts:26`).
