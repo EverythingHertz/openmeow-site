@@ -19,6 +19,14 @@ let shownPair = null;
 async function api(path, init) {
   const res = await fetch(path, { credentials: 'same-origin', ...init });
   if (res.status === 401) { location.reload(); throw new Error('signed out'); }
+  if (!res.ok) {
+    let message = `Board request failed (${res.status}).`;
+    if (res.headers.get('content-type')?.includes('application/json')) {
+      const body = await res.json();
+      if (typeof body.error === 'string') message = body.error;
+    }
+    throw new Error(message);
+  }
   return res;
 }
 
@@ -94,12 +102,20 @@ async function refresh() {
   clearTimeout(pollTimer);
   if (!selected) return;
   const id = selected.id;
-  const s = await (await api(`/api/iterations/${id}`)).json();
-  if (!selected || selected.id !== id) return;
-  $('pending').hidden = !s.pending;
-  if (s.pending) $('prompt').textContent = s.prompt;
-  renderVersions(s.versions);
-  if (s.pending) pollTimer = setTimeout(refresh, 2000);
+  try {
+    const s = await (await api(`/api/iterations/${id}`)).json();
+    if (!selected || selected.id !== id) return;
+    $('pending').hidden = !s.pending;
+    if (s.pending) $('prompt').textContent = s.prompt;
+    renderVersions(s.versions);
+    if (s.pending) pollTimer = setTimeout(refresh, 2000);
+  } catch (err) {
+    if (!selected || selected.id !== id) return;
+    $('pending').hidden = true;
+    $('versions').hidden = true;
+    $('iter-note').className = 'note err';
+    $('iter-note').textContent = err.message;
+  }
 }
 
 function renderVersions(versions) {
@@ -136,17 +152,24 @@ $('iter-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!selected) return;
   const note = $('iter-note');
-  const res = await api(`/api/iterations/${selected.id}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ instruction: $('instruction').value }),
-  });
-  const body = await res.json();
-  if (!res.ok) { note.className = 'note err'; note.textContent = body.error; return; }
-  note.className = 'note';
-  note.textContent = `Request ${body.request.request} saved: ${body.request.base} → ${body.request.target}.`;
-  $('instruction').value = '';
-  refresh();
+  const id = selected.id;
+  try {
+    const res = await api(`/api/iterations/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instruction: $('instruction').value }),
+    });
+    const body = await res.json();
+    if (!selected || selected.id !== id) return;
+    note.className = 'note';
+    note.textContent = `Request ${body.request.request} saved: ${body.request.base} → ${body.request.target}.`;
+    $('instruction').value = '';
+    refresh();
+  } catch (err) {
+    if (!selected || selected.id !== id) return;
+    note.className = 'note err';
+    note.textContent = err.message;
+  }
 });
 $('copy').addEventListener('click', async () => {
   try {
@@ -160,7 +183,11 @@ $('copy').addEventListener('click', async () => {
 $('p-close').addEventListener('click', close);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
-const data = await (await api('/api/cards')).json();
-cards = data.cards;
-renderStrip(data);
-renderGrid();
+try {
+  const data = await (await api('/api/cards')).json();
+  cards = data.cards;
+  renderStrip(data);
+  renderGrid();
+} catch (err) {
+  $('strip').replaceChildren(el('span', 'pill held', `Board unavailable: ${err.message}`));
+}

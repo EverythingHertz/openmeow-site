@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, createRea
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
+import { once } from 'node:events';
 import { openIndex, rebuild, recent, corpora, card } from './index.mjs';
 import { state, createRequest, promptFor, iterDir } from './iterations.mjs';
 
@@ -24,14 +25,32 @@ function args(argv) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--port') out.port = Number(argv[++i]);
-    else if (a === '--data') out.data = argv[++i];
-    else if (a === '--corpus') { const [k, ...v] = argv[++i].split('='); out.corpus[k] = v.join('='); }
+    else if (a === '--data') {
+      out.data = argv[++i];
+      if (!out.data || out.data.startsWith('--')) throw new Error('--data requires a directory.');
+    } else if (a === '--corpus') {
+      const [k, ...v] = (argv[++i] || '').split('=');
+      if (!CORPORA.some((c) => c.id === k) || !v.join('=')) throw new Error('--corpus requires a known id and a nonempty root.');
+      out.corpus[k] = v.join('=');
+    } else throw new Error(`Unknown option: ${a}`);
   }
+  if (!Number.isInteger(out.port) || out.port < 0 || out.port > 65535) throw new Error('--port must be an integer from 0 to 65535.');
   return out;
 }
 
 const opt = args(process.argv.slice(2));
-const PORT = opt.port;
+let ready = false;
+const server = createServer((req, res) => {
+  if (!ready) {
+    res.writeHead(503, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
+    return res.end('Board is starting. Try again shortly.');
+  }
+  return handleRequest(req, res);
+});
+// Reserve the listener before rotating credentials or rebuilding any stored state.
+server.listen(opt.port, '127.0.0.1');
+await once(server, 'listening');
+const PORT = server.address().port;
 const HOSTS = new Set([`127.0.0.1:${PORT}`, `localhost:${PORT}`]);
 const ORIGINS = new Set([...HOSTS].map((h) => `http://${h}`));
 const DATA = opt.data;
@@ -75,8 +94,14 @@ function makeThumbs() {
   writeFileSync(list, JSON.stringify(jobs));
   const ps = spawn('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', join(here, 'thumbs.ps1'), '-List', list], { stdio: ['ignore', 'pipe', 'pipe'] });
   ps.stdout.on('data', (d) => process.stdout.write(`[thumbs] ${d}`));
+  ps.stderr.on('data', (d) => process.stderr.write(`[thumbs] ${d}`));
+  ps.on('error', (err) => console.error(`[thumbs] Could not start: ${err.message}`));
+  ps.on('exit', (code, signal) => {
+    if (code !== 0) console.error(`[thumbs] Exited with ${signal || code}. Original images remain available.`);
+  });
+  return ps;
 }
-makeThumbs();
+const thumbnailer = makeThumbs();
 
 const STATIC = {
   '/': ['slides.html', 'text/html; charset=utf-8'],
@@ -134,7 +159,7 @@ function publicCard(c) {
     currentness: c.currentness, evidence: c.evidence, limitations: c.limitations };
 }
 
-const server = createServer(async (req, res) => {
+async function handleRequest(req, res) {
   try {
     if (!HOSTS.has(req.headers.host || '')) return send(res, 403, 'Refused: foreign Host.');
     const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
@@ -189,20 +214,28 @@ const server = createServer(async (req, res) => {
       if (req.method === 'POST') {
         let body;
         try { body = JSON.parse(await readBody(req)); } catch { return json(res, 400, { error: 'Send JSON.' }); }
+        if (!body || typeof body !== 'object' || Array.isArray(body) ||
+            Object.keys(body).some((k) => k !== 'instruction') || typeof body.instruction !== 'string') {
+          return json(res, 400, { error: 'Send an object containing only an instruction string.' });
+        }
         const r = createRequest(DATA, c, body.instruction);
         return r.error ? json(res, r.status, { error: r.error }) : json(res, 201, r);
       }
     }
     return send(res, 404, 'Not found');
   } catch (e) {
-    return send(res, 500, 'Server error');
+    console.error(`[slides] Request failed: ${e.message}`);
+    return json(res, 500, { error: 'Server error. Check the board terminal for details.' });
   }
-});
+}
 
-server.listen(PORT, '127.0.0.1', () => {
-  const cs = corpora(db);
-  console.log(`OpenMeow slide board: http://127.0.0.1:${PORT}/`);
-  console.log(`Sign in: open ${launcher}  (or paste the key from ${tokenFile})`);
-  for (const c of cs) console.log(`  ${c.corpus_id}: ${c.status === 'ok' ? `${c.card_count} slides` : `HELD · ${c.reason}`}`);
+ready = true;
+console.log(`OpenMeow slide board: http://127.0.0.1:${PORT}/`);
+console.log(`Sign in: open ${launcher}  (or paste the key from ${tokenFile})`);
+for (const c of corpora(db)) console.log(`  ${c.corpus_id}: ${c.status === 'ok' ? `${c.card_count} slides` : `HELD · ${c.reason}`}`);
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => {
+  thumbnailer?.kill();
+  server.close();
+  db.close();
+  process.exit(0);
 });
-for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { server.close(); db.close(); process.exit(0); });

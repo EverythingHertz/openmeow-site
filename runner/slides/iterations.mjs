@@ -10,8 +10,15 @@ export function iterDir(dataDir, cardId) {
   return join(dataDir, 'iterations', cardId);
 }
 
-function readJson(p) {
-  try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return null; }
+function readJson(p, optional = false) {
+  try {
+    const value = JSON.parse(readFileSync(p, 'utf8'));
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Expected an object.');
+    return value;
+  } catch (err) {
+    if (optional && err.code === 'ENOENT') return null;
+    throw new Error(`Cannot read iteration state: ${p}`, { cause: err });
+  }
 }
 
 export function state(dataDir, cardId) {
@@ -23,7 +30,7 @@ export function state(dataDir, cardId) {
     .filter(Boolean)
     .map((m) => {
       const n = Number(m[1]);
-      const meta = readJson(join(dir, `v${n}.json`)) || {};
+      const meta = readJson(join(dir, `v${n}.json`), true) || {};
       return { version: n, file: `v${n}.svg`, parent: meta.parent ?? null, instruction: meta.instruction ?? null,
         author: meta.author ?? null, created_at: meta.created_at ?? null };
     })
@@ -31,8 +38,18 @@ export function state(dataDir, cardId) {
   const requests = files
     .map((f) => /^request-(\d+)\.json$/.exec(f))
     .filter(Boolean)
-    .map((m) => readJson(join(dir, m[0])))
-    .filter(Boolean)
+    .map((m) => {
+      const r = readJson(join(dir, m[0]));
+      if (!Number.isSafeInteger(r.request) || r.request < 1 || r.request !== Number(m[1]) ||
+          r.card_id !== cardId || typeof r.base !== 'string' || typeof r.target !== 'string' ||
+          !/^v[1-9]\d*$/.test(r.base) || !/^v[1-9]\d*$/.test(r.target) ||
+          !Number.isSafeInteger(Number(r.base.slice(1))) || !Number.isSafeInteger(Number(r.target.slice(1))) ||
+          Number(r.target.slice(1)) !== Number(r.base.slice(1)) + 1 ||
+          typeof r.instruction !== 'string' || !r.instruction.trim() || r.instruction.length > MAX_INSTRUCTION) {
+        throw new Error(`Invalid iteration state: ${m[0]}`);
+      }
+      return r;
+    })
     .sort((a, b) => a.request - b.request);
   const have = new Set(versions.map((v) => `v${v.version}`));
   const pending = requests.find((r) => !have.has(r.target)) || null;
@@ -54,7 +71,8 @@ export function promptFor(card, req, dir) {
 }
 
 export function createRequest(dataDir, card, instruction) {
-  const text = String(instruction || '').trim();
+  if (typeof instruction !== 'string') return { error: 'The change must be a string.', status: 400 };
+  const text = instruction.trim();
   if (!text) return { error: 'Type one change first.', status: 400 };
   if (text.length > MAX_INSTRUCTION) return { error: `Keep the change under ${MAX_INSTRUCTION} characters.`, status: 400 };
   if (!card.svg_path || !existsSync(card.svg_path)) return { error: 'This slide has no SVG source, so it cannot be iterated yet.', status: 409 };
